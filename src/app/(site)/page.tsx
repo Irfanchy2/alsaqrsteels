@@ -252,7 +252,7 @@ export default async function HomePage() {
                 <li
                   key={s.slug}
                   className={`photo-zoom group relative flex min-h-[24rem] flex-col justify-end overflow-hidden border border-line-ink bg-ink ${wide ? "lg:col-span-3 lg:min-h-[28rem]" : "lg:col-span-2"}`}
-                  data-reveal
+                  data-reveal="photo"
                   style={delay(i * 70)}
                 >
                   <Image src={photo.src} alt="" fill sizes={wide ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"} className="object-cover opacity-75" />
@@ -345,7 +345,7 @@ export default async function HomePage() {
             </div>
             <ul data-stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((p, i) => (
-                <li key={p.slug} data-reveal="scale" style={delay((i % 3) * 90)}>
+                <li key={p.slug} data-reveal="photo" style={delay((i % 3) * 110)}>
                   <ProjectCard project={p} index={i} />
                 </li>
               ))}

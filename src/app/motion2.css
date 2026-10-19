@@ -67,10 +67,6 @@
     transition: transform 0.8s var(--ease-out-expo);
     transform: translateX(120%);
   }
-  .marquee--logos:hover .marquee__track,
-  .marquee--logos:focus-within .marquee__track {
-    animation-play-state: paused;
-  }
 }
 @media (hover: none) {
   /* Touch screens have no hover: show logos in colour. */
@@ -316,4 +312,36 @@
   to {
     transform: scaleX(0.9);
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Photo wipe: tiles marked data-reveal="photo" open upward like a roller
+   shutter as they scroll in, while the photo inside settles from a slight
+   zoom. Staggered through --reveal-delay. Off for reduced motion, and only
+   when JS is running (html.js), so content is never hidden without it.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal="photo"],
+  html.js [data-stagger] > [data-reveal="photo"]:not(.is-in) {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+  html.js [data-reveal="photo"].is-in {
+    clip-path: inset(0 0 0 0);
+  }
+  html.js [data-reveal="photo"] img {
+    transform: scale(1.18);
+    transition: transform 1.6s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+  html.js [data-reveal="photo"].is-in img {
+    transform: none;
+  }
+}
+/* Keep the hover zoom on photo tiles once they have been revealed. */
+html.js [data-reveal="photo"].is-in.photo-zoom:hover img,
+html.js [data-reveal="photo"].is-in .photo-zoom:hover img {
+  transform: scale(1.06);
+  transition-delay: 0ms;
 }

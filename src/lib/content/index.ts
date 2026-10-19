@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { publicClient } from "@/lib/supabase/public";
 import * as seed from "./seed";
+import { projectImages } from "./stock";
 import { sanitizeArticle } from "@/lib/html";
 import type {
   Company,
@@ -167,7 +168,7 @@ function mapProject(r: ProjectRow, i: number): Project {
 }
 
 export const getProjects = cache(async (): Promise<Project[]> => {
-  if (USE_SEED) return seed.projects;
+  if (USE_SEED) return seed.projects.map((p) => ({ ...p, images: projectImages(p) }));
   const { data, error } = await publicClient()
     .from("projects")
     .select("id, slug, code, title, location, emirate, sector, status, scope, description, services, client_name, client_public, year, featured, project_images(url, alt, width, height, sort_order)")
@@ -175,7 +176,10 @@ export const getProjects = cache(async (): Promise<Project[]> => {
     .not("slug", "is", null)
     .order("sort_order", { ascending: true });
   if (error) fail("projects", error);
-  return (data ?? []).map((r, i) => mapProject(r as unknown as ProjectRow, i));
+  return (data ?? []).map((r, i) => {
+    const p = mapProject(r as unknown as ProjectRow, i);
+    return { ...p, images: projectImages(p) };
+  });
 });
 
 export async function getProject(slug: string): Promise<Project | null> {

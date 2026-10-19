@@ -36,7 +36,7 @@ export default function Gallery({ images, title }: { images: ImageRef[]; title: 
     <>
       <ul data-stagger className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images.map((img, i) => (
-          <li key={img.src} className={i === 0 ? "col-span-2 row-span-2" : ""}>
+          <li key={img.src} data-reveal="photo" className={i === 0 ? "col-span-2 row-span-2" : ""}>
             <button
               type="button"
               onClick={() => open(i)}

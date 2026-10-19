@@ -23,3 +23,9 @@ Replace any of these by uploading real workshop/project photos through the CMS.
 | grinder-sparks.jpg | https://unsplash.com/photos/8DQz9z99GjU |
 | grinding-worker.jpg | images.unsplash.com/photo-1504917595217-d4dc5ebe6122 |
 | cranes-dusk.jpg | images.unsplash.com/photo-1514069709437-f1c294e44e1a |
+
+## Project galleries and showcase (public/images/projects, public/images/showcase)
+
+Free Unsplash photos used until real project photos are uploaded in the CMS
+(one upload replaces a project's whole set). Source IDs are in
+src/lib/content/stock.ts history; all from unsplash.com under the Unsplash licence.

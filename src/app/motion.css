@@ -50,9 +50,6 @@
     animation: marquee 38s linear infinite;
     will-change: transform;
   }
-  .marquee:hover .marquee__track {
-    animation-play-state: paused;
-  }
 }
 @keyframes marquee {
   to {

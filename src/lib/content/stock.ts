@@ -69,3 +69,64 @@ export function projectPhoto(project: Pick<Project, "images" | "sector">, i = 0)
   const pool = SECTOR_PHOTOS[project.sector] ?? ROTATION;
   return { image: pool[i % pool.length], representative: true };
 }
+
+// ---------------------------------------------------------------------------
+// Project galleries. Shown for a project until its own photos are uploaded
+// through the CMS; one upload replaces the whole set for that project.
+const g = (slug: string, alts: string[], sizes: [number, number][]): ImageRef[] =>
+  alts.map((alt, i) => ({ src: `/images/projects/${slug}-${i + 1}.jpg`, alt, width: sizes[i][0], height: sizes[i][1] }));
+
+const PROJECT_GALLERY: Record<string, ImageRef[]> = {
+  "taweelah-gas-compressor-station": g(
+    "taweelah-gas-compressor-station",
+    ["Process plant with red and white pipework", "Pipes and valves at a compressor facility", "Storage tanks and steel pipe racks at a plant"],
+    [[1400, 875], [1400, 875], [1400, 933]]
+  ),
+  "al-hayl-road-improvement": g(
+    "al-hayl-road-improvement",
+    ["Highway interchange with steel-supported overpasses", "Road works with crews and closure signs", "Construction crew at work on a road project"],
+    [[1400, 788], [1400, 1066], [1400, 933]]
+  ),
+  "al-raha-beach-development": g(
+    "al-raha-beach-development",
+    ["Waterfront building under construction", "Waterfront skyline with buildings under construction", "Crew assembling a steel frame on site"],
+    [[1400, 933], [1400, 620], [1400, 933]]
+  ),
+  "burj-vista": g(
+    "burj-vista",
+    ["High-rise towers in Dubai", "Aerial view of Downtown Dubai towers", "Structural steel frame against the sky"],
+    [[1400, 1050], [1400, 933], [1400, 933]]
+  ),
+  "ittihad-paper-mill": g(
+    "ittihad-paper-mill",
+    ["Steel tower framework painted yellow", "Black structural steel frame of an industrial building", "Construction workers in safety vests on site"],
+    [[1400, 933], [1400, 933], [1400, 893]]
+  ),
+  "zirku-island-development": g(
+    "zirku-island-development",
+    ["Offshore oil rig serviced by a supply vessel", "Offshore construction vessel with a crane", "Offshore oil rig seen from the shore"],
+    [[1400, 788], [1400, 961], [1400, 933]]
+  ),
+  "dmcc-cluster-car-park-extension": g(
+    "dmcc-cluster-car-park-extension",
+    ["Multi-storey car park ramp", "Empty concrete car park level with columns", "Steel structure seen from inside"],
+    [[1400, 1050], [1400, 934], [1400, 1000]]
+  ),
+};
+
+/** The project's CMS photos, or its stock gallery while none are uploaded. */
+export function projectImages(project: Pick<Project, "slug" | "images">): ImageRef[] {
+  return project.images.length ? project.images : PROJECT_GALLERY[project.slug] ?? [];
+}
+
+/** Photos for the "made to order" showcase items. */
+export const SHOWCASE_PHOTO: Record<string, ImageRef> = {
+  stair: { src: "/images/showcase/staircase.jpg", alt: "Steel staircase with handrails", width: 1400, height: 859 },
+  ladder: { src: "/images/showcase/ladder.jpg", alt: "Fixed steel access ladder on a building", width: 1400, height: 933 },
+  shed: { src: "/images/showcase/parking-shed.jpg", alt: "Long steel shade structure on columns", width: 1400, height: 933 },
+  sunshade: { src: "/images/showcase/sun-shade.jpg", alt: "Shade sails on steel posts", width: 1400, height: 942 },
+  canopy: { src: "/images/showcase/canopy.jpg", alt: "Curved steel canopy over a walkway", width: 1400, height: 926 },
+  pergola: { src: "/images/showcase/pergola.jpg", alt: "Modern black steel pergola", width: 1400, height: 933 },
+  gate: { src: "/images/showcase/gate.jpg", alt: "Decorative steel gate", width: 1400, height: 939 },
+  fence: { src: "/images/showcase/fence.jpg", alt: "Black steel boundary fence", width: 1400, height: 933 },
+};
