@@ -698,3 +698,26 @@ dialog {
     height: 5rem;
   }
 }
+
+/* Phones: no text below 12px. The small mono labels (0.58–0.72rem) that read
+   fine on a desktop screen are lifted to a legible minimum. */
+@media (max-width: 639px) {
+  .site-theme [class*="text-[0.5"],
+  .site-theme [class*="text-[0.6"],
+  .site-theme [class*="text-[0.7"],
+  .site-theme .text-xs {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.08em;
+  }
+  .site-theme .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+  /* Comfortable side gutters and tap targets. */
+  .site-theme .wrap {
+    padding-inline: 1rem;
+  }
+  .site-theme .btn {
+    min-height: 3rem;
+  }
+}

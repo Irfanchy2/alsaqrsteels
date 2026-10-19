@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { publicClient } from "@/lib/supabase/public";
 import * as seed from "./seed";
-import { projectImages } from "./stock";
+import { projectImages, blogImage } from "./stock";
 import { sanitizeArticle } from "@/lib/html";
 import type {
   Company,
@@ -325,16 +325,17 @@ function hostedImage(src: string | null): string | null {
 }
 
 function toSummary(p: BlogRow): BlogPostSummary {
-  return {
+  const summary = {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt,
     publishedAt: p.published_at,
-    image: hostedImage(p.featured_image),
+    image: null as string | null,
     tags: splitTags(p.tags),
     author: p.author,
     readingMinutes: readingMinutes(p.content ?? ""),
   };
+  return { ...summary, image: blogImage({ ...summary, image: hostedImage(p.featured_image) }) };
 }
 
 export const getBlogPosts = cache(async (): Promise<BlogPostSummary[]> => {

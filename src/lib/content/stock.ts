@@ -154,3 +154,129 @@ export const SHOWCASE_PHOTOS: Record<string, ImageRef[]> = Object.fromEntries(
     })),
   ])
 );
+
+// ---------------------------------------------------------------------------
+// One image library for the whole site. Every page takes its pictures from
+// here; a photo uploaded in the CMS for a service, project or blog post always
+// wins over these. The files live in /public, so they are served by the
+// website itself and never touch Supabase storage or the database.
+
+/** Genuine company photos recovered from the previous website. */
+export const COMPANY_PHOTOS = {
+  cableDrumTrailer: {
+    src: "/images/work/cable-drum-trailer.jpg",
+    alt: "Blue cable-drum trailer fabricated by Al Saqr Al Ahmar, on site",
+    width: 1200,
+    height: 900,
+  },
+} as const;
+
+const sc = (key: string, n: number): ImageRef => SHOWCASE_PHOTOS[key][n - 1];
+const pj = (slug: string, n: number): ImageRef => PROJECT_GALLERY[slug][n - 1];
+const yard = {
+  frame: { src: "/images/work/steel-frame-yard.webp", alt: "Fabricated steel frame with a vertical tank in the workshop yard", width: 640, height: 853 },
+  tank: { src: "/images/work/tank-frame-yard.webp", alt: "Blue tank in a fabricated steel support frame in the workshop yard", width: 576, height: 768 },
+};
+
+/** A photo for each capability on the Services page, none repeated. */
+export const CAPABILITY_PHOTO: Record<string, ImageRef> = {
+  // Structural steel
+  "industrial-steel-sheds": STOCK.factoryHall,
+  "steel-warehouses": STOCK.steelRoofFrame,
+  "structural-frameworks": STOCK.steelGrid,
+  "mezzanine-floors": pj("ittihad-paper-mill", 2),
+  "industrial-platforms": pj("dmcc-cluster-car-park-extension", 3),
+  "steel-staircases": sc("stair", 1),
+  "access-ladders": sc("ladder", 1),
+  "crane-girders-monorails": STOCK.steelErection,
+  "pipe-racks": STOCK.pipeNetwork,
+  "steel-skids": COMPANY_PHOTOS.cableDrumTrailer,
+  "steel-canopies": sc("canopy", 1),
+  "walkways-gangways": sc("ladder", 6),
+  // Architectural metal
+  "steel-sliding-gates": sc("gate", 1),
+  "decorative-metal-gates": sc("gate", 2),
+  "boundary-fencing": sc("fence", 1),
+  "steel-railings": sc("stair", 3),
+  handrails: sc("stair", 2),
+  "metal-grills-screens": sc("fence", 5),
+  "steel-doors-frames": sc("gate", 4),
+  // CNC cutting
+  "cnc-laser-cutting": STOCK.laserCutter,
+  "cnc-waterjet-cutting": STOCK.cncSparks,
+  "cnc-oxyfuel-cutting": STOCK.grinderSparks,
+  "plate-profiling": STOCK.steelMill,
+  "sheet-perforation": sc("gate", 5),
+  "decorative-panels": sc("fence", 6),
+  "precision-components": STOCK.grindingWorker,
+  // Stainless steel
+  "ss-handrails": sc("stair", 4),
+  "ss-staircase-components": sc("stair", 5),
+  "ss-ladders": sc("ladder", 2),
+  "ss-platforms": sc("ladder", 4),
+  "ss-tables-frames": STOCK.stainlessPlant,
+  "ss-pipe-supports": pj("taweelah-gas-compressor-station", 2),
+  // Pipeline and welding
+  "pipeline-welding": STOCK.pipelineValves,
+  "pipe-fabrication": pj("taweelah-gas-compressor-station", 1),
+  "pipe-supports-hangers": pj("taweelah-gas-compressor-station", 3),
+  "site-welding": STOCK.weldingSparks,
+  // Sheds and roofing
+  "parking-sheds": sc("shed", 1),
+  "sandwich-panel-roofing": sc("shed", 3),
+  "sandwich-panel-rooms": sc("shed", 4),
+  "roof-frames-extensions": sc("pergola", 1),
+  "gutters-drainage": sc("shed", 5),
+  // Storage
+  "storage-fuel-tanks": yard.tank,
+  "cement-silos": yard.frame,
+  "storage-containers": STOCK.containerYard,
+  "industrial-skids": STOCK.heroWelding,
+  "lifting-material-baskets": pj("zirku-island-development", 1),
+  // Safety and access
+  "access-maintenance-platforms": sc("ladder", 5),
+  "safety-guard-railings": sc("fence", 2),
+  "road-safety-bollards": pj("al-hayl-road-improvement", 2),
+  "industrial-fencing": sc("fence", 3),
+  "loading-access-ramps": pj("dmcc-cluster-car-park-extension", 1),
+  "grating-platforms": sc("stair", 6),
+  "machine-protection-barriers": pj("al-hayl-road-improvement", 3),
+};
+
+// Blog: posts without a working featured image get a photo matched to their
+// topic. Checked in order; the first keyword found in the slug or tags wins.
+const BLOG_TOPICS: [string[], ImageRef][] = [
+  [["fire"], STOCK.steelMill],
+  [["corrosion", "coating", "galvaniz"], pj("zirku-island-development", 3)],
+  [["ndt", "inspection"], STOCK.grindingWorker],
+  [["wps", "pqr", "welder", "welding"], STOCK.weldingBlue],
+  [["iso-3834", "en-1090", "iso 3834", "certification"], STOCK.weldingSparks],
+  [["icv", "adnoc", "procurement"], STOCK.gasFlare],
+  [["detailing", "shop-drawings", "bim"], STOCK.laserCutter],
+  [["mezzanine", "platform"], pj("ittihad-paper-mill", 1)],
+  [["lead-time", "schedule", "planning"], STOCK.cranesDusk],
+  [["code", "aisc", "eurocode", "standard"], STOCK.steelGrid],
+];
+
+// The current posts each get their own photo; new posts fall back to topics.
+const BLOG_BY_SLUG: Record<string, ImageRef> = {
+  "uae-structural-steel-codes-aisc-360-eurocode-3-abu-dhabi-ibc": STOCK.steelGrid,
+  "iso-3834-en-1090-steel-fabricator-explained": STOCK.weldingSparks,
+  "wps-pqr-welder-qualification-explained": STOCK.heroWelding,
+  "ndt-methods-compared-mpi-ut-pt-rt": STOCK.grindingWorker,
+  "icv-certification-steel-fabricators-adnoc-bids": STOCK.gasFlare,
+  "structural-steel-fire-protection-uae": STOCK.steelMill,
+  "corrosion-protection-iso-12944-coastal-uae": pj("zirku-island-development", 3),
+  "steel-detailing-shop-drawings-rfi-rework": STOCK.laserCutter,
+  "mezzanine-floors-industrial-platforms-specification": pj("ittihad-paper-mill", 1),
+  "structural-steel-fabrication-lead-times-schedule": STOCK.cranesDusk,
+};
+
+/** The post's own featured image, or a photo from the library. */
+export function blogImage(post: { slug: string; tags: string[]; image: string | null }): string {
+  if (post.image) return post.image;
+  if (BLOG_BY_SLUG[post.slug]) return BLOG_BY_SLUG[post.slug].src;
+  const hay = `${post.slug} ${post.tags.join(" ")}`.toLowerCase();
+  const hit = BLOG_TOPICS.find(([keys]) => keys.some((k) => hay.includes(k)));
+  return (hit ? hit[1] : STOCK.factoryHall).src;
+}

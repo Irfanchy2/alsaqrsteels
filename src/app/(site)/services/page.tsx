@@ -98,8 +98,7 @@ export default async function ServicesPage() {
             </h2>
             <p className="mt-5 text-lg text-on-ink-muted">
               {capabilities.length} types of steel and metal work we fabricate to your drawings, across {capabilityCategories.length}{" "}
-              disciplines. Search or filter to find what you need, then send it straight to a quote. Illustrations show the kind of
-              work; they are not photographs of completed projects.
+              disciplines. Search or filter to find what you need, then send it straight to a quote.
             </p>
           </div>
           <div className="mt-10" data-reveal>
