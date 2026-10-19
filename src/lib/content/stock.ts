@@ -280,3 +280,8 @@ export function blogImage(post: { slug: string; tags: string[]; image: string | 
   const hit = BLOG_TOPICS.find(([keys]) => keys.some((k) => hay.includes(k)));
   return (hit ? hit[1] : STOCK.factoryHall).src;
 }
+
+/** Wraps a CMS-uploaded image URL (sizes unknown) for components that take an ImageRef. */
+export function photoRef(src: string, alt = ""): ImageRef {
+  return { src, alt, width: 1600, height: 1000 };
+}

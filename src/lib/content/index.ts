@@ -2,6 +2,7 @@ import { cache } from "react";
 import { publicClient } from "@/lib/supabase/public";
 import * as seed from "./seed";
 import { projectImages, blogImage } from "./stock";
+import { pageReader, readMotion, type PageReader, type PageValues, type MotionSettings } from "./pages";
 import { sanitizeArticle } from "@/lib/html";
 import type {
   Company,
@@ -371,4 +372,29 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 
 export function projectsForService(projects: Project[], slug: string) {
   return projects.filter((p) => p.services.includes(slug));
+}
+
+// Editable pages and site-wide settings (Admin → Pages, Motion & effects) ----
+// Never fails the page: if the site_content table is missing or unreachable,
+// the built-in defaults are used.
+
+const getSiteContent = cache(async (): Promise<Record<string, unknown>> => {
+  if (USE_SEED) return {};
+  try {
+    const { data, error } = await publicClient().from("site_content").select("key, data");
+    if (error || !data) return {};
+    return Object.fromEntries(data.map((r: { key: string; data: unknown }) => [r.key, r.data]));
+  } catch {
+    return {};
+  }
+});
+
+export async function getPage(pageKey: string): Promise<PageReader> {
+  const all = await getSiteContent();
+  return pageReader(pageKey, (all[`page:${pageKey}`] as PageValues | undefined) ?? null);
+}
+
+export async function getMotion(): Promise<MotionSettings> {
+  const all = await getSiteContent();
+  return readMotion((all.motion as Partial<MotionSettings> | undefined) ?? null);
 }

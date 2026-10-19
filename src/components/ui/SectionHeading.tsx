@@ -18,6 +18,7 @@ export default function SectionHeading({ label, title, intro, as = "h2", classNa
       >
         {title}
       </H>
+      <span className="heading-spark" aria-hidden="true" />
       {intro ? <p className="mt-5 text-lg text-steel-text max-w-[62ch]">{intro}</p> : null}
     </div>
   );

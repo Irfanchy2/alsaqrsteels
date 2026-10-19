@@ -1,24 +1,15 @@
+import Toast from "./Toast";
 import Link from "next/link";
 
 export function Flash({ saved, error }: { saved?: string; error?: string }) {
-  if (!saved && !error) return null;
-  return (
-    <p
-      role={error ? "alert" : "status"}
-      className={`mb-6 border-s-4 px-4 py-3 text-sm ${error ? "border-danger bg-danger-bg" : "border-ok bg-ok-bg"}`}
-    >
-      {error ?? saved}
-      {!error ? (
-        <>
-          {" "}
-          The website is updated too.{" "}
-          <a href="/" target="_blank" className="font-semibold underline">
-            View website ↗
-          </a>
-        </>
-      ) : null}
-    </p>
-  );
+  if (error)
+    return (
+      <p role="alert" className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-bg px-4 py-3 text-sm">
+        <span aria-hidden="true" className="font-bold text-danger">!</span>
+        <span>{error}</span>
+      </p>
+    );
+  return saved ? <Toast message={saved} /> : null;
 }
 
 export function PageTitle({ title, children, back }: { title: string; children?: React.ReactNode; back?: { href: string; label: string } }) {
@@ -30,7 +21,7 @@ export function PageTitle({ title, children, back }: { title: string; children?:
         </Link>
       ) : null}
       <div className="mt-2 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">{title}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         {children ? <div className="flex flex-wrap gap-3">{children}</div> : null}
       </div>
     </div>
@@ -88,7 +79,7 @@ export function Check({ label, name, defaultChecked, hint }: { label: string; na
 }
 
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`border border-line bg-card p-4 sm:p-6 ${className}`}>{children}</div>;
+  return <div className={`rounded-lg border border-line bg-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-6 ${className}`}>{children}</div>;
 }
 
 export function StatusPill({ value, label }: { value: string; label?: string }) {

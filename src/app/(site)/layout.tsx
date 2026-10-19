@@ -1,4 +1,4 @@
-import { getCompany, getServices } from "@/lib/content";
+import { getCompany, getServices, getMotion } from "@/lib/content";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import MobileContactBar from "@/components/site/MobileContactBar";
@@ -9,6 +9,7 @@ import { IllustrationDefs } from "@/components/ui/Illustration";
 import { JsonLd, organizationLd } from "@/components/site/JsonLd";
 import Assistant from "@/components/assistant/AssistantLazy";
 import WeldSparks from "@/components/site/WeldSparks";
+import MotionControl from "@/components/site/MotionControl";
 
 // Public pages are served from cache and refreshed on every admin save; this
 // is the fallback so no page is ever more than a minute behind the CMS.
@@ -17,9 +18,22 @@ export const revalidate = 60;
 export const preferredRegion = "hnd1";
 
 export default async function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [company, services] = await Promise.all([getCompany(), getServices()]);
+  const [company, services, motion] = await Promise.all([getCompany(), getServices(), getMotion()]);
+  const on = motion.enabled;
+  // Each switched-off effect adds a class that disables it in CSS.
+  const fx = [
+    "site-theme",
+    on ? "" : "motion-off",
+    on && motion.cursor ? "weld-cursor" : "",
+    on && motion.ticker ? "" : "no-ticker",
+    on && motion.reveals ? "" : "no-reveals",
+    on && motion.headingSpark ? "fx-heading" : "",
+    on && motion.tilt ? "fx-tilt" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <div className="site-theme">
+    <div className={fx}>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
@@ -35,7 +49,10 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       <PageViews />
       <BackToTop />
       <RevealObserver />
-      <WeldSparks />
+      {on && (motion.sparks || (motion.trail && motion.cursor)) ? (
+        <WeldSparks sparks={motion.sparks} trail={motion.trail && motion.cursor} />
+      ) : null}
+      {on ? <MotionControl speed={motion.speed} tilt={motion.tilt} /> : null}
       <JsonLd data={organizationLd(company)} />
     </div>
   );

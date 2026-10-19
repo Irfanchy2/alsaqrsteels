@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { getCompany, getCertifications, getDocuments } from "@/lib/content";
+import { getPage, getCompany, getCertifications, getDocuments } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import EnquiryCta from "@/components/site/EnquiryCta";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -41,21 +41,22 @@ function formatDate(d: string) {
 
 export default async function QualityPage() {
   const [company, certs, documents] = await Promise.all([getCompany(), getCertifications(), getDocuments()]);
+  const pg = await getPage("quality");
   const certDocs = documents.filter((d) => d.kind === "certificate");
 
   return (
     <>
       <PageHero
-        image={STOCK.grindingWorker}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.grindingWorker}
         crumbs={[{ name: "Quality", href: "/quality" }]}
-        label="Quality and certifications"
-        title="Quality that starts at the drawing board"
-        lede="How we control quality on a fabrication job — and how to obtain the certification documents your tender or pre-qualification needs."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title")}
+        lede={pg.text("hero", "lede")}
       />
 
-      <section aria-labelledby="approach-title" className="py-16 lg:py-24">
+      {pg.visible("approach") ? <section aria-labelledby="approach-title" className="py-16 lg:py-24">
         <div className="wrap">
-          <SectionHeading id="approach-title" label="Our approach" title="How quality is controlled" />
+          <SectionHeading id="approach-title" label={pg.text("approach", "label")} title={pg.text("approach", "title")} />
           <ol data-stagger className="mt-12 grid gap-6 sm:grid-cols-2">
             {PRINCIPLES.map((p, i) => (
               <li key={p.title} className="border-t-2 border-ink pt-5" data-reveal>
@@ -66,15 +67,15 @@ export default async function QualityPage() {
             ))}
           </ol>
         </div>
-      </section>
+      </section> : null}
 
-      <section aria-labelledby="certs-title" className="border-t border-line bg-paper-2 py-16 lg:py-24">
+      {pg.visible("certificates") ? <section aria-labelledby="certs-title" className="border-t border-line bg-paper-2 py-16 lg:py-24">
         <div className="wrap">
           <SectionHeading
             id="certs-title"
-            label="Certification"
-            title="Certificates"
-            intro="We publish a certificate here only once a current copy in the company's name has been checked."
+            label={pg.text("certificates", "label")}
+            title={pg.text("certificates", "title")}
+            intro={pg.text("certificates", "intro")}
           />
           {certs.length ? (
             <ul data-stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -148,7 +149,7 @@ export default async function QualityPage() {
             </ul>
           ) : null}
         </div>
-      </section>
+      </section> : null}
 
       <EnquiryCta
         company={company}

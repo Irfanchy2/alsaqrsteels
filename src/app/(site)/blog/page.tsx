@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { getBlogPosts } from "@/lib/content";
+import { getBlogPosts, getPage } from "@/lib/content";
 import type { BlogPostSummary } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import Illustration from "@/components/ui/Illustration";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -52,18 +52,18 @@ function Meta({ post, onInk = false }: { post: BlogPostSummary; onInk?: boolean 
 }
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  const [posts, pg] = await Promise.all([getBlogPosts(), getPage("blog")]);
   const [lead, ...rest] = posts;
   const tags = Array.from(new Set(posts.flatMap((p) => p.tags))).slice(0, 12);
 
   return (
     <>
       <PageHero
-        image={STOCK.weldingBlue}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.weldingBlue}
         crumbs={[{ name: "Blog", href: "/blog" }]}
-        label="Blog"
-        title="Notes from the workshop"
-        lede="Practical background on structural steel, welding, inspection and fabrication schedules — the questions that come up in real enquiries. For advice on your project, talk to our team."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title")}
+        lede={pg.text("hero", "lede")}
       />
 
       <section className="py-14 lg:py-20">

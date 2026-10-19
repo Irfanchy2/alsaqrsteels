@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { getCompany, getServices, getFaqsFor } from "@/lib/content";
+import { getPage, getCompany, getServices, getFaqsFor } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import FaqList from "@/components/ui/FaqList";
 import QuoteForm from "@/components/quote/QuoteForm";
 import ContactLink from "@/components/site/ContactLink";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -18,15 +18,16 @@ export const metadata: Metadata = {
 
 export default async function QuotePage() {
   const [company, services, faqs] = await Promise.all([getCompany(), getServices(), getFaqsFor("quote")]);
+  const pg = await getPage("quote");
   const phone = company.phones[0] ?? null;
   return (
     <>
       <PageHero
-        image={STOCK.cncSparks}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.cncSparks}
         crumbs={[{ name: "Request a Quote", href: "/quote" }]}
-        label="Request a quote"
-        title="Tell us what you need fabricated"
-        lede="A few details and any drawings you have. Our team reviews every request and contacts you — pricing, programme and terms are always confirmed by our staff."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title")}
+        lede={pg.text("hero", "lede")}
       />
 
       <section className="py-12 lg:py-16">

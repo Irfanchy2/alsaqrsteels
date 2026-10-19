@@ -45,7 +45,7 @@ export default function ProjectCard({
   const more = project.images.length - 1;
   const code = project.code?.replace(/-/, " / ");
   return (
-    <article className="edge-draw group relative flex aspect-[4/3.4] h-full w-full min-w-0 min-h-[17rem] border border-line-ink flex-col justify-end overflow-hidden bg-ink-2 text-on-ink">
+    <article data-tilt className="edge-draw group relative flex aspect-[4/3.4] h-full w-full min-w-0 min-h-[17rem] border border-line-ink flex-col justify-end overflow-hidden bg-ink-2 text-on-ink">
       {photo ? (
         <Image
           src={photo.src}

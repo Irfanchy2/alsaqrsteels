@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { getCompany, getServices, getProcessSteps, getDocuments } from "@/lib/content";
+import { getPage, getCompany, getServices, getProcessSteps, getDocuments } from "@/lib/content";
 import { WORK_PHOTOS } from "@/lib/content/seed";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import EnquiryCta from "@/components/site/EnquiryCta";
 import ContactLink from "@/components/site/ContactLink";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -33,17 +33,18 @@ export default async function AboutPage() {
     getProcessSteps(),
     getDocuments(),
   ]);
+  const pg = await getPage("about");
   const profile = documents.find((d) => d.kind === "company_profile");
   const paragraphs = company.aboutBody.split(/\n\s*\n/);
 
   return (
     <>
       <PageHero
-        image={STOCK.steelErection}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.steelErection}
         crumbs={[{ name: "About", href: "/about" }]}
-        label="About"
-        title={company.aboutTitle || "About the company"}
-        lede="Structural steel, pipeline, CNC, storage and stainless steel fabrication — detailed, cut, fabricated and installed from one workshop in Musaffah."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title", company.aboutTitle || "About the company")}
+        lede={pg.text("hero", "lede")}
       >
         {profile ? (
           <a href={profile.fileUrl} className="btn btn-secondary mt-8" download>
@@ -96,14 +97,14 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="workshop-title" className="on-ink py-16 lg:py-24">
+      {pg.visible("workshop") ? <section aria-labelledby="workshop-title" className="on-ink py-16 lg:py-24">
         <div className="wrap grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <SectionHeading
               id="workshop-title"
-              label="The workshop"
-              title="Detailing, cutting, fabrication and installation"
-              intro="Our engineering personnel work on current design and detailing software, and profiling runs on CNC equipment in the workshop — so drawings and cut parts are prepared before fabrication begins."
+              label={pg.text("workshop", "label")}
+              title={pg.text("workshop", "title")}
+              intro={pg.text("workshop", "intro")}
             />
           </div>
           <ul data-stagger className="grid gap-px self-start border border-line-ink bg-line-ink sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
@@ -118,12 +119,12 @@ export default async function AboutPage() {
             ))}
           </ul>
         </div>
-      </section>
+      </section> : null}
 
-      <section aria-labelledby="clients-title" className="py-16 lg:py-24">
+      {pg.visible("clients") ? <section aria-labelledby="clients-title" className="py-16 lg:py-24">
         <div className="wrap grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionHeading id="clients-title" label="Who we work with" title="Built for people who buy steelwork" />
+            <SectionHeading id="clients-title" label={pg.text("clients", "label")} title={pg.text("clients", "title")} />
           </div>
           <ul className="border-t-2 border-ink lg:col-span-7 lg:col-start-6">
             {AUDIENCES.map(([who, what]) => (
@@ -134,12 +135,12 @@ export default async function AboutPage() {
             ))}
           </ul>
         </div>
-      </section>
+      </section> : null}
 
-      {steps.length ? (
+      {steps.length && pg.visible("process") ? (
         <section aria-labelledby="steps-title" className="border-t border-line bg-paper-2 py-16 lg:py-24">
           <div className="wrap">
-            <SectionHeading id="steps-title" label="How a project runs" title="Our project process" />
+            <SectionHeading id="steps-title" label={pg.text("process", "label")} title={pg.text("process", "title")} />
             <ol data-stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {steps.map((s, i) => (
                 <li key={s.title} className="border-t-2 border-ink pt-5" data-reveal>

@@ -8,7 +8,7 @@ type Spark = { x: number; y: number; vx: number; vy: number; life: number; max: 
 // the electrode tip: a white-hot flash, then orange and amber sparks that arc
 // under gravity and fade. One full-screen canvas, drawn only while sparks are
 // alive. Mouse/pen only (no touch), and off for reduced motion.
-export default function WeldSparks() {
+export default function WeldSparks({ sparks: clickSparks = true, trail = false }: { sparks?: boolean; trail?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -107,14 +107,45 @@ export default function WeldSparks() {
       if (!raf) raf = requestAnimationFrame(tick);
     };
 
-    document.addEventListener("pointerdown", burst, { passive: true });
+    // Ember trail: a few small, short-lived embers drop off the electrode tip
+    // as the cursor moves.
+    let lastX = -1;
+    let lastY = -1;
+    const ember = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (dx * dx + dy * dy < 36) return;
+      const n = 1 + (Math.random() < 0.5 ? 1 : 0);
+      for (let i = 0; i < n; i++) {
+        const max = 0.25 + Math.random() * 0.3;
+        sparks.push({
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 60 - dx * 0.6,
+          vy: (Math.random() - 0.7) * 60 - dy * 0.6,
+          life: max,
+          max,
+          size: 0.8 + Math.random() * 0.9,
+          hue: 22 + Math.random() * 18,
+        });
+      }
+      if (sparks.length > 400) sparks = sparks.slice(-400);
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    if (clickSparks) document.addEventListener("pointerdown", burst, { passive: true });
+    if (trail) document.addEventListener("pointermove", ember, { passive: true });
     window.addEventListener("resize", resize);
     return () => {
       document.removeEventListener("pointerdown", burst);
+      document.removeEventListener("pointermove", ember);
       window.removeEventListener("resize", resize);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [clickSparks, trail]);
 
   return <canvas ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999] h-full w-full" />;
 }

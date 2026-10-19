@@ -18,7 +18,13 @@ const ITEMS: { title: string; blurb: string; photos: string; service: string }[]
   { title: "Fences", photos: "fence", blurb: "Boundary and security fencing with posts, rails, pickets or laser-cut panels.", service: "steel-structures" },
 ];
 
-export default function FabricationShowcase() {
+export default function FabricationShowcase({
+  title = "Fabrication showcase",
+  intro = "Typical items we fabricate and install for villas, compounds and industrial sites across the UAE. Open any item to see more photos, then request a quotation for your own design.",
+}: {
+  title?: string;
+  intro?: string;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [item, setItem] = useState(0);
   const [index, setIndex] = useState(0);
@@ -53,18 +59,15 @@ export default function FabricationShowcase() {
       <div className="wrap">
         <p className="label">Made to order</p>
         <h2 id="showcase-title" className="mt-4 text-4xl uppercase sm:text-5xl">
-          Fabrication showcase
+          {title}
         </h2>
-        <p className="mt-4 max-w-[62ch] text-on-ink-muted">
-          Typical items we fabricate and install for villas, compounds and industrial sites across the UAE. Open any item
-          to see more photos, then request a quotation for your own design.
-        </p>
+        <p className="mt-4 max-w-[62ch] text-on-ink-muted">{intro}</p>
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ITEMS.map((it, i) => {
             const set = SHOWCASE_PHOTOS[it.photos] ?? [];
             const cover = set[0];
             return (
-              <li key={it.title} data-reveal="photo" className="group relative flex flex-col border border-line-ink bg-ink-2">
+              <li key={it.title} data-reveal="photo" data-tilt className="group relative flex flex-col border border-line-ink bg-ink-2">
                 <button
                   type="button"
                   onClick={() => open(i)}

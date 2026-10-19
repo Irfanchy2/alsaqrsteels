@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCompany, getFaqsFor } from "@/lib/content";
+import { getPage, getCompany, getFaqsFor } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FaqList from "@/components/ui/FaqList";
 import ContactLink from "@/components/site/ContactLink";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -19,14 +19,15 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const [company, faqs] = await Promise.all([getCompany(), getFaqsFor("quote")]);
+  const pg = await getPage("contact");
   return (
     <>
       <PageHero
-        image={STOCK.cranesDusk}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.cranesDusk}
         crumbs={[{ name: "Contact", href: "/contact" }]}
-        label="Contact"
-        title="Talk to the workshop"
-        lede="Call or WhatsApp for a quick conversation, or send your drawings through the quote form for a written response."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title")}
+        lede={pg.text("hero", "lede")}
       />
 
       <section aria-label="Contact options" className="py-16 lg:py-24">
@@ -79,10 +80,10 @@ export default async function ContactPage() {
         </div>
       </section>
 
-      <section aria-labelledby="visit-title" className="on-ink py-16 lg:py-20">
+      {pg.visible("visit") ? <section aria-labelledby="visit-title" className="on-ink py-16 lg:py-20">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
-            <SectionHeading id="visit-title" label="Workshop" title="Visit us in Musaffah" intro={company.address} />
+            <SectionHeading id="visit-title" label={pg.text("visit", "label")} title={pg.text("visit", "title")} intro={company.address} />
           </div>
           <div className="flex flex-wrap gap-3 lg:col-span-4 lg:col-start-9 lg:justify-end">
             {company.mapsUrl ? (
@@ -97,13 +98,13 @@ export default async function ContactPage() {
             ) : null}
           </div>
         </div>
-      </section>
+      </section> : null}
 
-      {faqs.length ? (
+      {faqs.length && pg.visible("faq") ? (
         <section aria-labelledby="faq-title" className="py-16 lg:py-24">
           <div className="wrap grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionHeading id="faq-title" label="Questions" title="About sending an enquiry" />
+              <SectionHeading id="faq-title" label="Questions" title={pg.text("faq", "title")} />
             </div>
             <div className="lg:col-span-8">
               <FaqList faqs={faqs} />

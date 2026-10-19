@@ -11,17 +11,20 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "hnd1";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/analytics", label: "Visitors & analytics" },
-  { href: "/admin/enquiries", label: "Enquiries" },
-  { href: "/admin/projects", label: "Projects & photos" },
-  { href: "/admin/blog", label: "Blog posts" },
-  { href: "/admin/services", label: "Services" },
-  { href: "/admin/faqs", label: "FAQs" },
-  { href: "/admin/clients", label: "Client logos" },
-  { href: "/admin/certifications", label: "Certifications" },
-  { href: "/admin/documents", label: "Documents" },
-  { href: "/admin/settings", label: "Company details" },
+  { href: "/admin", label: "Dashboard", icon: "dashboard", group: "" },
+  { href: "/admin/enquiries", label: "Enquiries", icon: "inbox", group: "Leads" },
+  { href: "/admin/analytics", label: "Visitors & analytics", icon: "chart", group: "Leads" },
+  { href: "/admin/pages", label: "Pages & sections", icon: "pages", group: "Website" },
+  { href: "/admin/projects", label: "Projects & photos", icon: "projects", group: "Website" },
+  { href: "/admin/services", label: "Services", icon: "services", group: "Website" },
+  { href: "/admin/blog", label: "Blog posts", icon: "blog", group: "Website" },
+  { href: "/admin/faqs", label: "FAQs", icon: "faq", group: "Website" },
+  { href: "/admin/settings", label: "Company details", icon: "company", group: "Company" },
+  { href: "/admin/clients", label: "Client logos", icon: "clients", group: "Company" },
+  { href: "/admin/certifications", label: "Certifications", icon: "cert", group: "Company" },
+  { href: "/admin/documents", label: "Documents", icon: "docs", group: "Company" },
+  { href: "/admin/motion", label: "Motion & effects", icon: "motion", group: "Settings", admin: true },
+  { href: "/admin/team", label: "Team & roles", icon: "team", group: "Settings", admin: true },
 ];
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -29,7 +32,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
   return (
     <div className="admin min-h-dvh bg-paper lg:flex">
       <AdminNav
-        items={NAV}
+        items={NAV.filter((n) => !n.admin || role === "admin")}
         email={user.email}
         role={role}
         signOut={

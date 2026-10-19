@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { requireStaff, refreshSite, text, lines, int, bool, back, slugify } from "@/lib/admin";
+import { requireStaff, requireAdmin, refreshSite, text, lines, int, bool, back, slugify } from "@/lib/admin";
+import { PAGES } from "@/lib/content/pages";
 import { callEnquiryFunction } from "@/lib/enquiry-backend";
 import { SITE_URL } from "@/lib/site";
 import { sanitizeArticle } from "@/lib/html";
@@ -461,4 +462,102 @@ export async function saveBlogPost(form: FormData) {
   }
   refreshSite();
   back(`/admin/blog/${res.data!.id}`, status === "published" ? "Saved and published." : "Draft saved.");
+}
+
+// ---------------------------------------------------------------- Pages
+export async function savePage(form: FormData) {
+  const { supabase, user } = await requireStaff();
+  const key = text(form, "page", 60) ?? "";
+  const def = PAGES.find((p) => p.key === key);
+  if (!def) back("/admin/pages", "Unknown page.", "error");
+  const data: Record<string, Record<string, string | boolean>> = {};
+  for (const s of def!.sections) {
+    const sec: Record<string, string | boolean> = {};
+    if (s.hideable) sec._hidden = !bool(form, `${s.key}._visible`);
+    for (const f of s.fields) {
+      const v = text(form, `${s.key}.${f.key}`, f.type === "textarea" ? 3000 : 600);
+      // Store only what differs from the default, so future default
+      // improvements still reach sections nobody has customised.
+      if (v && v !== f.default) sec[f.key] = v;
+    }
+    if (Object.keys(sec).length) data[s.key] = sec;
+  }
+  const { error } = await supabase
+    .from("site_content")
+    .upsert({ key: `page:${key}`, data, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) back(`/admin/pages/${key}`, contentError(error.message), "error");
+  refreshSite();
+  back(`/admin/pages/${key}`, `${def!.label} page saved.`);
+}
+
+export async function resetPage(form: FormData) {
+  const { supabase } = await requireStaff();
+  const key = text(form, "page", 60) ?? "";
+  const { error } = await supabase.from("site_content").delete().eq("key", `page:${key}`);
+  if (error) back(`/admin/pages/${key}`, contentError(error.message), "error");
+  refreshSite();
+  back(`/admin/pages/${key}`, "Page reset to the original text.");
+}
+
+// ---------------------------------------------------------------- Motion
+export async function saveMotion(form: FormData) {
+  const { supabase, user } = await requireAdmin();
+  const speed = Number(text(form, "speed", 10) ?? "1");
+  const data = {
+    enabled: bool(form, "enabled"),
+    speed: Math.min(2, Math.max(0.5, Number.isFinite(speed) ? speed : 1)),
+    cursor: bool(form, "cursor"),
+    sparks: bool(form, "sparks"),
+    heroSparks: bool(form, "heroSparks"),
+    ticker: bool(form, "ticker"),
+    reveals: bool(form, "reveals"),
+    tilt: bool(form, "tilt"),
+    trail: bool(form, "trail"),
+    headingSpark: bool(form, "headingSpark"),
+  };
+  const { error } = await supabase
+    .from("site_content")
+    .upsert({ key: "motion", data, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) back("/admin/motion", contentError(error.message), "error");
+  refreshSite();
+  back("/admin/motion", "Motion settings saved.");
+}
+
+// ---------------------------------------------------------------- Team
+export async function addStaff(form: FormData) {
+  const { supabase } = await requireAdmin();
+  const email = text(form, "email", 200);
+  const role = text(form, "role", 10) === "admin" ? "admin" : "staff";
+  if (!email) back("/admin/team", "Enter an email address.", "error");
+  const { data, error } = await supabase.rpc("admin_add_staff", { p_email: email, p_role: role });
+  if (error) back("/admin/team", teamError(error.message), "error");
+  back("/admin/team", `${data ?? email} can now sign in to the admin as ${role === "admin" ? "an Admin" : "an Editor"}.`);
+}
+
+export async function setStaffRole(form: FormData) {
+  const { supabase } = await requireAdmin();
+  const id = text(form, "user_id", 60);
+  const role = text(form, "role", 10) === "admin" ? "admin" : "staff";
+  const { error } = await supabase.rpc("admin_set_staff_role", { p_user: id, p_role: role });
+  if (error) back("/admin/team", teamError(error.message), "error");
+  back("/admin/team", "Role updated.");
+}
+
+export async function removeStaff(form: FormData) {
+  const { supabase } = await requireAdmin();
+  const id = text(form, "user_id", 60);
+  const { error } = await supabase.rpc("admin_remove_staff", { p_user: id });
+  if (error) back("/admin/team", teamError(error.message), "error");
+  back("/admin/team", "Removed from the team. Their login still exists but can no longer open the admin.");
+}
+
+function contentError(msg: string) {
+  return /site_content|relation .* does not exist|schema cache/i.test(msg)
+    ? "Saving needs a one-time database update. Run supabase/migrations/20261020090000_site_content_team.sql in Supabase → SQL Editor, then try again."
+    : `Could not save: ${msg}`;
+}
+function teamError(msg: string) {
+  return /function .* does not exist|schema cache/i.test(msg)
+    ? "Team management needs a one-time database update. Run supabase/migrations/20261020090000_site_content_team.sql in Supabase → SQL Editor."
+    : msg;
 }

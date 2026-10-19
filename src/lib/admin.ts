@@ -69,3 +69,10 @@ export function slugify(s: string) {
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
 }
+
+/** Like requireStaff, but only for the "admin" role (Team, Motion & effects). */
+export async function requireAdmin() {
+  const ctx = await requireStaff();
+  if (ctx.role !== "admin") redirect("/admin?error=" + encodeURIComponent("That area is for admins only."));
+  return ctx;
+}

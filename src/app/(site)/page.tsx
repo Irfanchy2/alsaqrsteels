@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import {
+  getPage,
+  getMotion,
   getCompany,
   getServices,
   getProjects,
@@ -44,7 +46,9 @@ const SPARKS = Array.from({ length: 22 }, (_, i) => ({
 }));
 
 export default async function HomePage() {
-  const [company, services, projects, highlights, steps, certs, faqs, clients] = await Promise.all([
+  const [pg, motion, company, services, projects, highlights, steps, certs, faqs, clients] = await Promise.all([
+    getPage("home"),
+    getMotion(),
     getCompany(),
     getServices(),
     getProjects(),
@@ -58,9 +62,12 @@ export default async function HomePage() {
   const shown = ordered.slice(0, ordered.length >= 6 ? 6 : 3);
   const [aboutLead, ...aboutRest] = company.aboutBody.split(/\n\s*\n/);
   const [heroA, ...heroB] = company.heroTitle.split(/(?<=\.)\s+/);
-  const eyebrow = [company.establishedYear ? `Est. ${company.establishedYear}` : null, "Musaffah Industrial 44, Abu Dhabi, UAE"]
+  const heroImage = pg.image("hero") ?? STOCK.heroWelding.src;
+  const bandImage = pg.image("band") ?? STOCK.steelErection.src;
+  const eyebrowAuto = [company.establishedYear ? `Est. ${company.establishedYear}` : null, "Musaffah Industrial 44, Abu Dhabi, UAE"]
     .filter(Boolean)
     .join(" · ");
+  const eyebrow = pg.text("hero", "eyebrow") || eyebrowAuto;
   const ticker = services.flatMap((s) => [s.title, ...s.scope.slice(0, 3)]);
   // Two wide cards, then rows of three; the "not sure" card fills what is left.
   const leftover = (6 - ((Math.max(0, services.length - 2) * 2) % 6)) % 6;
@@ -79,7 +86,7 @@ export default async function HomePage() {
       <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] flex min-h-[100svh] flex-col overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]" aria-labelledby="hero-title">
         <div className="absolute inset-0" aria-hidden="true">
           <Image
-            src={STOCK.heroWelding.src}
+            src={heroImage}
             alt=""
             fill
             priority
@@ -89,11 +96,11 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/50" />
           <div className="forge-glow absolute inset-0" />
-          <div className="sparks">
+          {motion.heroSparks ? <div className="sparks">
             {SPARKS.map((s, i) => (
               <i key={i} style={s} />
             ))}
-          </div>
+          </div> : null}
         </div>
 
         <div className="wrap relative flex flex-1 flex-col justify-center pb-10 pt-16 lg:pt-10">
@@ -117,10 +124,10 @@ export default async function HomePage() {
           </p>
           <div className="fade-up mt-9 flex flex-wrap gap-3" style={d(580)}>
             <Link href="/quote" className="btn btn-primary">
-              Request a Quote <span aria-hidden="true">→</span>
+              {pg.text("hero", "primaryCta")} <span aria-hidden="true">→</span>
             </Link>
             <Link href="/projects" className="btn btn-secondary-ink">
-              Explore Our Projects
+              {pg.text("hero", "secondaryCta")}
             </Link>
           </div>
         </div>
@@ -146,7 +153,7 @@ export default async function HomePage() {
       </section>
 
       {/* Ticker of real service lines ---------------------------------------- */}
-      <div className="relative overflow-hidden border-y border-line bg-flame py-4 text-ink">
+      {pg.visible("ticker") ? <div className="relative overflow-hidden border-y border-line bg-flame py-4 text-ink">
         <div className="marquee" aria-label="Services and typical items">
           {[0, 1].map((copy) => (
             <ul key={copy} className="marquee__track" aria-hidden={copy === 1 ? true : undefined}>
@@ -159,13 +166,13 @@ export default async function HomePage() {
             </ul>
           ))}
         </div>
-      </div>
+      </div> : null}
 
       {/* Trusted by — client logos ------------------------------------------ */}
-      <ClientStrip logos={clients} />
+      {pg.visible("clients") ? <ClientStrip logos={clients} title={pg.text("clients", "title")} subtitle={pg.text("clients", "subtitle")} /> : null}
 
       {/* About the yard — photo collage + copy ------------------------------- */}
-      <section aria-labelledby="about-title" className="relative py-24 lg:py-32">
+      {pg.visible("about") ? <section aria-labelledby="about-title" className="relative py-24 lg:py-32">
         <div className="wrap grid gap-14 lg:grid-cols-12 lg:items-center">
           <div className="relative lg:col-span-6" data-reveal="left">
             <div className="grid grid-cols-5 grid-rows-6 gap-3 sm:gap-4" style={{ aspectRatio: "1 / 1.02" }}>
@@ -187,7 +194,7 @@ export default async function HomePage() {
             ) : null}
           </div>
           <div className="lg:col-span-6" data-reveal="right">
-            <p className="label">About the yard</p>
+            <p className="label">{pg.text("about", "label")}</p>
             <h2 id="about-title" className="mt-4 text-[2.3rem] sm:text-5xl lg:text-[3.4rem]">
               {company.aboutTitle}
             </h2>
@@ -217,25 +224,25 @@ export default async function HomePage() {
             </ul>
             <div className="mt-9 flex flex-wrap items-center gap-5">
               <Link href="/about" className="btn btn-primary">
-                About the company <span aria-hidden="true">→</span>
+                {pg.text("about", "cta")} <span aria-hidden="true">→</span>
               </Link>
               <Link href="/contact" className="link-arrow">
-                Visit the workshop <span aria-hidden="true">→</span>
+                {pg.text("about", "link")} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
         </div>
-      </section>
+      </section> : null}
 
       {/* Services — photo cards ---------------------------------------------- */}
-      <section aria-labelledby="services-title" className="relative border-t border-line bg-paper-2 py-24 lg:py-32">
+      {pg.visible("services") ? <section aria-labelledby="services-title" className="relative border-t border-line bg-paper-2 py-24 lg:py-32">
         <div className="wrap relative">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
               id="services-title"
-              label="Capabilities"
-              title="What we fabricate"
-              intro="Structural steel for residential and industrial buildings, plant structures, workshops and warehouses — with pipeline, CNC, storage and stainless work alongside."
+              label={pg.text("services", "label")}
+              title={pg.text("services", "title")}
+              intro={pg.text("services", "intro")}
             />
             <Link href="/services" className="link-arrow" data-reveal>
               All services <span aria-hidden="true">→</span>
@@ -253,6 +260,7 @@ export default async function HomePage() {
                   key={s.slug}
                   className={`photo-zoom group relative flex min-h-[24rem] flex-col justify-end overflow-hidden border border-line-ink bg-ink ${wide ? "lg:col-span-3 lg:min-h-[28rem]" : "lg:col-span-2"}`}
                   data-reveal="photo"
+                  data-tilt
                   style={delay(i * 70)}
                 >
                   <Image src={photo.src} alt="" fill sizes={wide ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"} className="object-cover opacity-75" />
@@ -280,9 +288,9 @@ export default async function HomePage() {
             >
               <div>
                 <p className="font-mono text-xs tracking-[0.16em]">00 — Not sure?</p>
-                <h3 className="mt-3 text-3xl [font-stretch:78%]">Send us the drawings</h3>
+                <h3 className="mt-3 text-3xl [font-stretch:78%]">{pg.text("services", "ctaTitle")}</h3>
                 <p className="mt-4 max-w-[48ch] text-sm font-medium">
-                  Describe the job or attach drawings and our team will tell you which discipline — or combination — it needs.
+                  {pg.text("services", "ctaText")}
                 </p>
               </div>
               <Link href="/quote" className="btn mt-8 self-start bg-ink text-on-ink hover:bg-ink-3">
@@ -291,23 +299,23 @@ export default async function HomePage() {
             </li>
           </ul>
         </div>
-      </section>
+      </section> : null}
 
       {/* Full-bleed statement band ------------------------------------------- */}
-      <section aria-labelledby="band-title" className="on-ink relative overflow-hidden">
+      {pg.visible("band") ? <section aria-labelledby="band-title" className="on-ink relative overflow-hidden">
         <div className="absolute inset-0" aria-hidden="true">
-          <Image src={STOCK.steelErection.src} alt="" fill sizes="100vw" className="parallax object-cover opacity-60" />
+          <Image src={bandImage} alt="" fill sizes="100vw" className="parallax object-cover opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/20" />
           <div className="forge-glow absolute inset-0" />
         </div>
         <div className="wrap relative grid gap-12 py-28 lg:grid-cols-12 lg:py-40">
           <div className="lg:col-span-7" data-reveal="left">
-            <p className="label">From drawing to installation</p>
+            <p className="label">{pg.text("band", "label")}</p>
             <h2 id="band-title" className="mt-5 text-[2.6rem] sm:text-6xl lg:text-[4.4rem]">
-              Cut, welded and <span className="text-spark">erected by one team.</span>
+              {pg.text("band", "title")} <span className="text-spark">{pg.text("band", "highlight")}</span>
             </h2>
             <p className="mt-6 max-w-[54ch] text-lg text-on-ink/80">
-              Detailing, CNC profiling, fabrication and site erection stay under one roof — so the steel that arrives on site is the steel that was drawn.
+              {pg.text("band", "text")}
             </p>
           </div>
           <ul className="grid content-end gap-3 self-end lg:col-span-5" data-reveal="right">
@@ -326,18 +334,18 @@ export default async function HomePage() {
             ))}
           </ul>
         </div>
-      </section>
+      </section> : null}
 
       {/* Projects ------------------------------------------------------------ */}
-      {shown.length ? (
+      {shown.length && pg.visible("projects") ? (
         <section aria-labelledby="projects-title" className="py-24 lg:py-32">
           <div className="wrap">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeading
                 id="projects-title"
-                label="Field work"
-                title="Selected projects"
-                intro="Structural steel fabrication and erection on projects across the UAE."
+                label={pg.text("projects", "label")}
+                title={pg.text("projects", "title")}
+                intro={pg.text("projects", "intro")}
               />
               <Link href="/projects" className="link-arrow" data-reveal>
                 Full portfolio <span aria-hidden="true">→</span>
@@ -360,16 +368,16 @@ export default async function HomePage() {
       ) : null}
 
       {/* Process ------------------------------------------------------------- */}
-      {steps.length ? (
+      {steps.length && pg.visible("process") ? (
         <section aria-labelledby="process-title" className="relative border-t border-line bg-paper-2">
           <div className="wrap relative grid gap-14 py-24 lg:grid-cols-12 lg:py-32">
             <div className="lg:col-span-4">
               <div className="lg:sticky lg:top-28">
                 <SectionHeading
                   id="process-title"
-                  label="How a project runs"
-                  title="From your drawings to installation"
-                  intro="A typical sequence. Every quotation confirms the exact scope, programme and responsibilities in writing."
+                  label={pg.text("process", "label")}
+                  title={pg.text("process", "title")}
+                  intro={pg.text("process", "intro")}
                 />
                 <div className="photo-zoom relative mt-10 hidden aspect-[4/3] overflow-hidden lg:block" data-reveal>
                   <Image src={STOCK.cncSparks.src} alt={STOCK.cncSparks.alt} fill sizes="30vw" className="object-cover" />
@@ -392,14 +400,14 @@ export default async function HomePage() {
       ) : null}
 
       {/* Certifications ------------------------------------------------------ */}
-      <section aria-labelledby="quality-title" className="py-24 lg:py-28">
+      {pg.visible("quality") ? <section aria-labelledby="quality-title" className="py-24 lg:py-28">
         <div className="wrap">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
               id="quality-title"
-              label="Quality & compliance"
-              title="Our certifications"
-              intro="Fabrication follows drawings you have approved, and CNC cutting runs from the same detailed information."
+              label={pg.text("quality", "label")}
+              title={pg.text("quality", "title")}
+              intro={pg.text("quality", "intro")}
             />
             <Link href="/quality" className="link-arrow" data-reveal>
               Quality & certifications <span aria-hidden="true">→</span>
@@ -433,14 +441,14 @@ export default async function HomePage() {
             </div>
           )}
         </div>
-      </section>
+      </section> : null}
 
       {/* FAQ ------------------------------------------------------------------ */}
-      {faqs.length ? (
+      {faqs.length && pg.visible("faq") ? (
         <section aria-labelledby="faq-title" className="border-t border-line bg-paper-2 py-24 lg:py-28">
           <div className="wrap grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionHeading id="faq-title" label="Questions" title="Before you send a request" />
+              <SectionHeading id="faq-title" label={pg.text("faq", "label")} title={pg.text("faq", "title")} />
             </div>
             <div className="lg:col-span-8" data-reveal>
               <FaqList faqs={faqs} />
@@ -450,7 +458,7 @@ export default async function HomePage() {
       ) : null}
 
       {/* Contact + quick quote, over a spark photograph ----------------------- */}
-      <section aria-labelledby="contact-title" className="on-ink relative overflow-hidden py-24 lg:py-32">
+      {pg.visible("contact") ? <section aria-labelledby="contact-title" className="on-ink relative overflow-hidden py-24 lg:py-32">
         <div className="absolute inset-0" aria-hidden="true">
           <Image src={STOCK.grinderSparks.src} alt="" fill sizes="100vw" className="object-cover opacity-35" />
           <div className="absolute inset-0 bg-ink/70" />
@@ -462,7 +470,7 @@ export default async function HomePage() {
             <h2 id="contact-title" className="mt-4 text-3xl sm:text-4xl">
               {company.name}
             </h2>
-            <p className="mt-3 text-steel-text">Get in touch for quotations, site surveys and fabrication schedules.</p>
+            <p className="mt-3 text-steel-text">{pg.text("contact", "text")}</p>
             <dl className="mt-7 divide-y divide-line border-y border-line text-[0.95rem]">
               {company.phones.length ? (
                 <div className="grid gap-1 py-4 sm:grid-cols-[7rem_1fr]">
@@ -523,13 +531,13 @@ export default async function HomePage() {
 
           <div className="border border-white/10 bg-ink/75 p-7 backdrop-blur-md lg:p-9" data-reveal="right">
             <p className="label">Request a quote</p>
-            <h2 className="mt-4 text-3xl sm:text-4xl">Start your request</h2>
+            <h2 className="mt-4 text-3xl sm:text-4xl">{pg.text("contact", "quoteTitle")}</h2>
             <div className="mt-6">
               <QuickStart services={services.map((s) => ({ slug: s.slug, title: s.title }))} />
             </div>
           </div>
         </div>
-      </section>
+      </section> : null}
     </>
   );
 }

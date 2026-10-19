@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { requireStaff } from "@/lib/admin";
-import { Card, PageTitle, StatusPill } from "@/components/admin/AdminUI";
+import { Card, Flash, PageTitle, StatusPill } from "@/components/admin/AdminUI";
 
-export default async function AdminHome() {
-  const { supabase } = await requireStaff();
+export default async function AdminHome({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const { error } = await searchParams;
+  const { supabase, role } = await requireStaff();
   const since = new Date(Date.now() - 30 * 86400_000).toISOString();
 
   const [newCount, notifyIssues, recent, events, projectsNoPhotos, certsLive, traffic, statuses] = await Promise.all([
@@ -31,6 +32,28 @@ export default async function AdminHome() {
   return (
     <>
       <PageTitle title="Dashboard" />
+      <Flash error={error} />
+
+      <ul className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          { href: "/admin/pages", title: "Edit pages & sections", text: "Headings, text, buttons, photos; show or hide sections." },
+          { href: "/admin/projects", title: "Projects & photos", text: "Add projects and upload site photos." },
+          { href: "/admin/settings", title: "Company details", text: "Phones, address, headline and About text." },
+          ...(role === "admin"
+            ? [{ href: "/admin/motion", title: "Motion & effects", text: "Speed, sparks, cursor and animations." }]
+            : [{ href: "/admin/blog", title: "Blog posts", text: "Write and publish articles." }]),
+        ].map((c) => (
+          <li key={c.href}>
+            <Link
+              href={c.href}
+              className="group block h-full rounded-lg border border-line bg-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition hover:-translate-y-0.5 hover:border-flame/50"
+            >
+              <p className="font-semibold group-hover:text-accent">{c.title} →</p>
+              <p className="mt-1 text-sm text-steel-text">{c.text}</p>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       {(notifyIssues.count ?? 0) > 0 ? (
         <p className="mb-6 border-s-4 border-warn bg-warn-bg px-4 py-3 text-sm">

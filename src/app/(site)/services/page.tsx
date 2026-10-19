@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCompany, getServices, getFaqsFor } from "@/lib/content";
+import { getPage, getCompany, getServices, getFaqsFor } from "@/lib/content";
 import { capabilityCategories, capabilities } from "@/lib/content/capabilities";
 import PageHero from "@/components/ui/PageHero";
 import ServiceVisual from "@/components/ui/ServiceVisual";
@@ -8,7 +8,7 @@ import FaqList from "@/components/ui/FaqList";
 import SectionHeading from "@/components/ui/SectionHeading";
 import CapabilitiesGrid from "@/components/services/CapabilitiesGrid";
 import EnquiryCta from "@/components/site/EnquiryCta";
-import { STOCK } from "@/lib/content/stock";
+import { STOCK, photoRef } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -21,15 +21,16 @@ export const metadata: Metadata = {
 
 export default async function ServicesPage() {
   const [company, services, faqs] = await Promise.all([getCompany(), getServices(), getFaqsFor("general")]);
+  const pg = await getPage("services");
 
   return (
     <>
       <PageHero
-        image={STOCK.weldingSparks}
+        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.weldingSparks}
         crumbs={[{ name: "Services", href: "/services" }]}
-        label="Services"
-        title="Engineered in steel. Built to last."
-        lede="From detailing and CNC profiling through welding, fabrication and site installation — handled in-house at our Musaffah workshop for contractors, engineers and industrial clients across the UAE."
+        label={pg.text("hero", "label")}
+        title={pg.text("hero", "title")}
+        lede={pg.text("hero", "lede")}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="#capabilities" className="btn btn-primary">
@@ -88,13 +89,13 @@ export default async function ServicesPage() {
       </section>
 
       {/* Capabilities grid — everything we fabricate to order --------------- */}
-      <section id="capabilities" aria-labelledby="capabilities-title" className="on-ink relative scroll-mt-24 py-20 lg:py-28">
+      {pg.visible("capabilities") ? <section id="capabilities" aria-labelledby="capabilities-title" className="on-ink relative scroll-mt-24 py-20 lg:py-28">
         <div className="yard-grid absolute inset-0" aria-hidden="true" />
         <div className="wrap relative">
           <div className="max-w-3xl" data-reveal>
             <p className="label">Made to order</p>
             <h2 id="capabilities-title" className="mt-4 text-[2rem] sm:text-5xl">
-              Explore our capabilities
+              {pg.text("capabilities", "title")}
             </h2>
             <p className="mt-5 text-lg text-on-ink-muted">
               {capabilities.length} types of steel and metal work we fabricate to your drawings, across {capabilityCategories.length}{" "}
@@ -105,13 +106,13 @@ export default async function ServicesPage() {
             <CapabilitiesGrid categories={capabilityCategories} />
           </div>
         </div>
-      </section>
+      </section> : null}
 
-      {faqs.length ? (
+      {faqs.length && pg.visible("faq") ? (
         <section aria-labelledby="faq-title" className="border-t border-line bg-card py-20">
           <div className="wrap grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionHeading id="faq-title" label="Questions" title="Common questions" />
+              <SectionHeading id="faq-title" label="Questions" title={pg.text("faq", "title")} />
             </div>
             <div className="lg:col-span-8">
               <FaqList faqs={faqs} />
