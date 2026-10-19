@@ -5,6 +5,7 @@ import { getBlogPosts } from "@/lib/content";
 import type { BlogPostSummary } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import Illustration from "@/components/ui/Illustration";
+import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -58,6 +59,7 @@ export default async function BlogPage() {
   return (
     <>
       <PageHero
+        image={STOCK.weldingBlue}
         crumbs={[{ name: "Blog", href: "/blog" }]}
         label="Blog"
         title="Notes from the workshop"

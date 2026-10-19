@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import EnquiryCta from "@/components/site/EnquiryCta";
 import ContactLink from "@/components/site/ContactLink";
+import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -38,6 +39,7 @@ export default async function AboutPage() {
   return (
     <>
       <PageHero
+        image={STOCK.steelErection}
         crumbs={[{ name: "About", href: "/about" }]}
         label="About"
         title={company.aboutTitle || "About the company"}

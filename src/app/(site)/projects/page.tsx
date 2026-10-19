@@ -4,6 +4,7 @@ import PageHero from "@/components/ui/PageHero";
 import ProjectExplorer from "@/components/projects/ProjectExplorer";
 import FabricationShowcase from "@/components/projects/FabricationShowcase";
 import EnquiryCta from "@/components/site/EnquiryCta";
+import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -20,6 +21,7 @@ export default async function ProjectsPage() {
   return (
     <>
       <PageHero
+        image={STOCK.steelRoofFrame}
         crumbs={[{ name: "Projects", href: "/projects" }]}
         label="Projects"
         title="Project portfolio"

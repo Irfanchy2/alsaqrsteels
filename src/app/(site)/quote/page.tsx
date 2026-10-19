@@ -5,6 +5,7 @@ import FaqList from "@/components/ui/FaqList";
 import QuoteForm from "@/components/quote/QuoteForm";
 import ContactLink from "@/components/site/ContactLink";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
+import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -21,6 +22,7 @@ export default async function QuotePage() {
   return (
     <>
       <PageHero
+        image={STOCK.cncSparks}
         crumbs={[{ name: "Request a Quote", href: "/quote" }]}
         label="Request a quote"
         title="Tell us what you need fabricated"

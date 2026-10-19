@@ -11,6 +11,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import EnquiryCta from "@/components/site/EnquiryCta";
 import { JsonLd } from "@/components/site/JsonLd";
 import { SITE_URL } from "@/lib/site";
+import { serviceStock } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -45,7 +46,13 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <section className="relative border-b border-line bg-ink">
+      <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]">
+        <div className="absolute inset-0" aria-hidden="true">
+          <Image src={serviceStock(service).src} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-35" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
+          <div className="forge-glow absolute inset-0" />
+        </div>
         <div className="wrap relative grid gap-10 pb-14 pt-10 lg:grid-cols-12 lg:gap-12 lg:pb-20 lg:pt-14">
           <div className="lg:col-span-7">
             <Breadcrumbs onInk items={[{ name: "Services", href: "/services" }, { name: service.title, href: `/services/${service.slug}` }]} />
@@ -70,10 +77,11 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <ServiceVisual
             service={service}
             priority
-            className="aspect-[4/3] w-full self-end lg:col-span-5"
+            className="fade-up aspect-[4/3] w-full self-end border border-line-ink border-t-4 border-t-flame lg:col-span-5"
             sizes="(min-width: 1024px) 40vw, 100vw"
           />
         </div>
+        <div className="spark-rule relative" aria-hidden="true" />
       </section>
 
       <section aria-label="Scope and applications" className="py-16 lg:py-24">

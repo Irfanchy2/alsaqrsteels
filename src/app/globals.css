@@ -47,47 +47,47 @@
 }
 
 /* ==========================================================================
-   2026 "Mill" theme for the public site: blued-steel charcoal, chalk text,
-   galvanised greys, and the logo's gear red used only for the main action.
+   2026 "Forge" theme — bold industrial dark for the public site.
    Scoped to .site-theme so the staff CMS keeps the light palette above.
-   Token names are unchanged: "paper" is the page ground, "ink" the deepest.
+   Every token keeps its name, so components switch over without changes:
+   "paper" is now the dark ground and "ink" the deepest black.
    ========================================================================== */
 .site-theme {
-  --color-paper: #171b20;
-  --color-paper-2: #1c2127;
-  --color-card: #20262d;
-  --color-ink: #12161a;
-  --color-ink-2: #1c2127;
-  --color-ink-3: #262d35;
-  --color-slate: #2b333c;
-  --color-steel: #7d8792;
-  --color-steel-text: #a9b1ba;
-  --color-line: #2c343d;
-  --color-line-strong: #414b56;
-  --color-flame: #c8262d; /* gear red */
-  --color-flame-hover: #dc3138;
-  --color-accent: #e9e6df;
-  --color-accent-hover: #ffffff;
-  --color-accent-on-ink: #c9ced4;
-  --color-amber: #c9ced4; /* galvanised highlight, replaces amber */
-  --color-brand: #c8262d;
-  --color-ok: #6fcf97;
-  --color-ok-bg: #16281f;
-  --color-warn: #e2c06b;
-  --color-warn-bg: #2a2416;
-  --color-danger: #ff7b7b;
-  --color-danger-bg: #2e1719;
-  --color-on-ink: #ece9e3;
-  --color-on-ink-muted: #a9b1ba;
-  --color-line-ink: #2c343d;
-  --color-whatsapp: #1f7a4d;
+  --color-paper: #0c0d10;
+  --color-paper-2: #111317;
+  --color-card: #16191e;
+  --color-ink: #060708;
+  --color-ink-2: #121418;
+  --color-ink-3: #1c2026;
+  --color-slate: #242a31;
+  --color-steel: #6f7882;
+  --color-steel-text: #a2abb5;
+  --color-line: #252a31;
+  --color-line-strong: #3a414a;
+  --color-flame: #ff5a1f;
+  --color-flame-hover: #ff7440;
+  --color-accent: #ff6b35;
+  --color-accent-hover: #ff9466;
+  --color-accent-on-ink: #ff6b35;
+  --color-amber: #ffb020;
+  --color-brand: #d42a2f; /* logo gear red */
+  --color-ok: #4ade80;
+  --color-ok-bg: #0f2a1c;
+  --color-warn: #fbbf24;
+  --color-warn-bg: #2d2208;
+  --color-danger: #ff6b6b;
+  --color-danger-bg: #2e1214;
+  --color-on-ink: #f4f2ee;
+  --color-on-ink-muted: #a8b0ba;
+  --color-line-ink: #262b32;
+  --color-whatsapp: #1f8a55;
 
   background: var(--color-paper);
   color: var(--color-on-ink);
   color-scheme: dark;
 }
 body:has(.site-theme) {
-  background: #171b20;
+  background: #0c0d10;
 }
 
 @layer base {
@@ -535,202 +535,155 @@ dialog {
 }
 
 /* ==========================================================================
-   Mill theme — component adjustments.
+   Forge theme — component adjustments for the dark ground.
    ========================================================================== */
-/* Sentence-case headlines in a semi-condensed cut; uppercase only on the logo. */
-.site-theme h1,
-.site-theme h2 {
-  text-transform: none;
-  font-stretch: 86%;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.02;
-}
-.site-theme h3,
-.site-theme h4 {
-  font-stretch: 90%;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-}
-/* Section labels: quiet sentence-case text, no mono caps or square bullet. */
-.site-theme .label {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--color-steel-text);
-}
-.site-theme .label::before {
-  display: none;
-}
-/* Buttons: set in the body face, square-shouldered like cut plate. */
-.site-theme .btn {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  border-radius: 2px;
-}
-.site-theme .btn:hover {
-  transform: none;
-}
-.site-theme .btn-primary {
-  background: var(--color-flame);
-  color: #fff;
-  box-shadow: none;
-}
-.site-theme .btn-primary::after {
-  display: none;
-}
-.site-theme .btn-primary:hover {
-  background: var(--color-flame-hover);
-  box-shadow: none;
-}
-.site-theme .btn-secondary,
-.site-theme .btn-secondary-ink {
-  border-color: var(--color-line-strong);
+.site-theme .btn-secondary {
+  border-color: rgb(244 242 238 / 0.35);
   color: var(--color-on-ink);
-  background: transparent;
 }
-.site-theme .btn-secondary:hover,
-.site-theme .btn-secondary-ink:hover {
+.site-theme .btn-secondary:hover {
+  background: var(--color-on-ink);
   border-color: var(--color-on-ink);
-  background: transparent;
-  color: #fff;
+  color: var(--color-ink);
 }
 .site-theme .btn-dark {
   background: var(--color-ink-3);
-  color: var(--color-on-ink);
+  border-color: var(--color-line-strong);
 }
 .site-theme .btn-dark:hover {
-  background: var(--color-slate);
+  background: var(--color-flame);
+  border-color: var(--color-flame);
+  color: var(--color-ink);
 }
-.site-theme .link-arrow {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
+.site-theme .btn-primary {
+  background: linear-gradient(100deg, var(--color-flame) 0%, #ff7a2f 100%);
+  color: #0a0a0a;
   font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--color-on-ink);
-  text-decoration: underline;
-  text-decoration-color: var(--color-flame);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.35em;
 }
-.site-theme .link-arrow:hover {
-  gap: 0.5rem;
-  color: #fff;
+.site-theme .btn-primary:hover {
+  background: linear-gradient(100deg, #ff6a2c 0%, var(--color-amber) 100%);
+  box-shadow: 0 12px 34px -10px rgb(255 90 31 / 0.7);
 }
 .site-theme .prose {
   color: var(--color-on-ink);
 }
-.site-theme .prose a {
-  color: var(--color-on-ink);
-  text-decoration-color: var(--color-flame);
-}
-/* Form controls. background-color (not the shorthand) so the select chevron
-   below keeps its no-repeat positioning. */
 .site-theme .input {
-  background-color: #12161a;
+  /* background-color, not the shorthand: the shorthand resets
+     background-repeat, which made the select chevron tile across the field. */
+  background-color: #0f1114;
   color: var(--color-on-ink);
   border-color: var(--color-line-strong);
-  border-radius: 2px;
 }
 .site-theme .input::placeholder {
-  color: #77818b;
+  color: #6b737c;
 }
 .site-theme .input:hover {
   border-color: var(--color-steel);
 }
 .site-theme .input:focus {
-  border-color: var(--color-on-ink);
-  box-shadow: 0 0 0 3px rgb(200 38 45 / 0.35);
+  border-color: var(--color-flame);
 }
 .site-theme select.input {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ECE9E3' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23F4F2EE' stroke-width='1.8'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 12px 8px;
 }
 .site-theme select.input option {
-  background: #20262d;
-  color: #ece9e3;
+  background: #16191e;
 }
 .site-theme .lift:hover {
-  transform: none;
-  box-shadow: none;
-  border-color: var(--color-line-strong);
+  box-shadow: 0 22px 50px -24px rgb(0 0 0 / 0.9);
+  border-color: rgb(255 90 31 / 0.45);
 }
 .site-theme .text-ink {
   color: var(--color-on-ink);
 }
 .site-theme :focus-visible {
-  outline-color: #ece9e3;
-}
-.site-theme ::selection {
-  background: var(--color-flame);
-  color: #fff;
-}
-/* One orchestrated moment only (the hero load): no per-section scroll
-   reveals, no decorative loops, on the public site. */
-.site-theme [data-reveal] {
-  opacity: 1 !important;
-  transform: none !important;
-}
-.site-theme .kenburns,
-.site-theme .parallax {
-  animation: none !important;
-}
-.site-theme .edge-draw::before {
-  background: var(--color-flame);
-}
-.site-theme .spotlight::after,
-.site-theme .spotlight-light::after {
-  display: none;
+  outline-color: var(--color-amber);
 }
 
-/* Photo tiles that ease in slightly when hovered (a response to the pointer). */
+/* Photo treatments ------------------------------------------------------- */
+/* Darkens a photo from the bottom so text set over it stays readable. */
+.photo-shade {
+  background:
+    linear-gradient(to top, rgb(6 7 8 / 0.96) 0%, rgb(6 7 8 / 0.55) 45%, rgb(6 7 8 / 0.15) 100%);
+}
+/* Warm weld-glow wash laid over dark photos. */
+.forge-glow {
+  background:
+    radial-gradient(60% 70% at 85% 20%, rgb(255 90 31 / 0.28), transparent 70%),
+    radial-gradient(50% 60% at 10% 100%, rgb(212 42 47 / 0.22), transparent 70%);
+  mix-blend-mode: screen;
+}
+/* Fine film grain on hero photos so gradients do not band. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Gradient text for the spark-coloured hero line. */
+.text-spark {
+  background: linear-gradient(95deg, #ff4a1c 0%, #ff7a2f 45%, #ffb020 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Thin red-to-amber rule used as a section divider. */
+.spark-rule {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-brand) 20%, var(--color-flame) 50%, var(--color-amber) 80%, transparent);
+}
+/* Photo tiles that zoom slightly on hover. */
 .photo-zoom img {
-  transition: transform 0.9s var(--ease-out-quart);
+  transition: transform 1.2s var(--ease-out-quart), filter 0.6s ease;
 }
 .photo-zoom:hover img,
 .photo-zoom:focus-within img {
-  transform: scale(1.03);
+  transform: scale(1.06);
 }
 
-/* Services carousel: native horizontal scroll with snap points. */
-.reel {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min(82vw, 26rem);
-  gap: 1rem;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--reel-pad, 1.25rem);
-  padding-inline: var(--reel-pad, 1.25rem);
-  scrollbar-width: none;
+/* Floating sparks over the home hero (pure CSS; hidden under reduced motion). */
+.sparks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
-.reel::-webkit-scrollbar {
-  display: none;
+.sparks i {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffb020;
+  box-shadow: 0 0 8px 2px rgb(255 120 40 / 0.8);
+  opacity: 0;
 }
-.reel > * {
-  scroll-snap-align: start;
-}
-@media (min-width: 640px) {
-  .reel {
-    --reel-pad: 2rem;
+@media (prefers-reduced-motion: no-preference) {
+  .sparks i {
+    animation: spark-rise var(--t, 7s) linear infinite;
+    animation-delay: var(--delay, 0s);
   }
 }
-@media (min-width: 1024px) {
-  .reel {
-    --reel-pad: max(2.5rem, calc((100vw - 1280px) / 2 + 2.5rem));
-    grid-auto-columns: 30rem;
+@keyframes spark-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--dx, 40px), -90vh, 0);
+    opacity: 0;
   }
 }
 
-/* Header: taller bar so the logo reads at a useful size. */
+/* Larger logo in the header bar. */
 .site-theme .site-header__bar {
   height: 5.5rem;
 }
@@ -739,7 +692,7 @@ dialog {
 }
 @media (min-width: 1024px) {
   .site-theme .site-header__bar {
-    height: 6.5rem;
+    height: 6.25rem;
   }
   .site-theme .site-header[data-scrolled="true"] .site-header__bar {
     height: 5rem;

@@ -18,20 +18,21 @@ const ITEMS: { title: string; blurb: string; drawing: IllustrationKey | ConceptK
 ];
 
 const NEW: string[] = ["pergola", "fence", "shed", "ladder"];
-const DRAW = "h-[80%] w-[80%] opacity-55 transition-opacity duration-300 group-hover:opacity-90";
+const DRAW = "draw-in h-[88%] w-[88%] opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100";
 
 export default function FabricationShowcase() {
   return (
-    <section aria-labelledby="showcase-title" className="border-t border-line bg-ink py-16 lg:py-24">
+    <section aria-labelledby="showcase-title" className="on-ink bg-ink py-16 lg:py-24">
       <div className="wrap">
         <p className="label">Made to order</p>
-        <h2 id="showcase-title" className="mt-3 text-4xl sm:text-5xl">
-          Items we fabricate to your drawings
+        <h2 id="showcase-title" className="mt-4 text-4xl uppercase sm:text-5xl">
+          Fabrication showcase
         </h2>
         <p className="mt-4 max-w-[62ch] text-on-ink-muted">
-          Line drawings of typical items, not photographs of client work. Send your own design and we will price it.
+          Typical items we fabricate and install. The drawings below are illustrative concepts, not photographs of
+          completed client projects — request a quotation and we will price your own design.
         </p>
-        <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid gap-px bg-ink-2 sm:grid-cols-2 lg:grid-cols-4" data-stagger>
           {ITEMS.map((it) => (
             <li key={it.title} className="tile group relative flex flex-col bg-ink p-5">
               <div className="yard-grid flex aspect-[4/3] items-center justify-center overflow-hidden text-on-ink-muted">
@@ -41,13 +42,14 @@ export default function FabricationShowcase() {
                   <Illustration name={it.drawing as IllustrationKey} className={DRAW} />
                 )}
               </div>
-              <h3 className="mt-4 text-xl">{it.title}</h3>
+              <p className="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-amber">Concept drawing</p>
+              <h3 className="mt-1 text-xl uppercase [font-stretch:78%]">{it.title}</h3>
               <p className="mt-2 text-sm text-on-ink-muted">{it.blurb}</p>
               <Link
                 href={`/quote?service=${it.service}&topic=${encodeURIComponent(it.title)}`}
-                className="mt-auto pt-4 text-[0.9rem] font-medium text-on-ink-muted after:absolute after:inset-0 group-hover:text-on-ink group-hover:underline group-hover:decoration-flame group-hover:decoration-2 group-hover:underline-offset-4"
+                className="mt-4 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-on-ink-muted after:absolute after:inset-0 group-hover:text-amber"
               >
-                Request a quote
+                Request a quote <span aria-hidden="true">→</span>
               </Link>
             </li>
           ))}

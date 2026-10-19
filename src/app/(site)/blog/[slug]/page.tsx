@@ -75,6 +75,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span>{post.readingMinutes} min read</span>
           </p>
         </div>
+        <div className="spark-rule relative" aria-hidden="true" />
       </header>
 
       <div className="wrap grid gap-12 py-12 lg:grid-cols-12 lg:py-16">
