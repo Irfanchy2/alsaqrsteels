@@ -16,12 +16,12 @@ automatically.
 2. Repository name: `alsaqr-steels`. Set it to **Private**.
 3. Do **not** tick "Add a README", ".gitignore" or "license". The repo must be empty.
 4. Click **Create repository** and copy its URL, for example
-   `https://github.com/YOUR-USERNAME/alsaqr-steels.git`.
+   `https://github.com/Irfanchy2/alsaqrsteels.git`.
 
 ## 2. Push this code (run in Terminal, in this folder)
 
 ```bash
-git remote add origin https://github.com/YOUR-USERNAME/alsaqr-steels.git
+git remote add origin https://github.com/Irfanchy2/alsaqrsteels.git
 git push -u origin main
 ```
 
