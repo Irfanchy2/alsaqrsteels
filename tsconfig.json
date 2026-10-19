@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "supabase",
+    "src/components/BlockPage.tsx",
+    "src/components/BlockRenderer.tsx",
+    "src/components/Footer.tsx",
+    "src/components/Header.tsx",
+    "src/components/Hero.tsx",
+    "src/components/MobileCta.tsx",
+    "src/components/Partners.tsx",
+    "src/components/SafeImage.tsx",
+    "src/components/motion",
+    "src/lib/data.ts",
+    "src/lib/types.ts",
+    "src/app/(site)/contact/QuoteForm.tsx",
+    "src/app/(site)/contact/actions.ts",
+    "src/app/admin/(dashboard)/leads/LeadRow.tsx"
+  ]
+}

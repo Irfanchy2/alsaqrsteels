@@ -1,0 +1,1744 @@
+{
+  "base": "http://localhost:3100",
+  "live": false,
+  "at": "2026-09-27T12:04:49.063Z",
+  "total": 347,
+  "failed": 0,
+  "results": [
+    {
+      "name": "mobile / loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile / no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile / one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile / images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile / no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile / no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /about loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /about no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /about one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /about images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /about no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /about no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/steel-structures loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services/steel-structures no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/steel-structures one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services/steel-structures images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/steel-structures no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/steel-structures no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/pipeline-welding loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services/pipeline-welding no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/pipeline-welding one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services/pipeline-welding images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/pipeline-welding no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/pipeline-welding no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/laser-cnc-cutting no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/storage-containers loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services/storage-containers no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/storage-containers one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services/storage-containers images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/storage-containers no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/storage-containers no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/stainless-steel loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /services/stainless-steel no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/stainless-steel one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /services/stainless-steel images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/stainless-steel no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /services/stainless-steel no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /projects no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /projects images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /projects/taweelah-gas-compressor-station no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quality loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /quality no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quality one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /quality images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quality no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quality no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quote loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /quote no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quote one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /quote images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quote no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /quote no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /contact loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /contact no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /contact one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /contact images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /contact no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /contact no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /privacy loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /privacy no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /privacy one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /privacy images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /privacy no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /privacy no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /terms loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /terms no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /terms one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /terms images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /terms no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /terms no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /blog loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "mobile /blog no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /blog one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "mobile /blog images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /blog no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile /blog no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet / loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet / no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet / one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet / images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet / no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet / no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /about loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /about no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /about one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /about images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /about no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /about no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/steel-structures loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services/steel-structures no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/steel-structures one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services/steel-structures images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/steel-structures no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/steel-structures no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/pipeline-welding loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services/pipeline-welding no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/pipeline-welding one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services/pipeline-welding images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/pipeline-welding no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/pipeline-welding no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/laser-cnc-cutting no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/storage-containers loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services/storage-containers no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/storage-containers one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services/storage-containers images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/storage-containers no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/storage-containers no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/stainless-steel loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /services/stainless-steel no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/stainless-steel one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /services/stainless-steel images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/stainless-steel no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /services/stainless-steel no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /projects no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /projects images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /projects/taweelah-gas-compressor-station no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quality loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /quality no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quality one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /quality images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quality no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quality no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quote loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /quote no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quote one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /quote images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quote no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /quote no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /contact loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /contact no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /contact one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /contact images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /contact no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /contact no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /privacy loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /privacy no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /privacy one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /privacy images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /privacy no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /privacy no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /terms loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /terms no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /terms one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /terms images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /terms no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /terms no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /blog loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "tablet /blog no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /blog one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "tablet /blog images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /blog no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "tablet /blog no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop / loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop / no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop / one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop / images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop / no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop / no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/ has title + description",
+      "ok": true,
+      "detail": "Precision Steelwork in Musaffah, Abu Dhabi | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/ has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000"
+    },
+    {
+      "name": "desktop /about loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /about no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /about one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /about images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /about no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /about no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/about has title + description",
+      "ok": true,
+      "detail": "About the Company and Workshop | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/about has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/about"
+    },
+    {
+      "name": "desktop /services loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services has title + description",
+      "ok": true,
+      "detail": "Steel Fabrication Services | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services"
+    },
+    {
+      "name": "desktop /services/steel-structures loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services/steel-structures no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/steel-structures one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services/steel-structures images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/steel-structures no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/steel-structures no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services/steel-structures has title + description",
+      "ok": true,
+      "detail": "Structural Steel Fabrication & Installation in Abu Dhabi | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services/steel-structures has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services/steel-structures"
+    },
+    {
+      "name": "desktop /services/pipeline-welding loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services/pipeline-welding no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/pipeline-welding one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services/pipeline-welding images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/pipeline-welding no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/pipeline-welding no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services/pipeline-welding has title + description",
+      "ok": true,
+      "detail": "Pipeline Welding, Pipe Supports & Pipe Racks — Abu Dhabi | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services/pipeline-welding has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services/pipeline-welding"
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/laser-cnc-cutting no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services/laser-cnc-cutting has title + description",
+      "ok": true,
+      "detail": "CNC Laser, Water Jet & Oxy-Fuel Cutting — Musaffah, Abu Dhabi | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services/laser-cnc-cutting has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services/laser-cnc-cutting"
+    },
+    {
+      "name": "desktop /services/storage-containers loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services/storage-containers no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/storage-containers one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services/storage-containers images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/storage-containers no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/storage-containers no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services/storage-containers has title + description",
+      "ok": true,
+      "detail": "Fuel Tanks, Silos, Skips & Storage Containers — Abu Dhabi | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services/storage-containers has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services/storage-containers"
+    },
+    {
+      "name": "desktop /services/stainless-steel loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /services/stainless-steel no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/stainless-steel one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /services/stainless-steel images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/stainless-steel no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /services/stainless-steel no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/services/stainless-steel has title + description",
+      "ok": true,
+      "detail": "Stainless Steel Fabrication — Handrails, Gratings, Tanks & Skids | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/services/stainless-steel has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/services/stainless-steel"
+    },
+    {
+      "name": "desktop /projects loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /projects no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /projects images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/projects has title + description",
+      "ok": true,
+      "detail": "Projects | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/projects has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/projects"
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /projects/taweelah-gas-compressor-station no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/projects/taweelah-gas-compressor-station has title + description",
+      "ok": true,
+      "detail": "Taweelah Gas Compressor Station — Structural steel fabrication and erection | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/projects/taweelah-gas-compressor-station has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/projects/taweelah-gas-compressor-station"
+    },
+    {
+      "name": "desktop /quality loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /quality no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quality one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /quality images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quality no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quality no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/quality has title + description",
+      "ok": true,
+      "detail": "Quality and Certifications | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/quality has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/quality"
+    },
+    {
+      "name": "desktop /quote loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /quote no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quote one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /quote images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quote no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /quote no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/quote has title + description",
+      "ok": true,
+      "detail": "Request a Quote | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/quote has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/quote"
+    },
+    {
+      "name": "desktop /contact loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /contact no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /contact one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /contact images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /contact no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /contact no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/contact has title + description",
+      "ok": true,
+      "detail": "Contact the Workshop | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/contact has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/contact"
+    },
+    {
+      "name": "desktop /privacy loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /privacy no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /privacy one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /privacy images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /privacy no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /privacy no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/privacy has title + description",
+      "ok": true,
+      "detail": "Privacy Notice | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/privacy has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/privacy"
+    },
+    {
+      "name": "desktop /terms loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /terms no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /terms one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /terms images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /terms no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /terms no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/terms has title + description",
+      "ok": true,
+      "detail": "Website Terms | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/terms has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/terms"
+    },
+    {
+      "name": "desktop /blog loads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "desktop /blog no horizontal overflow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /blog one h1",
+      "ok": true,
+      "detail": "h1 count 1"
+    },
+    {
+      "name": "desktop /blog images have alt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /blog no broken images",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop /blog no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/blog has title + description",
+      "ok": true,
+      "detail": "Blog — Steel Fabrication Notes | Al Saqr Al Ahmar"
+    },
+    {
+      "name": "/blog has canonical",
+      "ok": true,
+      "detail": "http://localhost:3000/blog"
+    },
+    {
+      "name": "internal links (35) resolve",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "redirect /about.html",
+      "ok": true,
+      "detail": "308 /about"
+    },
+    {
+      "name": "redirect /certifications.html",
+      "ok": true,
+      "detail": "308 /quality"
+    },
+    {
+      "name": "redirect /privacy-policy",
+      "ok": true,
+      "detail": "308 /privacy"
+    },
+    {
+      "name": "redirect /contact.html",
+      "ok": true,
+      "detail": "308 /contact"
+    },
+    {
+      "name": "404 status and page",
+      "ok": true,
+      "detail": "404 This page isn't on the drawing"
+    },
+    {
+      "name": "mobile menu opens and navigates",
+      "ok": true,
+      "detail": "http://localhost:3100/projects"
+    },
+    {
+      "name": "mobile menu no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "skip link is first focus",
+      "ok": true,
+      "detail": "Skip to content"
+    },
+    {
+      "name": "reduced motion: nothing hidden",
+      "ok": true,
+      "detail": "0 hidden"
+    },
+    {
+      "name": "project filter narrows results",
+      "ok": true,
+      "detail": "7 → 2, http://localhost:3100/projects?sector=Oil+%26+gas"
+    },
+    {
+      "name": "project filter clears",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WhatsApp dialog lets visitor edit the message",
+      "ok": true,
+      "detail": "https://wa.me/971559270303?text=Test%20message%20about%20a%20pipe%20rack"
+    },
+    {
+      "name": "assistant identifies as AI and shows a usable state",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "quote form preselects service",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty submit shows error summary with focus",
+      "ok": true,
+      "detail": "Please correct these before sending:\n\nEnter your name.\nEnter the project location (city or site).\nDescribe the scope in "
+    },
+    {
+      "name": "disallowed file type rejected with message",
+      "ok": true,
+      "detail": "“virus.exe” is not a PDF, JPG or PNG."
+    },
+    {
+      "name": "oversized file rejected with message",
+      "ok": true,
+      "detail": "“big.pdf” is 11.0 MB; the limit is 10 MB per file."
+    },
+    {
+      "name": "valid PDF uploads with progress to 'Uploaded'",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid email caught",
+      "ok": true,
+      "detail": "Enter a valid email address."
+    },
+    {
+      "name": "submission returns a reference",
+      "ok": true,
+      "detail": "TEST-687496"
+    },
+    {
+      "name": "confirmation mentions the attachment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "quote journey no console errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "confirmation page without reference shows no success",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "robots.txt present",
+      "ok": true,
+      "detail": "User-Agent: * / Disallow: / / "
+    },
+    {
+      "name": "sitemap.xml present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "staging sends noindex header",
+      "ok": true,
+      "detail": "noindex, nofollow"
+    }
+  ]
+}

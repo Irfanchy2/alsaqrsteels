@@ -1,0 +1,162 @@
+/* UI/UX polish layer: motion tokens, drawing-in illustrations, focus, press
+   states, accordion and form feedback. All motion is off under reduced motion. */
+:root {
+  --dur-fast: 0.18s;
+  --dur-base: 0.35s;
+  --dur-slow: 0.7s;
+}
+
+/* Clear, consistent keyboard focus everywhere. */
+:where(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid var(--color-flame);
+  outline-offset: 3px;
+}
+.on-ink :where(a, button, summary, input, select, textarea):focus-visible {
+  outline-color: var(--color-amber);
+}
+
+/* Buttons: tactile press. */
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+  transition-duration: var(--dur-fast);
+}
+
+/* Comfortable tap targets on touch screens. */
+@media (pointer: coarse) {
+  .link-arrow {
+    min-height: 2.75rem;
+  }
+}
+
+/* Text links inside long-form copy: underline draws in from the left. */
+.prose a,
+.article a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
+  transition: background-size var(--dur-base) var(--ease-out-quart);
+}
+.prose a:hover,
+.prose a:focus-visible,
+.article a:hover,
+.article a:focus-visible {
+  background-size: 100% 1.5px;
+}
+
+/* FAQ accordion: answer eases in, open row is marked. */
+details > summary {
+  transition: color var(--dur-fast) ease;
+}
+details > summary:hover {
+  color: var(--color-accent);
+}
+details[open] > summary {
+  color: var(--color-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  details[open] > summary ~ * {
+    animation: fade-up 0.45s var(--ease-out-expo) both;
+  }
+}
+
+/* Form fields: visible focus and gentle invalid feedback. */
+.input {
+  transition:
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease;
+}
+.input:focus {
+  border-color: var(--color-flame);
+  box-shadow: 0 0 0 3px rgb(255 90 31 / 0.18);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .input[aria-invalid="true"] {
+    animation: field-nudge 0.3s ease;
+  }
+}
+@keyframes field-nudge {
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Line drawings draw themselves in when their card scrolls into view. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] .draw-in :is(path, line, rect, circle, ellipse) {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    transition: stroke-dashoffset 1.6s var(--ease-out-quart) 0.15s;
+  }
+  html.js [data-reveal].is-in .draw-in :is(path, line, rect, circle, ellipse) {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Showcase / capability tiles: lift, amber corner tick, arrow nudge. */
+.tile {
+  transition:
+    translate var(--dur-base) var(--ease-out-quart),
+    background-color var(--dur-base) ease;
+}
+.tile::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: 0;
+  height: 0;
+  border-top: 0 solid var(--color-amber);
+  border-inline-start: 0 solid transparent;
+  transition:
+    border-width var(--dur-base) var(--ease-out-quart);
+  pointer-events: none;
+}
+.tile:hover,
+.tile:focus-within {
+  translate: 0 -4px;
+  background-color: var(--color-ink-2);
+  z-index: 1;
+}
+.tile:hover::after,
+.tile:focus-within::after {
+  border-top-width: 18px;
+  border-inline-start-width: 18px;
+}
+
+/* Back-to-top control. */
+.to-top {
+  position: fixed;
+  inset-inline-start: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  border: 1px solid var(--color-line-ink);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base) ease,
+    transform var(--dur-base) var(--ease-out-quart),
+    background-color var(--dur-fast) ease;
+}
+.to-top[data-show="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.to-top:hover {
+  background: var(--color-flame);
+  color: var(--color-ink);
+}
+@media (max-width: 1023px) {
+  .to-top {
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}

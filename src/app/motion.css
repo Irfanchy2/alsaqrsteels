@@ -1,0 +1,284 @@
+/* Decorative motion, header behaviour, reveals, admin and article styles. */
+/* ==========================================================================
+   Yard motion kit
+   Everything here is decorative and switched off under reduced motion.
+   ========================================================================== */
+
+/* Hazard tape — amber/black diagonal band, slowly crawling. The stripes are
+   drawn on a wider pseudo-element that slides with transform, so the crawl
+   runs on the GPU compositor instead of repainting every frame. */
+.hazard {
+  height: 14px;
+  overflow: hidden;
+  contain: paint;
+  background: var(--color-ink);
+}
+.hazard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -40px;
+  background: repeating-linear-gradient(-45deg, var(--color-amber) 0 14px, var(--color-ink) 14px 28px);
+  background-size: 40px 40px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hazard::before {
+    animation: hazard-crawl 2.4s linear infinite;
+    will-change: transform;
+  }
+}
+@keyframes hazard-crawl {
+  to {
+    transform: translateX(40px);
+  }
+}
+
+/* Endless ticker. Content is duplicated once in markup (aria-hidden copy). */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  flex: none;
+  gap: 2.5rem;
+  padding-inline-end: 2.5rem;
+  min-width: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee__track {
+    animation: marquee 38s linear infinite;
+    will-change: transform;
+  }
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Hero headline: each line slides up from behind a mask on load. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+}
+.line-mask > span {
+  display: block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .line-mask > span {
+    animation: line-up 1s var(--ease-out-expo) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .fade-up {
+    animation: fade-up 0.9s var(--ease-out-expo) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes line-up {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/* Slow push-in on the hero photograph. */
+@media (prefers-reduced-motion: no-preference) {
+  .kenburns {
+    animation: kenburns 22s cubic-bezier(0.22, 1, 0.36, 1) both;
+    will-change: transform;
+  }
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Welding arc: a flickering glow point with sparks thrown off it. */
+.weld {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.weld__glow {
+  position: absolute;
+  left: -60px;
+  top: -60px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 244 214 / 0.95) 0%, rgb(255 170 60 / 0.55) 18%, rgb(255 90 31 / 0.18) 45%, transparent 70%);
+  will-change: opacity, transform;
+}
+.weld__spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 9px;
+  border-radius: 2px;
+  background: linear-gradient(#fff6d6, #ff9a3c);
+  opacity: 0;
+  transform-origin: 50% 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .weld__glow {
+    animation: arc-flicker 0.18s steps(2) infinite alternate, arc-breathe 3.2s ease-in-out infinite;
+  }
+  .weld__spark {
+    animation: spark 1.1s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+    animation-delay: var(--sd, 0s);
+  }
+}
+@keyframes arc-flicker {
+  from {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes arc-breathe {
+  0%,
+  100% {
+    scale: 0.85;
+  }
+  50% {
+    scale: 1.15;
+  }
+}
+@keyframes spark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a, 0deg)) translateY(0) scaleY(1);
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a, 0deg)) translateY(var(--dist, 90px)) scaleY(0.4);
+  }
+}
+
+/* Construction grid over dark sections. */
+.yard-grid {
+  background-image:
+    linear-gradient(to right, rgb(241 240 236 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(241 240 236 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Cards that lift with an orange edge. */
+.lift {
+  transition:
+    transform 0.35s var(--ease-out-quart),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -22px rgb(19 23 28 / 0.55);
+}
+.edge-draw {
+  position: relative;
+}
+.edge-draw::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: var(--color-flame);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-out-quart);
+  z-index: 2;
+}
+.edge-draw:hover::before,
+.edge-draw:focus-within::before {
+  transform: scaleX(1);
+}
+
+/* Reveal variants on top of the base [data-reveal] fade-up. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal="left"] {
+    transform: translateX(-24px);
+  }
+  html.js [data-reveal="right"] {
+    transform: translateX(24px);
+  }
+  html.js [data-reveal="scale"] {
+    transform: scale(0.96);
+  }
+  html.js [data-reveal="rule"] {
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 1;
+  }
+  html.js [data-reveal].is-in {
+    transform: none;
+  }
+}
+
+/* Header: transparent-to-solid on scroll, with a progress rail. */
+.site-header {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.site-header[data-scrolled="true"] {
+  background-color: rgb(19 23 28 / 0.92);
+  border-color: var(--color-line-ink);
+  box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.8);
+}
+.site-header__bar {
+  height: 5rem;
+  transition: height 0.35s var(--ease-out-quart);
+}
+.site-header[data-scrolled="true"] .site-header__bar {
+  height: 4rem;
+}
+.scroll-rail {
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+}
+.live-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,679 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Al Saqr Al Ahmar — "workshop drawing" design system
+   Palette tuned to the logo (red gear sampled at #BC2024, green wordmark).
+   ========================================================================== */
+
+@theme {
+  /* "Yard" palette — graphite and site-safety orange, hazard amber for
+     markings. Orange is a fill colour; orange TEXT on light grounds uses the
+     darker --color-accent so it keeps AA contrast. */
+  --color-paper: #eeeeea;
+  --color-paper-2: #e2e5e0;
+  --color-card: #f8f8f5;
+  --color-ink: #13171c;
+  --color-ink-2: #1b2027;
+  --color-ink-3: #262c34;
+  --color-slate: #333b45;
+  --color-steel: #727b84; /* lines, icons, large text only */
+  --color-steel-text: #545d66; /* body-size secondary text on paper */
+  --color-line: #d3d4ce;
+  --color-line-strong: #aeb1aa;
+  --color-flame: #ff5a1f; /* primary fills */
+  --color-flame-hover: #ff7440;
+  --color-accent: #c2410c; /* orange text on light */
+  --color-accent-hover: #9a3412;
+  --color-accent-on-ink: #ff6a33;
+  --color-amber: #f5b301;
+  --color-ok: #0c5a38;
+  --color-ok-bg: #e4efe8;
+  --color-warn: #8a5a00;
+  --color-warn-bg: #fbf1dc;
+  --color-danger: #a1161d;
+  --color-danger-bg: #f9e3e3;
+  --color-on-ink: #f1f0ec;
+  --color-on-ink-muted: #a3abb4;
+  --color-line-ink: #2f3741;
+  --color-whatsapp: #1f7a4d;
+
+  --font-display: var(--font-archivo), "Arial Narrow", Arial, sans-serif;
+  --font-sans: var(--font-plex), "Segoe UI", Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+  --font-arabic: var(--font-plex-arabic), "Segoe UI", Tahoma, sans-serif;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   2026 "Forge" theme — bold industrial dark for the public site.
+   Scoped to .site-theme so the staff CMS keeps the light palette above.
+   Every token keeps its name, so components switch over without changes:
+   "paper" is now the dark ground and "ink" the deepest black.
+   ========================================================================== */
+.site-theme {
+  --color-paper: #0c0d10;
+  --color-paper-2: #111317;
+  --color-card: #16191e;
+  --color-ink: #060708;
+  --color-ink-2: #121418;
+  --color-ink-3: #1c2026;
+  --color-slate: #242a31;
+  --color-steel: #6f7882;
+  --color-steel-text: #a2abb5;
+  --color-line: #252a31;
+  --color-line-strong: #3a414a;
+  --color-flame: #ff5a1f;
+  --color-flame-hover: #ff7440;
+  --color-accent: #ff6b35;
+  --color-accent-hover: #ff9466;
+  --color-accent-on-ink: #ff6b35;
+  --color-amber: #ffb020;
+  --color-brand: #d42a2f; /* logo gear red */
+  --color-ok: #4ade80;
+  --color-ok-bg: #0f2a1c;
+  --color-warn: #fbbf24;
+  --color-warn-bg: #2d2208;
+  --color-danger: #ff6b6b;
+  --color-danger-bg: #2e1214;
+  --color-on-ink: #f4f2ee;
+  --color-on-ink-muted: #a8b0ba;
+  --color-line-ink: #262b32;
+  --color-whatsapp: #1f8a55;
+
+  background: var(--color-paper);
+  color: var(--color-on-ink);
+  color-scheme: dark;
+}
+body:has(.site-theme) {
+  background: #0c0d10;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* clip (not hidden) keeps any sticky children working while side-sliding
+     reveal animations never cause sideways scroll. */
+  main,
+  footer[data-site-footer] {
+    overflow-x: clip;
+  }
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-stretch: 78%;
+    font-weight: 800;
+    letter-spacing: -0.005em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  h1,
+  h2 {
+    text-transform: uppercase;
+    line-height: 0.96;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-flame);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+  .on-ink :focus-visible {
+    outline-color: var(--color-amber);
+  }
+  img {
+    max-width: 100%;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Small mono eyebrow — orange on light, hazard amber on dark. */
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .label::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    background: currentColor;
+    flex: none;
+  }
+  .on-ink .label {
+    color: var(--color-amber);
+  }
+
+  .on-ink {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+
+
+  /* Buttons -------------------------------------------------------------- */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.35rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    border: 1.5px solid transparent;
+    border-radius: 0;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s var(--ease-out-quart),
+      box-shadow 0.25s ease;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+  .btn[disabled],
+  .btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-primary {
+    background: var(--color-flame);
+    color: var(--color-ink);
+    box-shadow: 0 0 0 0 rgb(255 90 31 / 0);
+  }
+  .btn-primary:hover {
+    background: var(--color-flame-hover);
+    box-shadow: 0 10px 28px -10px rgb(255 90 31 / 0.65);
+  }
+  /* Light sweep across primary buttons on hover. */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s var(--ease-out-quart);
+  }
+  .btn-primary:hover::after {
+    transform: translateX(120%);
+  }
+  .btn-dark {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+  .btn-dark:hover {
+    background: var(--color-ink-3);
+  }
+  .btn-secondary {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .btn-secondary:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .on-ink .btn-secondary,
+  .btn-secondary-ink {
+    border-color: rgb(241 240 236 / 0.4);
+    color: var(--color-on-ink);
+  }
+  .on-ink .btn-secondary:hover,
+  .btn-secondary-ink:hover {
+    background: var(--color-on-ink);
+    color: var(--color-ink);
+    border-color: var(--color-on-ink);
+  }
+  .btn-whatsapp {
+    background: var(--color-whatsapp);
+    color: #fff;
+  }
+  .btn-whatsapp:hover {
+    background: #17603c;
+  }
+  .btn-sm {
+    min-height: 2.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: gap 0.25s var(--ease-out-quart), color 0.2s ease;
+  }
+  .link-arrow:hover {
+    gap: 0.9rem;
+    color: var(--color-accent-hover);
+  }
+  .on-ink .link-arrow {
+    color: var(--color-amber);
+  }
+  .on-ink .link-arrow:hover {
+    color: #ffd24d;
+  }
+
+  /* Prose for long-form content (blog, legal) ------------------------------ */
+  .prose {
+    max-width: 68ch;
+    color: var(--color-ink);
+  }
+  .prose > * + * {
+    margin-top: 1.1em;
+  }
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 2.2em;
+  }
+  .prose h3 {
+    font-size: 1.2rem;
+    margin-top: 1.8em;
+  }
+  .prose ul,
+  .prose ol {
+    padding-inline-start: 1.25rem;
+  }
+  .prose ul {
+    list-style: square;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .prose strong {
+    font-weight: 600;
+  }
+  .prose blockquote {
+    border-inline-start: 3px solid var(--color-accent);
+    padding-inline-start: 1rem;
+    color: var(--color-steel-text);
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose th,
+  .prose td {
+    border: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem;
+    text-align: start;
+  }
+
+  /* Form controls ---------------------------------------------------------- */
+  .field-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+  .field-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-steel-text);
+    margin-top: 0.35rem;
+  }
+  .field-error {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-danger);
+    margin-top: 0.4rem;
+    font-weight: 500;
+  }
+  .input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.85rem;
+    background: #fff;
+    border: 1.5px solid var(--color-line-strong);
+    border-radius: 2px;
+    font: inherit;
+    color: var(--color-ink);
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .input::placeholder {
+    color: #8a929a;
+  }
+  .input:hover {
+    border-color: var(--color-steel);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-ink);
+    box-shadow: 0 0 0 3px rgb(255 90 31 / 0.25);
+  }
+  .input[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  textarea.input {
+    min-height: 9rem;
+    resize: vertical;
+  }
+  select.input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23151A20' stroke-width='1.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-inline-end: 2.5rem;
+  }
+  html[dir="rtl"] select.input {
+    background-position: left 0.9rem center;
+  }
+
+  /* Blueprint grid used behind illustrations and title blocks. */
+  .drawing-grid {
+    background-color: var(--color-card);
+    background-image:
+      linear-gradient(to right, rgb(114 123 132 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(114 123 132 / 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .on-ink .drawing-grid,
+  .drawing-grid-ink {
+    background-color: var(--color-ink-2);
+    background-image:
+      linear-gradient(to right, rgb(242 240 234 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(242 240 234 / 0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* Scroll reveal: only when JS has marked the document, so content is never
+   hidden for visitors without JavaScript or with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s var(--ease-out-quart),
+      transform 0.6s var(--ease-out-quart);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  html.js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Native <dialog> backdrop for gallery, WhatsApp review and menus. */
+dialog::backdrop {
+  background: rgb(10 12 15 / 0.78);
+}
+dialog {
+  color: inherit;
+}
+
+/* Print: keep contact details and content, drop chrome. */
+@media print {
+  header[data-site-header],
+  footer[data-site-footer],
+  [data-no-print] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}
+
+/* Unlayered so they win over Tailwind utilities: secondary text and hairlines
+   inside dark sections keep readable contrast. */
+.on-ink .text-steel-text {
+  color: var(--color-on-ink-muted);
+}
+.on-ink .border-line {
+  border-color: var(--color-line-ink);
+}
+
+/* ==========================================================================
+   Forge theme — component adjustments for the dark ground.
+   ========================================================================== */
+.site-theme .btn-secondary {
+  border-color: rgb(244 242 238 / 0.35);
+  color: var(--color-on-ink);
+}
+.site-theme .btn-secondary:hover {
+  background: var(--color-on-ink);
+  border-color: var(--color-on-ink);
+  color: var(--color-ink);
+}
+.site-theme .btn-dark {
+  background: var(--color-ink-3);
+  border-color: var(--color-line-strong);
+}
+.site-theme .btn-dark:hover {
+  background: var(--color-flame);
+  border-color: var(--color-flame);
+  color: var(--color-ink);
+}
+.site-theme .btn-primary {
+  background: linear-gradient(100deg, var(--color-flame) 0%, #ff7a2f 100%);
+  color: #0a0a0a;
+  font-weight: 600;
+}
+.site-theme .btn-primary:hover {
+  background: linear-gradient(100deg, #ff6a2c 0%, var(--color-amber) 100%);
+  box-shadow: 0 12px 34px -10px rgb(255 90 31 / 0.7);
+}
+.site-theme .prose {
+  color: var(--color-on-ink);
+}
+.site-theme .input {
+  background: #0f1114;
+  color: var(--color-on-ink);
+  border-color: var(--color-line-strong);
+}
+.site-theme .input::placeholder {
+  color: #6b737c;
+}
+.site-theme .input:hover {
+  border-color: var(--color-steel);
+}
+.site-theme .input:focus {
+  border-color: var(--color-flame);
+}
+.site-theme select.input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23F4F2EE' stroke-width='1.8'/%3E%3C/svg%3E");
+}
+.site-theme select.input option {
+  background: #16191e;
+}
+.site-theme .lift:hover {
+  box-shadow: 0 22px 50px -24px rgb(0 0 0 / 0.9);
+  border-color: rgb(255 90 31 / 0.45);
+}
+.site-theme .text-ink {
+  color: var(--color-on-ink);
+}
+.site-theme :focus-visible {
+  outline-color: var(--color-amber);
+}
+
+/* Photo treatments ------------------------------------------------------- */
+/* Darkens a photo from the bottom so text set over it stays readable. */
+.photo-shade {
+  background:
+    linear-gradient(to top, rgb(6 7 8 / 0.96) 0%, rgb(6 7 8 / 0.55) 45%, rgb(6 7 8 / 0.15) 100%);
+}
+/* Warm weld-glow wash laid over dark photos. */
+.forge-glow {
+  background:
+    radial-gradient(60% 70% at 85% 20%, rgb(255 90 31 / 0.28), transparent 70%),
+    radial-gradient(50% 60% at 10% 100%, rgb(212 42 47 / 0.22), transparent 70%);
+  mix-blend-mode: screen;
+}
+/* Fine film grain on hero photos so gradients do not band. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Gradient text for the spark-coloured hero line. */
+.text-spark {
+  background: linear-gradient(95deg, #ff4a1c 0%, #ff7a2f 45%, #ffb020 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Thin red-to-amber rule used as a section divider. */
+.spark-rule {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-brand) 20%, var(--color-flame) 50%, var(--color-amber) 80%, transparent);
+}
+/* Photo tiles that zoom slightly on hover. */
+.photo-zoom img {
+  transition: transform 1.2s var(--ease-out-quart), filter 0.6s ease;
+}
+.photo-zoom:hover img,
+.photo-zoom:focus-within img {
+  transform: scale(1.06);
+}
+
+/* Floating sparks over the home hero (pure CSS; hidden under reduced motion). */
+.sparks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sparks i {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffb020;
+  box-shadow: 0 0 8px 2px rgb(255 120 40 / 0.8);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sparks i {
+    animation: spark-rise var(--t, 7s) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+}
+@keyframes spark-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--dx, 40px), -90vh, 0);
+    opacity: 0;
+  }
+}
