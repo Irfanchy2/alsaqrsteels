@@ -21,6 +21,9 @@ const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   env: PUBLIC_DEFAULTS,
+  // Shared build servers (Hostinger) cap processes and memory: build with one
+  // worker so static generation never needs more than the host allows.
+  experimental: { cpus: 1, webpackBuildWorker: false },
   images: {
     qualities: [75],
     formats: ["image/avif", "image/webp"],

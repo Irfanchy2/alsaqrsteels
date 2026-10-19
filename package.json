@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/make-logo.mjs && next build",
+    "build": "node scripts/make-logo.mjs && next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "node scripts/e2e.mjs",
