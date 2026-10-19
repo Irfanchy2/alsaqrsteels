@@ -37,7 +37,7 @@ export default function ProjectCard({
   const { image: photo, representative } = projectPhoto(project, index);
   const code = project.code?.replace(/-/, " / ");
   return (
-    <article className="edge-draw group relative flex aspect-[4/3.4] h-full min-h-[19rem] border border-line-ink flex-col justify-end overflow-hidden bg-ink-2 text-on-ink">
+    <article className="edge-draw group relative flex aspect-[4/3.4] h-full w-full min-w-0 min-h-[17rem] border border-line-ink flex-col justify-end overflow-hidden bg-ink-2 text-on-ink">
       <Image
         src={photo.src}
         alt={representative ? "" : photo.alt}

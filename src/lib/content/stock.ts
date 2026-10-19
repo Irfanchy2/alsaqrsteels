@@ -40,11 +40,12 @@ const SERVICE_PHOTO: Record<string, ImageRef> = {
   "stainless-steel": STOCK.stainlessPlant,
 };
 
-const SECTOR_PHOTO: Record<string, ImageRef> = {
-  "Oil & gas": STOCK.gasFlare,
-  Infrastructure: STOCK.cranesDusk,
-  Industrial: STOCK.factoryHall,
-  "Residential & commercial": STOCK.steelRoofFrame,
+// Several per sector, so neighbouring cards in one sector differ.
+const SECTOR_PHOTOS: Record<string, ImageRef[]> = {
+  "Oil & gas": [STOCK.gasFlare, STOCK.pipeNetwork, STOCK.pipelineValves],
+  Infrastructure: [STOCK.cranesDusk, STOCK.steelGrid, STOCK.steelErection],
+  Industrial: [STOCK.factoryHall, STOCK.steelMill, STOCK.weldingSparks],
+  "Residential & commercial": [STOCK.steelRoofFrame, STOCK.steelGrid, STOCK.cranesDusk],
 };
 
 const ROTATION = [STOCK.steelGrid, STOCK.weldingSparks, STOCK.pipeNetwork, STOCK.steelMill, STOCK.cncSparks, STOCK.grinderSparks];
@@ -65,5 +66,6 @@ export function servicePhoto(service: Pick<Service, "slug" | "image">, i = 0): I
  */
 export function projectPhoto(project: Pick<Project, "images" | "sector">, i = 0): { image: ImageRef; representative: boolean } {
   if (project.images[0]) return { image: project.images[0], representative: false };
-  return { image: SECTOR_PHOTO[project.sector] ?? ROTATION[i % ROTATION.length], representative: true };
+  const pool = SECTOR_PHOTOS[project.sector] ?? ROTATION;
+  return { image: pool[i % pool.length], representative: true };
 }
