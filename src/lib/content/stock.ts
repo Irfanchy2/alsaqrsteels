@@ -119,14 +119,38 @@ export function projectImages(project: Pick<Project, "slug" | "images">): ImageR
   return project.images.length ? project.images : PROJECT_GALLERY[project.slug] ?? [];
 }
 
-/** Photos for the "made to order" showcase items. */
-export const SHOWCASE_PHOTO: Record<string, ImageRef> = {
-  stair: { src: "/images/showcase/staircase.jpg", alt: "Steel staircase with handrails", width: 1400, height: 859 },
-  ladder: { src: "/images/showcase/ladder.jpg", alt: "Fixed steel access ladder on a building", width: 1400, height: 933 },
-  shed: { src: "/images/showcase/parking-shed.jpg", alt: "Long steel shade structure on columns", width: 1400, height: 933 },
-  sunshade: { src: "/images/showcase/sun-shade.jpg", alt: "Shade sails on steel posts", width: 1400, height: 942 },
-  canopy: { src: "/images/showcase/canopy.jpg", alt: "Curved steel canopy over a walkway", width: 1400, height: 926 },
-  pergola: { src: "/images/showcase/pergola.jpg", alt: "Modern black steel pergola", width: 1400, height: 933 },
-  gate: { src: "/images/showcase/gate.jpg", alt: "Decorative steel gate", width: 1400, height: 939 },
-  fence: { src: "/images/showcase/fence.jpg", alt: "Black steel boundary fence", width: 1400, height: 933 },
+// Pixel sizes of /images/showcase/<key>-<n>.jpg, in file order.
+const SHOWCASE_SIZES: Record<string, [number, number][]> = {
+  canopy: [[1200, 793], [1200, 799], [1200, 846], [1200, 799]],
+  fence: [[1200, 799], [1200, 800], [1200, 900], [1200, 799], [1200, 799], [1200, 799]],
+  gate: [[1200, 805], [1200, 799], [1200, 799], [1200, 799], [1200, 799], [1200, 799]],
+  ladder: [[1200, 799], [1200, 799], [1200, 799], [1200, 799], [1200, 799], [1200, 799]],
+  pergola: [[1200, 799], [1200, 799], [1200, 900], [1200, 806], [1200, 901], [1200, 900]],
+  shed: [[1200, 799], [1200, 799], [1200, 799], [1200, 795], [1200, 800], [1200, 799]],
+  stair: [[1200, 736], [1200, 857], [1200, 799], [1200, 799], [1200, 799], [1200, 819]],
+  sunshade: [[1200, 807], [1200, 799], [1200, 804], [1200, 799], [1200, 900], [1200, 795]],
 };
+
+const SHOWCASE_ALT: Record<string, string> = {
+  stair: "Steel staircase",
+  ladder: "Steel access ladder",
+  shed: "Steel parking shed",
+  sunshade: "Shade structure on steel posts",
+  canopy: "Steel canopy",
+  pergola: "Steel pergola",
+  gate: "Steel gate",
+  fence: "Steel fence",
+};
+
+/** Photo sets for the "made to order" showcase items (first photo is the cover). */
+export const SHOWCASE_PHOTOS: Record<string, ImageRef[]> = Object.fromEntries(
+  Object.entries(SHOWCASE_SIZES).map(([key, list]) => [
+    key,
+    list.map(([width, height], i) => ({
+      src: `/images/showcase/${key}-${i + 1}.jpg`,
+      alt: `${SHOWCASE_ALT[key]} ${i + 1} of ${list.length}`,
+      width,
+      height,
+    })),
+  ])
+);
