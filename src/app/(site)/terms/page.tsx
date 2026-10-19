@@ -14,7 +14,7 @@ export default async function TermsPage() {
   const company = await getCompany();
   return (
     <>
-      <PageHero image={null} crumbs={[{ name: "Terms", href: "/terms" }]} label="Legal" title="Website terms" lede="Last updated: 26 September 2026" />
+      <PageHero crumbs={[{ name: "Terms", href: "/terms" }]} label="Legal" title="Website terms" lede="Last updated: 26 September 2026" />
       <section className="py-14 lg:py-20">
         <div className="wrap">
           <div className="prose">

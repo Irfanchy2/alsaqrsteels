@@ -24,7 +24,7 @@ export default function SiteHeader({ company }: { company: Company }) {
             height={208}
             priority
             className="site-logo__img h-full w-auto"
-            sizes="(min-width: 1024px) 150px, 130px"
+            sizes="(min-width: 1024px) 200px, 150px"
           />
         </Link>
 
@@ -33,15 +33,14 @@ export default function SiteHeader({ company }: { company: Company }) {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link href="/quote" className="btn btn-secondary-ink btn-sm hidden xl:inline-flex">
-            Request a Quote
-          </Link>
           {phone ? (
-            <a href={`tel:${phone.e164}`} className="btn btn-primary btn-sm hidden sm:inline-flex" aria-label={`Call ${phone.display}`}>
-              <span className="live-dot" aria-hidden="true" />
+            <a href={`tel:${phone.e164}`} className="hidden font-mono text-[0.9rem] text-on-ink-muted transition-colors hover:text-on-ink xl:inline" aria-label={`Call ${phone.display}`}>
               {phone.display}
             </a>
           ) : null}
+          <Link href="/quote" className="btn btn-primary btn-sm hidden sm:inline-flex">
+            Request a quote
+          </Link>
           <MobileMenu items={[...NAV]} phone={phone ?? null} whatsapp={company.whatsapp} />
         </div>
       </div>

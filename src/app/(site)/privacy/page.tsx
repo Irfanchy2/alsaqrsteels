@@ -14,7 +14,7 @@ export default async function PrivacyPage() {
   const company = await getCompany();
   return (
     <>
-      <PageHero image={null} crumbs={[{ name: "Privacy", href: "/privacy" }]} label="Legal" title="Privacy notice" lede="Last updated: 26 September 2026" />
+      <PageHero crumbs={[{ name: "Privacy", href: "/privacy" }]} label="Legal" title="Privacy notice" lede="Last updated: 26 September 2026" />
       <section className="py-14 lg:py-20">
         <div className="wrap">
           <div className="prose">

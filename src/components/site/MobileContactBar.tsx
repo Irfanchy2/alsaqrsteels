@@ -40,8 +40,8 @@ export default function MobileContactBar({ company }: { company: Company }) {
         />
       ) : null}
       {!onQuote ? (
-        <Link href="/quote" className="flex min-h-14 items-center justify-center bg-flame font-mono text-sm font-medium text-ink">
-          Request a Quote
+        <Link href="/quote" className="flex min-h-14 items-center justify-center whitespace-nowrap bg-flame px-2 text-sm font-semibold text-white">
+          Get a quote
         </Link>
       ) : null}
     </div>

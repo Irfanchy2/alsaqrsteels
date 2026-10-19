@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -8,7 +8,6 @@ import Illustration from "@/components/ui/Illustration";
 import ProjectCard, { StatusBadge } from "@/components/ui/ProjectCard";
 import Gallery from "@/components/projects/Gallery";
 import EnquiryCta from "@/components/site/EnquiryCta";
-import { projectPhoto } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -52,17 +51,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (project.clientName) facts.splice(2, 0, ["Client", project.clientName]);
   if (project.year) facts.push(["Year", project.year]);
 
-  const heroPhoto = projectPhoto(project).image;
-
   return (
     <>
-      <section className="on-ink grain relative -mt-20 overflow-hidden pt-20">
-        <div className="absolute inset-0" aria-hidden="true">
-          <Image src={heroPhoto.src} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-40" />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
-          <div className="forge-glow absolute inset-0" />
-        </div>
+      <section className="relative border-b border-line bg-ink">
         <div className="wrap relative pb-14 pt-10 lg:pb-20 lg:pt-14">
           <Breadcrumbs onInk items={[{ name: "Projects", href: "/projects" }, { name: project.title, href: `/projects/${project.slug}` }]} />
           <div className="mt-10 grid gap-10 lg:grid-cols-12">
@@ -90,7 +81,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </dl>
           </div>
         </div>
-        <div className="spark-rule relative" aria-hidden="true" />
       </section>
 
       <section aria-labelledby="photos-title" className="py-14 lg:py-20">

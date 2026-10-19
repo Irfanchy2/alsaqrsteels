@@ -8,7 +8,6 @@ import FaqList from "@/components/ui/FaqList";
 import SectionHeading from "@/components/ui/SectionHeading";
 import CapabilitiesGrid from "@/components/services/CapabilitiesGrid";
 import EnquiryCta from "@/components/site/EnquiryCta";
-import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -25,7 +24,6 @@ export default async function ServicesPage() {
   return (
     <>
       <PageHero
-        image={STOCK.weldingSparks}
         crumbs={[{ name: "Services", href: "/services" }]}
         label="Services"
         title="Engineered in steel. Built to last."

@@ -5,7 +5,6 @@ import { getCompany, getCertifications, getDocuments } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import EnquiryCta from "@/components/site/EnquiryCta";
-import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -46,7 +45,6 @@ export default async function QualityPage() {
   return (
     <>
       <PageHero
-        image={STOCK.grindingWorker}
         crumbs={[{ name: "Quality", href: "/quality" }]}
         label="Quality and certifications"
         title="Quality that starts at the drawing board"

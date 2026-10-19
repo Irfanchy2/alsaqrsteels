@@ -36,14 +36,11 @@ export default function HeaderShell({ children }: { children: React.ReactNode })
       ref={ref}
       data-site-header
       data-scrolled={scrolled ? "true" : "false"}
-      className={`site-header on-ink sticky top-0 z-40 border-b transition-colors duration-300 ${
-        scrolled
-          ? "border-white/10 bg-ink/85 backdrop-blur-md supports-[backdrop-filter]:bg-ink/75"
-          : "border-transparent bg-gradient-to-b from-ink/80 to-transparent"
+      className={`site-header on-ink sticky top-0 z-40 border-b bg-ink/95 backdrop-blur-md transition-colors duration-300 supports-[backdrop-filter]:bg-ink/85 ${
+        scrolled ? "border-line" : "border-transparent"
       }`}
     >
       {children}
-      <span aria-hidden="true" className="scroll-rail absolute inset-x-0 bottom-0 h-[2px] bg-flame" />
-    </header>
+          </header>
   );
 }

@@ -6,7 +6,6 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import FaqList from "@/components/ui/FaqList";
 import ContactLink from "@/components/site/ContactLink";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
-import { STOCK } from "@/lib/content/stock";
 
 export const revalidate = 60;
 
@@ -22,7 +21,6 @@ export default async function ContactPage() {
   return (
     <>
       <PageHero
-        image={STOCK.cranesDusk}
         crumbs={[{ name: "Contact", href: "/contact" }]}
         label="Contact"
         title="Talk to the workshop"

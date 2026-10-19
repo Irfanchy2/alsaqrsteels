@@ -33,7 +33,7 @@ export const STOCK = {
 } as const;
 
 const SERVICE_PHOTO: Record<string, ImageRef> = {
-  "steel-structures": STOCK.steelErection,
+  "steel-structures": STOCK.steelRoofFrame,
   "pipeline-welding": STOCK.pipelineValves,
   "laser-cnc-cutting": STOCK.laserCutter,
   "storage-containers": STOCK.containerYard,
