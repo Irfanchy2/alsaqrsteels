@@ -721,3 +721,25 @@ dialog {
     min-height: 3rem;
   }
 }
+
+/* Welding electrode-holder cursor (mouse and trackpad only). The hotspot is
+   the glowing rod tip at the top-left, where click sparks start. */
+@media (pointer: fine) {
+  .site-theme,
+  .site-theme a,
+  .site-theme button,
+  .site-theme summary,
+  .site-theme label,
+  .site-theme select,
+  .site-theme [role="button"] {
+    cursor: url("/cursors/welding-holder.svg") 3 3, auto;
+  }
+  .site-theme input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  .site-theme textarea {
+    cursor: text;
+  }
+  .site-theme [disabled],
+  .site-theme [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}

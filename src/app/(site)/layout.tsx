@@ -8,6 +8,7 @@ import RevealObserver from "@/components/site/RevealObserver";
 import { IllustrationDefs } from "@/components/ui/Illustration";
 import { JsonLd, organizationLd } from "@/components/site/JsonLd";
 import Assistant from "@/components/assistant/AssistantLazy";
+import WeldSparks from "@/components/site/WeldSparks";
 
 // Public pages are served from cache and refreshed on every admin save; this
 // is the fallback so no page is ever more than a minute behind the CMS.
@@ -34,6 +35,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       <PageViews />
       <BackToTop />
       <RevealObserver />
+      <WeldSparks />
       <JsonLd data={organizationLd(company)} />
     </div>
   );
