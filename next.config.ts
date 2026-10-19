@@ -1,13 +1,26 @@
 import type { NextConfig } from "next";
 
-const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-  : "ajurellftenxollyfahb.supabase.co";
+// Public defaults, so a host with no environment variables configured (e.g. a
+// fresh Hostinger Node.js app) still builds and runs. These are the same
+// browser-safe values as .env.local.example; anything set on the host wins.
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ajurellftenxollyfahb.supabase.co";
+const PUBLIC_DEFAULTS = {
+  NEXT_PUBLIC_SUPABASE_URL: SUPABASE_URL,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY:
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_wZ3tx4ZXlWG585K_8CaObA_OJofFRrm",
+  NEXT_PUBLIC_MEDIA_BASE: process.env.NEXT_PUBLIC_MEDIA_BASE ?? `${SUPABASE_URL}/storage/v1/object/public/media`,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://alsaqrsteels.com",
+};
+// Server code reads process.env directly at runtime, so fill the same gaps there.
+for (const [k, v] of Object.entries(PUBLIC_DEFAULTS)) process.env[k] ??= v;
+
+const supabaseHost = new URL(SUPABASE_URL).hostname;
 
 const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  env: PUBLIC_DEFAULTS,
   images: {
     qualities: [75],
     formats: ["image/avif", "image/webp"],
