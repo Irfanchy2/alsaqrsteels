@@ -48,7 +48,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     <>
       <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]">
         <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.3" aria-hidden="true">
-          <Image src={serviceStock(service).src} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-35" />
+          <Image src={serviceStock(service).src} alt="" fill priority sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="kenburns object-cover opacity-35" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
           <div className="forge-glow absolute inset-0" />

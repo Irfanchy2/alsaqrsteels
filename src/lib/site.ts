@@ -8,9 +8,12 @@ export const SITE_URL = (
     : "http://localhost:3000")
 ).replace(/\/$/, "");
 
-// Search engines are kept out unless this is explicitly switched on for the
-// real domain. Staging and preview deployments stay noindex.
-export const INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
+// Search engines may index the site only on its real domain. Any other
+// address (the Hostinger test domain, previews, localhost) is noindex. Decided
+// per request from the Host header, so no hosting setting can be forgotten.
+export const PRODUCTION_HOSTS = ["alsaqrsteels.com", "www.alsaqrsteels.com"];
+export const isProductionHost = (host: string | null | undefined) =>
+  !!host && PRODUCTION_HOSTS.includes(host.split(":")[0].toLowerCase());
 
 // Arabic UI is prepared but hidden until reviewed translations exist.
 export const ARABIC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_ARABIC === "true";

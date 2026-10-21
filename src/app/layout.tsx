@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
-import { SITE_URL, INDEXABLE } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 import "./motion.css";
 import "./motion2.css";
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   description:
     "Structural steel, pipeline welding, laser and CNC cutting, storage containers and stainless steel fabrication from Musaffah Industrial 44, Abu Dhabi.",
   applicationName: "Al Saqr Al Ahmar",
-  robots: INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
+  robots: { index: true, follow: true, "max-image-preview": "large" },
   openGraph: {
     type: "website",
     siteName: NAME,

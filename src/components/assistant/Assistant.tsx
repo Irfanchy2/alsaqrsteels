@@ -177,7 +177,7 @@ export default function Assistant({ services }: { services: ServiceOption[] }) {
         className="fixed bottom-[4.75rem] end-4 z-30 inline-flex min-h-12 items-center gap-2 border border-ink bg-paper px-4 text-sm font-semibold shadow-lg transition-colors hover:bg-ink hover:text-paper lg:bottom-6 lg:end-6"
         aria-haspopup="dialog"
       >
-        <span className="bg-ink px-1.5 py-0.5 font-mono text-[0.65rem] tracking-wider text-paper" aria-hidden="true">
+        <span className="bg-ink px-1.5 py-0.5 font-mono text-[0.65rem] tracking-wider text-on-ink" aria-hidden="true">
           AI
         </span>
         Project Assistant
@@ -196,7 +196,7 @@ export default function Assistant({ services }: { services: ServiceOption[] }) {
             <div>
               <h2 id={`${id}-title`} className="flex items-center gap-2 text-lg font-bold">
                 Al Saqr Project Assistant
-                <span className="bg-ink px-1.5 py-0.5 font-mono text-[0.65rem] font-medium tracking-wider text-paper">AI</span>
+                <span className="bg-ink px-1.5 py-0.5 font-mono text-[0.65rem] font-medium tracking-wider text-on-ink">AI</span>
               </h2>
               <p className="mt-0.5 text-sm text-steel-text">Automated assistant — not a member of staff</p>
             </div>

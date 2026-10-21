@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <header className="on-ink relative overflow-hidden">
         {post.image ? (
           <>
-            <Image src={post.image} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-35" />
+            <Image src={post.image} alt="" fill priority sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="kenburns object-cover opacity-35" />
             <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/40" />
           </>
         ) : null}

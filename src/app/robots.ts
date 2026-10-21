@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, INDEXABLE } from "@/lib/site";
+import { headers } from "next/headers";
+import { SITE_URL, isProductionHost } from "@/lib/site";
 
-// Staging and preview deployments are closed to crawlers. Set
-// NEXT_PUBLIC_SITE_INDEXABLE=true only on the production domain.
-export default function robots(): MetadataRoute.Robots {
-  if (!INDEXABLE) {
+// Only the real domain is open to crawlers; test domains and previews are not.
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const host = (await headers()).get("host");
+  if (!isProductionHost(host)) {
     return { rules: [{ userAgent: "*", disallow: "/" }] };
   }
   return {

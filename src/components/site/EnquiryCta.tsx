@@ -24,7 +24,7 @@ export default function EnquiryCta({
   return (
     <section aria-labelledby="cta-title" className="on-ink relative overflow-hidden border-t border-line">
       <div className="absolute inset-0" aria-hidden="true">
-        <Image src={STOCK.weldingSparks.src} alt="" fill sizes="100vw" className="object-cover opacity-40" />
+        <Image src={STOCK.weldingSparks.src} alt="" fill sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/50" />
         <div className="forge-glow absolute inset-0" />
       </div>

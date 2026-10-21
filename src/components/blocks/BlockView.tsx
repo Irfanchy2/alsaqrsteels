@@ -158,7 +158,7 @@ export default function BlockView({ block, data, editing = false }: { block: Blo
       return (
         <section className="on-ink relative overflow-hidden">
           <div className="absolute inset-x-0 -bottom-[14%] -top-[14%]" data-parallax="0.2" aria-hidden="true">
-            {url ? <Image src={url} alt="" fill sizes="100vw" className="object-cover opacity-50" /> : null}
+            {url ? <Image src={url} alt="" fill sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="object-cover opacity-50" /> : null}
             <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/20" />
           </div>
           <div className="wrap relative py-24 lg:py-32">

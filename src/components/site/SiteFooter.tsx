@@ -11,7 +11,7 @@ export default function SiteFooter({ company, services }: { company: Company; se
     <footer data-site-footer className="on-ink relative overflow-hidden border-t border-line">
       <div className="spark-rule" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <Image src={STOCK.steelGrid.src} alt="" fill sizes="100vw" className="object-cover opacity-[0.07] grayscale" />
+        <Image src={STOCK.steelGrid.src} alt="" fill sizes="50vw" quality={30} className="object-cover opacity-[0.07] grayscale" />
         <div className="absolute -top-40 start-1/4 h-80 w-[40rem] rounded-full bg-flame/10 blur-3xl" />
       </div>
       <p

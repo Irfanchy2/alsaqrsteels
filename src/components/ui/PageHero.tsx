@@ -25,7 +25,7 @@ export default function PageHero({
     <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]">
       {image ? (
         <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.3" aria-hidden="true">
-          <Image src={image.src} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-55" />
+          <Image src={image.src} alt="" fill priority sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="kenburns object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-ink/60" />
           <div className="forge-glow absolute inset-0" />

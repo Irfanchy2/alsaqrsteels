@@ -93,7 +93,7 @@ export default async function HomePage() {
               alt=""
               fill
               priority
-              sizes="100vw"
+              sizes="(max-width: 768px) 70vw, 100vw" quality={50}
               className="kenburns object-cover object-[60%_40%] opacity-70"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10" />
@@ -167,7 +167,7 @@ export default async function HomePage() {
               <ul key={copy} className="marquee__track" aria-hidden={copy === 1 ? true : undefined}>
                 {ticker.map((t, i) => (
                   <li key={`${copy}-${i}`} className="flex items-center gap-10 whitespace-nowrap">
-                    <span className="font-display text-xl font-extrabold uppercase [font-stretch:78%]">{t}</span>
+                    <span className="font-display text-xl font-extrabold uppercase text-[#0a0a0a] [font-stretch:78%]">{t}</span>
                     <span aria-hidden="true" className="h-2 w-2 rotate-45 bg-ink" />
                   </li>
                 ))}
@@ -324,7 +324,7 @@ export default async function HomePage() {
         {/* Full-bleed statement band ------------------------------------------- */}
         {pg.visible("band") ? <section aria-labelledby="band-title" className="on-ink relative overflow-hidden">
           <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.22" aria-hidden="true">
-            <Image src={bandImage} alt="" fill sizes="100vw" className="parallax object-cover opacity-60" />
+            <Image src={bandImage} alt="" fill sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="parallax object-cover opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/20" />
             <div className="forge-glow absolute inset-0" />
           </div>
@@ -495,7 +495,7 @@ export default async function HomePage() {
         {/* Contact + quick quote, over a spark photograph ----------------------- */}
         {pg.visible("contact") ? <section aria-labelledby="contact-title" className="on-ink relative overflow-hidden py-24 lg:py-32">
           <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.18" aria-hidden="true">
-            <Image src={STOCK.grinderSparks.src} alt="" fill sizes="100vw" className="object-cover opacity-35" />
+            <Image src={STOCK.grinderSparks.src} alt="" fill sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="object-cover opacity-35" />
             <div className="absolute inset-0 bg-ink/70" />
             <div className="forge-glow absolute inset-0" />
           </div>

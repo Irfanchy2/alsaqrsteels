@@ -603,6 +603,13 @@ dialog {
 .site-theme .text-ink {
   color: var(--color-on-ink);
 }
+/* …except on orange, where text must stay dark to be readable (WCAG AA). */
+.site-theme .bg-flame.text-ink,
+.site-theme .bg-flame .text-ink,
+.site-theme .bg-amber.text-ink,
+.site-theme .bg-flame:not([class*="text-"]) {
+  color: #0a0a0a;
+}
 .site-theme :focus-visible {
   outline-color: var(--color-amber);
 }

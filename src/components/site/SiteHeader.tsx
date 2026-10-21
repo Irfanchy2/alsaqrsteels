@@ -24,6 +24,8 @@ export default function SiteHeader({ company, extraNav = [] }: { company: Compan
             width={480}
             height={208}
             priority
+            fetchPriority="high"
+            unoptimized
             className="site-logo__img h-full w-auto"
             sizes="(min-width: 1024px) 200px, 150px"
           />

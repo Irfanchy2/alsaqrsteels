@@ -27,7 +27,7 @@ export default function NotFoundContent() {
         className="on-ink grain relative -mt-[5.5rem] flex min-h-[100svh] items-center overflow-hidden pb-16 pt-[7.5rem] lg:-mt-[6.25rem] lg:pt-[8.5rem]"
       >
         <div className="absolute inset-x-0 -bottom-[14%] -top-[14%]" data-parallax="0.25" aria-hidden="true">
-          <Image src={STOCK.weldingBlue.src} alt="" fill priority sizes="100vw" className="object-cover object-[60%_40%] opacity-45" />
+          <Image src={STOCK.weldingBlue.src} alt="" fill priority sizes="(max-width: 768px) 70vw, 100vw" quality={50} className="object-cover object-[60%_40%] opacity-45" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/70" />
           <div className="forge-glow absolute inset-0" />

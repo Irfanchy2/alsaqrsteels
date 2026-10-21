@@ -16,7 +16,6 @@ for (const [k, v] of Object.entries(PUBLIC_DEFAULTS)) process.env[k] ??= v;
 
 const supabaseHost = new URL(SUPABASE_URL).hostname;
 
-const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -25,7 +24,7 @@ const nextConfig: NextConfig = {
   // worker so static generation never needs more than the host allows.
   experimental: { cpus: 1, webpackBuildWorker: false },
   images: {
-    qualities: [75],
+    qualities: [30, 50, 75],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // Photos and documents uploaded through the CMS (public "media" bucket).
@@ -73,7 +72,8 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
-        headers: indexable ? security : [...security, { key: "X-Robots-Tag", value: "noindex, nofollow" }],
+        // Non-production hosts get "noindex" from middleware.ts.
+        headers: security,
       },
       { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       {
