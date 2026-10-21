@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getBlogPosts, getPage } from "@/lib/content";
 import type { BlogPostSummary } from "@/lib/content";
 import PageHero from "@/components/ui/PageHero";
+import BlogBrowser from "@/components/blog/BlogBrowser";
 import Illustration from "@/components/ui/Illustration";
 import { STOCK, photoRef } from "@/lib/content/stock";
 
@@ -54,7 +55,10 @@ function Meta({ post, onInk = false }: { post: BlogPostSummary; onInk?: boolean 
 export default async function BlogPage() {
   const [posts, pg] = await Promise.all([getBlogPosts(), getPage("blog")]);
   const [lead, ...rest] = posts;
-  const tags = Array.from(new Set(posts.flatMap((p) => p.tags))).slice(0, 12);
+  // Most-used topics first.
+  const counts = new Map<string, number>();
+  posts.forEach((p) => p.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+  const tags = [...counts.entries()].sort((x, y) => y[1] - x[1]).map(([t]) => t).slice(0, 14);
 
   return (
     <>
@@ -93,42 +97,7 @@ export default async function BlogPage() {
                 </div>
               </article>
 
-              {tags.length ? (
-                <ul className="mt-10 flex flex-wrap gap-2" aria-label="Topics covered">
-                  {tags.map((t) => (
-                    <li key={t} className="border border-line bg-card px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-steel-text">
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-
-              {/* All posts ------------------------------------------------- */}
-              {rest.length ? (
-                <ul data-stagger className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {rest.map((p, i) => (
-                    <li key={p.slug}>
-                      <article className="lift group relative flex h-full flex-col border border-line bg-card">
-                        <div className="relative aspect-[16/10] overflow-hidden">
-                          <Cover post={p} i={i + 1} sizes="(min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw" />
-                        </div>
-                        <div className="flex flex-1 flex-col border-t-4 border-flame p-5 sm:p-6">
-                          <Meta post={p} />
-                          <h2 className="mt-3 text-xl leading-tight [font-stretch:80%] sm:text-[1.4rem]">
-                            <Link href={`/blog/${p.slug}`} className="after:absolute after:inset-0 group-hover:text-accent">
-                              {p.title}
-                            </Link>
-                          </h2>
-                          {p.excerpt ? <p className="mt-3 line-clamp-3 text-[0.95rem] text-steel-text">{p.excerpt}</p> : null}
-                          <p className="mt-auto flex items-center gap-2 pt-5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-accent">
-                            Read <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                          </p>
-                        </div>
-                      </article>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+              {rest.length ? <BlogBrowser posts={rest} tags={tags} /> : null}
             </>
           ) : (
             <div className="border border-dashed border-line-strong bg-card p-10 text-center">

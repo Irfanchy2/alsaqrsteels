@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
-import { getServices, getProjects, getBlogPosts } from "@/lib/content";
+import { getServices, getProjects, getBlogPosts, getCustomPages } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [services, projects, posts] = await Promise.all([getServices(), getProjects(), getBlogPosts()]);
+  const [services, projects, posts, custom] = await Promise.all([getServices(), getProjects(), getBlogPosts(), getCustomPages()]);
   const staticPages = ["", "/about", "/services", "/projects", "/quality", "/quote", "/contact", "/blog", "/privacy", "/terms"];
   return [
     ...staticPages.map((p) => ({
@@ -18,8 +18,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...posts.map((p) => ({
       url: `${SITE_URL}/blog/${p.slug}`,
       lastModified: p.publishedAt ?? undefined,
-      changeFrequency: "yearly" as const,
-      priority: 0.4,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     })),
+    ...custom.map((p) => ({ url: `${SITE_URL}/${p.slug}`, changeFrequency: "monthly" as const, priority: 0.7 })),
   ];
 }
