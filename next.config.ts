@@ -35,6 +35,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     // URLs from the previous static/PHP website.
     return [
+      // Browsers ask for /favicon.ico on their own; serve the site icon.
+      { source: "/favicon.ico", destination: "/icon.png", permanent: true },
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/index.php", destination: "/", permanent: true },
       { source: "/about.html", destination: "/about", permanent: true },

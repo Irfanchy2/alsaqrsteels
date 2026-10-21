@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, INDEXABLE } from "@/lib/site";
 import "./globals.css";
@@ -85,7 +86,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <head>
         {/* Marks JS-capable browsers so scroll reveals never hide content without JS. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <Script id="js-flag" strategy="beforeInteractive">{`document.documentElement.classList.add('js')`}</Script>
       </head>
       <body>
         {children}
