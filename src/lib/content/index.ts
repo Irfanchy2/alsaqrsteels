@@ -3,6 +3,7 @@ import { publicClient } from "@/lib/supabase/public";
 import * as seed from "./seed";
 import { projectImages, blogImage } from "./stock";
 import { pageReader, readMotion, type PageReader, type PageValues, type MotionSettings } from "./pages";
+import type { Layout, CustomPage } from "./blocks";
 import { sanitizeArticle } from "@/lib/html";
 import type {
   Company,
@@ -397,4 +398,18 @@ export async function getPage(pageKey: string): Promise<PageReader> {
 export async function getMotion(): Promise<MotionSettings> {
   const all = await getSiteContent();
   return readMotion((all.motion as Partial<MotionSettings> | undefined) ?? null);
+}
+
+// Page builder layouts and custom pages ------------------------------------
+
+export async function getLayout(pageKey: string): Promise<Layout | null> {
+  const all = await getSiteContent();
+  const v = all[`layout:${pageKey}`] as Layout | undefined;
+  return v && Array.isArray(v.blocks) ? v : null;
+}
+
+export async function getCustomPages(): Promise<CustomPage[]> {
+  const all = await getSiteContent();
+  const v = all["pages:custom"];
+  return Array.isArray(v) ? (v as CustomPage[]) : [];
 }

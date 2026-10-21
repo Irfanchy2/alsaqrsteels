@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireStaff, requireAdmin, refreshSite, text, lines, int, bool, back, slugify } from "@/lib/admin";
 import { PAGES } from "@/lib/content/pages";
+import { BUILT_IN, blockDef, type Block, type BlockType, type CardItem, type StatItem, type CustomPage } from "@/lib/content/blocks";
 import { callEnquiryFunction } from "@/lib/enquiry-backend";
 import { SITE_URL } from "@/lib/site";
 import { sanitizeArticle } from "@/lib/html";
@@ -561,4 +562,174 @@ function teamError(msg: string) {
   return /function .* does not exist|schema cache/i.test(msg)
     ? "Team management needs a one-time database update. Run supabase/migrations/20261020090000_site_content_team.sql in Supabase → SQL Editor."
     : msg;
+}
+
+// ---------------------------------------------------------------- Services (add / remove / order)
+export async function createService(form: FormData) {
+  const { supabase } = await requireStaff();
+  const title = text(form, "title", 120);
+  if (!title) back("/admin/services", "Type a name for the new service.", "error");
+  const { data: existing } = await supabase.from("services").select("slug, sort_order").not("slug", "is", null);
+  const taken = new Set((existing ?? []).map((r: { slug: string }) => r.slug));
+  const base = slugify(title!) || "service";
+  let slug = base;
+  for (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;
+  const count = existing?.length ?? 0;
+  const maxOrder = Math.max(0, ...(existing ?? []).map((r: { sort_order: number | null }) => r.sort_order ?? 0));
+  const { error } = await supabase.from("services").insert({
+    title,
+    slug,
+    number: String(count + 1).padStart(2, "0"),
+    summary: text(form, "summary", 400),
+    sort_order: maxOrder + 1,
+    published: false,
+    bullets: [],
+    applications: [],
+  });
+  if (error) back("/admin/services", `Could not add: ${error.message}`, "error");
+  refreshSite();
+  back(`/admin/services/${slug}`, `“${title}” added. Fill in the details and switch “Show on website” on when it is ready.`);
+}
+
+export async function deleteService(form: FormData) {
+  const { supabase } = await requireStaff();
+  const slug = text(form, "slug", 100);
+  if (form.get("confirm") !== "yes") back(`/admin/services/${slug}`, "Tick the box to confirm deleting this service.", "error");
+  const { error } = await supabase.from("services").delete().eq("slug", slug);
+  if (error) back(`/admin/services/${slug}`, `Could not delete: ${error.message}`, "error");
+  refreshSite();
+  back("/admin/services", "Service deleted.");
+}
+
+/** Saves a new order after drag and drop. Returns an error message or null. */
+export async function reorderServices(slugs: string[]): Promise<string | null> {
+  const { supabase } = await requireStaff();
+  const results = await Promise.all(
+    slugs.map((slug, i) =>
+      supabase
+        .from("services")
+        .update({ sort_order: i + 1, number: String(i + 1).padStart(2, "0") })
+        .eq("slug", slug)
+    )
+  );
+  const failed = results.find((r) => r.error);
+  if (failed?.error) return failed.error.message;
+  refreshSite();
+  return null;
+}
+
+export async function setServiceVisible(slug: string, visible: boolean): Promise<string | null> {
+  const { supabase } = await requireStaff();
+  const { error } = await supabase.from("services").update({ published: visible }).eq("slug", slug);
+  if (error) return error.message;
+  refreshSite();
+  return null;
+}
+
+// ---------------------------------------------------------------- Page builder
+async function customPages(supabase: Awaited<ReturnType<typeof requireStaff>>["supabase"]): Promise<CustomPage[]> {
+  const { data } = await supabase.from("site_content").select("data").eq("key", "pages:custom").maybeSingle();
+  return Array.isArray(data?.data) ? (data!.data as CustomPage[]) : [];
+}
+
+function cleanBlocks(input: unknown): Block[] {
+  if (!Array.isArray(input)) return [];
+  const clip = (v: unknown, n = 2000) => (typeof v === "string" ? v.slice(0, n) : "");
+  return input.slice(0, 80).flatMap((raw): Block[] => {
+    const b = raw as Partial<Block>;
+    if (!b || typeof b.id !== "string" || typeof b.type !== "string") return [];
+    if (b.type === "section") return [{ id: b.id.slice(0, 40), type: "section", hidden: !!b.hidden, props: { key: clip(b.props?.key, 40) } }];
+    const def = blockDef(b.type as BlockType);
+    if (!def) return [];
+    const props: Record<string, unknown> = {};
+    for (const f of def.fields) {
+      const v = (b.props ?? {})[f.key];
+      if (f.kind === "images") props[f.key] = Array.isArray(v) ? v.slice(0, 40).map((x) => clip(x, 1000)).filter(Boolean) : [];
+      else if (f.kind === "cards")
+        props[f.key] = Array.isArray(v)
+          ? v.slice(0, 6).map((c) => ({ title: clip((c as CardItem).title, 120), text: clip((c as CardItem).text, 600), image: clip((c as CardItem).image, 1000) }))
+          : [];
+      else if (f.kind === "stats")
+        props[f.key] = Array.isArray(v) ? v.slice(0, 6).map((c) => ({ value: clip((c as StatItem).value, 20), label: clip((c as StatItem).label, 80) })) : [];
+      else props[f.key] = clip(v, f.kind === "textarea" ? 4000 : 1000);
+    }
+    return [{ id: b.id.slice(0, 40), type: def.type, hidden: !!b.hidden, props }];
+  });
+}
+
+/** Saves the block order and content of one page. Returns an error message or null. */
+export async function saveLayout(pageKey: string, blocks: unknown): Promise<string | null> {
+  const { supabase, user } = await requireStaff();
+  const custom = pageKey.startsWith("c:");
+  if (custom) {
+    const pages = await customPages(supabase);
+    if (!pages.some((p) => `c:${p.slug}` === pageKey)) return "This page no longer exists.";
+  } else if (!BUILT_IN[pageKey]) return "Unknown page.";
+  const { error } = await supabase
+    .from("site_content")
+    .upsert({ key: `layout:${pageKey}`, data: { blocks: cleanBlocks(blocks) }, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) return contentError(error.message);
+  refreshSite();
+  return null;
+}
+
+export async function resetLayout(pageKey: string): Promise<string | null> {
+  const { supabase } = await requireStaff();
+  const { error } = await supabase.from("site_content").delete().eq("key", `layout:${pageKey}`);
+  if (error) return contentError(error.message);
+  refreshSite();
+  return null;
+}
+
+const RESERVED = new Set(["admin", "api", "services", "projects", "about", "quality", "contact", "quote", "blog", "privacy", "terms", "og.png", "sitemap.xml", "robots.txt", "icon.png", "images", "brand", "cursors"]);
+
+export async function createCustomPage(form: FormData) {
+  const { supabase, user } = await requireStaff();
+  const title = text(form, "title", 80);
+  if (!title) back("/admin/builder", "Type a name for the new page.", "error");
+  const pages = await customPages(supabase);
+  const base = slugify(title!) || "page";
+  let slug = base;
+  for (let n = 2; RESERVED.has(slug) || pages.some((p) => p.slug === slug); n++) slug = `${base}-${n}`;
+  const page: CustomPage = { slug, title: title!, description: "", inMenu: bool(form, "inMenu") };
+  const starter: Block[] = [
+    { id: crypto.randomUUID().slice(0, 8), type: "banner", props: { ...blockDef("banner")!.defaults, title: title! } },
+    { id: crypto.randomUUID().slice(0, 8), type: "imageText", props: { ...blockDef("imageText")!.defaults } },
+    { id: crypto.randomUUID().slice(0, 8), type: "quickQuote", props: { ...blockDef("quickQuote")!.defaults } },
+  ];
+  const now = new Date().toISOString();
+  const { error } = await supabase.from("site_content").upsert([
+    { key: "pages:custom", data: [...pages, page], updated_at: now, updated_by: user.id },
+    { key: `layout:c:${slug}`, data: { blocks: starter }, updated_at: now, updated_by: user.id },
+  ]);
+  if (error) back("/admin/builder", contentError(error.message), "error");
+  refreshSite();
+  back(`/admin/builder/c:${slug}`, `Page “${title}” created at /${slug}. Drag blocks in, then press Save.`);
+}
+
+export async function updateCustomPage(form: FormData) {
+  const { supabase, user } = await requireStaff();
+  const slug = text(form, "slug", 80);
+  const pages = await customPages(supabase);
+  const next = pages.map((p) =>
+    p.slug === slug
+      ? { ...p, title: text(form, "title", 80) ?? p.title, description: text(form, "description", 300) ?? "", inMenu: bool(form, "inMenu") }
+      : p
+  );
+  const { error } = await supabase.from("site_content").upsert({ key: "pages:custom", data: next, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) back("/admin/builder", contentError(error.message), "error");
+  refreshSite();
+  back("/admin/builder", "Page settings saved.");
+}
+
+export async function deleteCustomPage(form: FormData) {
+  const { supabase, user } = await requireStaff();
+  const slug = text(form, "slug", 80);
+  if (form.get("confirm") !== "yes") back("/admin/builder", "Tick the box to confirm deleting the page.", "error");
+  const pages = (await customPages(supabase)).filter((p) => p.slug !== slug);
+  const { error } = await supabase.from("site_content").upsert({ key: "pages:custom", data: pages, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) back("/admin/builder", contentError(error.message), "error");
+  await supabase.from("site_content").delete().eq("key", `layout:c:${slug}`);
+  refreshSite();
+  back("/admin/builder", "Page deleted.");
 }

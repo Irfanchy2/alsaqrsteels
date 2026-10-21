@@ -285,3 +285,20 @@ export function blogImage(post: { slug: string; tags: string[]; image: string | 
 export function photoRef(src: string, alt = ""): ImageRef {
   return { src, alt, width: 1600, height: 1000 };
 }
+
+/** Every built-in photo, for the page builder's photo picker. */
+export function libraryPhotos(): { src: string; label: string }[] {
+  const seen = new Set<string>();
+  const out: { src: string; label: string }[] = [];
+  const add = (src: string, label: string) => {
+    if (!seen.has(src)) {
+      seen.add(src);
+      out.push({ src, label });
+    }
+  };
+  Object.values(STOCK).forEach((p) => add(p.src, p.alt));
+  Object.values(SHOWCASE_PHOTOS).flat().forEach((p) => add(p.src, p.alt));
+  Object.values(PROJECT_GALLERY).flat().forEach((p) => add(p.src, p.alt));
+  add(COMPANY_PHOTOS.cableDrumTrailer.src, COMPANY_PHOTOS.cableDrumTrailer.alt);
+  return out;
+}

@@ -6,8 +6,9 @@ import NavLinks from "./NavLinks";
 import MobileMenu from "./MobileMenu";
 import HeaderShell from "./HeaderShell";
 
-export default function SiteHeader({ company }: { company: Company }) {
+export default function SiteHeader({ company, extraNav = [] }: { company: Company; extraNav?: { href: string; label: string }[] }) {
   const phone = company.phones[0];
+  const nav = [...NAV.slice(0, -1), ...extraNav, NAV[NAV.length - 1]];
   return (
     <HeaderShell>
       <div className="site-header__bar wrap flex items-center justify-between gap-4">
@@ -29,7 +30,7 @@ export default function SiteHeader({ company }: { company: Company }) {
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
-          <NavLinks items={[...NAV]} />
+          <NavLinks items={nav} />
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
@@ -42,7 +43,7 @@ export default function SiteHeader({ company }: { company: Company }) {
               {phone.display}
             </a>
           ) : null}
-          <MobileMenu items={[...NAV]} phone={phone ?? null} whatsapp={company.whatsapp} />
+          <MobileMenu items={nav} phone={phone ?? null} whatsapp={company.whatsapp} />
         </div>
       </div>
     </HeaderShell>

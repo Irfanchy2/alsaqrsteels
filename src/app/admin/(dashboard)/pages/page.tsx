@@ -12,7 +12,7 @@ export default async function AdminPages({ searchParams }: { searchParams: Promi
 
   return (
     <>
-      <PageTitle title="Pages & sections" />
+      <PageTitle title="Page text" />
       <Flash saved={saved} error={error} />
       {loadError ? <SetupNotice /> : null}
       <p className="mb-6 max-w-2xl text-steel-text">

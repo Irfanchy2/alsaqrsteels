@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PageLayout from "@/components/blocks/PageLayout";
 import type { Metadata } from "next";
 import { getPage, getCompany, getServices, getFaqsFor } from "@/lib/content";
 import { capabilityCategories, capabilities } from "@/lib/content/capabilities";
@@ -23,105 +24,122 @@ export default async function ServicesPage() {
   const [company, services, faqs] = await Promise.all([getCompany(), getServices(), getFaqsFor("general")]);
   const pg = await getPage("services");
 
-  return (
-    <>
-      <PageHero
-        image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.weldingSparks}
-        crumbs={[{ name: "Services", href: "/services" }]}
-        label={pg.text("hero", "label")}
-        title={pg.text("hero", "title")}
-        lede={pg.text("hero", "lede")}
-      >
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="#capabilities" className="btn btn-primary">
-            Explore our capabilities <span aria-hidden="true">↓</span>
-          </Link>
-          <Link href="/quote" className="btn btn-secondary">
-            Request a Quotation
-          </Link>
-        </div>
-      </PageHero>
-      {/* Core disciplines — detailed, alternating sections ------------------ */}
-      <section aria-label="Core disciplines" className="py-16 lg:py-24">
-        <div className="wrap space-y-16 lg:space-y-24">
-          {services.map((s, i) => (
-            <article
-              key={s.slug}
-              aria-labelledby={`svc-${s.slug}`}
-              className="grid gap-8 border-t-2 border-ink pt-8 lg:grid-cols-12 lg:gap-12 lg:pt-10"
-              data-reveal={i % 2 ? "right" : "left"}
-            >
-              <div className={`lg:col-span-6 ${i % 2 ? "lg:order-2 lg:col-start-7" : ""}`}>
-                <p className="font-mono text-sm text-accent">{s.number}</p>
-                <h2 id={`svc-${s.slug}`} className="mt-3 text-3xl font-bold sm:text-4xl">
-                  {s.title}
-                </h2>
-                <p className="mt-4 max-w-[58ch] text-lg text-steel-text">{s.intro}</p>
-                <h3 className="mt-8 font-mono text-xs font-medium uppercase tracking-[0.14em] text-steel-text">Scope</h3>
-                <ul className="mt-3 grid gap-x-8 sm:grid-cols-2">
-                  {s.scope.map((item) => (
-                    <li key={item} className="flex items-start gap-3 border-b border-line py-2.5">
-                      <span aria-hidden="true" className="mt-2.5 h-1.5 w-1.5 shrink-0 bg-accent" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-                  <Link href={`/services/${s.slug}`} className="btn btn-secondary">
-                    {s.title} details
-                  </Link>
-                  <Link href={`/quote?service=${s.slug}`} className="btn btn-primary">
-                    Request a Quote
-                  </Link>
-                  <Link href={`/projects?service=${s.slug}`} className="link-arrow">
-                    Related projects <span aria-hidden="true">→</span>
-                  </Link>
+  const sections: Record<string, React.ReactNode> = {
+    hero: (
+      <>
+        <PageHero
+          image={pg.image("hero") ? photoRef(pg.image("hero")!) : STOCK.weldingSparks}
+          crumbs={[{ name: "Services", href: "/services" }]}
+          label={pg.text("hero", "label")}
+          title={pg.text("hero", "title")}
+          lede={pg.text("hero", "lede")}
+        >
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="#capabilities" className="btn btn-primary">
+              Explore our capabilities <span aria-hidden="true">↓</span>
+            </Link>
+            <Link href="/quote" className="btn btn-secondary">
+              Request a Quotation
+            </Link>
+          </div>
+        </PageHero>
+      </>
+    ),
+    main: (
+      <>
+        {/* Core disciplines — detailed, alternating sections ------------------ */}
+        <section aria-label="Core disciplines" className="py-16 lg:py-24">
+          <div className="wrap space-y-16 lg:space-y-24">
+            {services.map((s, i) => (
+              <article
+                key={s.slug}
+                aria-labelledby={`svc-${s.slug}`}
+                className="grid gap-8 border-t-2 border-ink pt-8 lg:grid-cols-12 lg:gap-12 lg:pt-10"
+                data-reveal={i % 2 ? "right" : "left"}
+              >
+                <div className={`lg:col-span-6 ${i % 2 ? "lg:order-2 lg:col-start-7" : ""}`}>
+                  <p className="font-mono text-sm text-accent">{s.number}</p>
+                  <h2 id={`svc-${s.slug}`} className="mt-3 text-3xl font-bold sm:text-4xl">
+                    {s.title}
+                  </h2>
+                  <p className="mt-4 max-w-[58ch] text-lg text-steel-text">{s.intro}</p>
+                  <h3 className="mt-8 font-mono text-xs font-medium uppercase tracking-[0.14em] text-steel-text">Scope</h3>
+                  <ul className="mt-3 grid gap-x-8 sm:grid-cols-2">
+                    {s.scope.map((item) => (
+                      <li key={item} className="flex items-start gap-3 border-b border-line py-2.5">
+                        <span aria-hidden="true" className="mt-2.5 h-1.5 w-1.5 shrink-0 bg-accent" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+                    <Link href={`/services/${s.slug}`} className="btn btn-secondary">
+                      {s.title} details
+                    </Link>
+                    <Link href={`/quote?service=${s.slug}`} className="btn btn-primary">
+                      Request a Quote
+                    </Link>
+                    <Link href={`/projects?service=${s.slug}`} className="link-arrow">
+                      Related projects <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-              <ServiceVisual
-                service={s}
-                className={`aspect-[4/3] w-full border border-ink lg:col-span-5 ${i % 2 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
-                sizes="(min-width: 1024px) 40vw, 100vw"
-              />
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Capabilities grid — everything we fabricate to order --------------- */}
-      {pg.visible("capabilities") ? <section id="capabilities" aria-labelledby="capabilities-title" className="on-ink relative scroll-mt-24 py-20 lg:py-28">
-        <div className="yard-grid absolute inset-0" aria-hidden="true" />
-        <div className="wrap relative">
-          <div className="max-w-3xl" data-reveal>
-            <p className="label">Made to order</p>
-            <h2 id="capabilities-title" className="mt-4 text-[2rem] sm:text-5xl">
-              {pg.text("capabilities", "title")}
-            </h2>
-            <p className="mt-5 text-lg text-on-ink-muted">
-              {capabilities.length} types of steel and metal work we fabricate to your drawings, across {capabilityCategories.length}{" "}
-              disciplines. Search or filter to find what you need, then send it straight to a quote.
-            </p>
-          </div>
-          <div className="mt-10" data-reveal>
-            <CapabilitiesGrid categories={capabilityCategories} />
-          </div>
-        </div>
-      </section> : null}
-
-      {faqs.length && pg.visible("faq") ? (
-        <section aria-labelledby="faq-title" className="border-t border-line bg-card py-20">
-          <div className="wrap grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <SectionHeading id="faq-title" label="Questions" title={pg.text("faq", "title")} />
-            </div>
-            <div className="lg:col-span-8">
-              <FaqList faqs={faqs} />
-            </div>
+                <ServiceVisual
+                  service={s}
+                  className={`aspect-[4/3] w-full border border-ink lg:col-span-5 ${i % 2 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
+                  sizes="(min-width: 1024px) 40vw, 100vw"
+                />
+              </article>
+            ))}
           </div>
         </section>
-      ) : null}
+      </>
+    ),
+    capabilities: (
+      <>
+        {/* Capabilities grid — everything we fabricate to order --------------- */}
+        {pg.visible("capabilities") ? <section id="capabilities" aria-labelledby="capabilities-title" className="on-ink relative scroll-mt-24 py-20 lg:py-28">
+          <div className="yard-grid absolute inset-0" aria-hidden="true" />
+          <div className="wrap relative">
+            <div className="max-w-3xl" data-reveal>
+              <p className="label">Made to order</p>
+              <h2 id="capabilities-title" className="mt-4 text-[2rem] sm:text-5xl">
+                {pg.text("capabilities", "title")}
+              </h2>
+              <p className="mt-5 text-lg text-on-ink-muted">
+                {capabilities.length} types of steel and metal work we fabricate to your drawings, across {capabilityCategories.length}{" "}
+                disciplines. Search or filter to find what you need, then send it straight to a quote.
+              </p>
+            </div>
+            <div className="mt-10" data-reveal>
+              <CapabilitiesGrid categories={capabilityCategories} />
+            </div>
+          </div>
+        </section> : null}
+      </>
+    ),
+    faq: (
+      <>
+        {faqs.length && pg.visible("faq") ? (
+          <section aria-labelledby="faq-title" className="border-t border-line bg-card py-20">
+            <div className="wrap grid gap-10 lg:grid-cols-12">
+              <div className="lg:col-span-4">
+                <SectionHeading id="faq-title" label="Questions" title={pg.text("faq", "title")} />
+              </div>
+              <div className="lg:col-span-8">
+                <FaqList faqs={faqs} />
+              </div>
+            </div>
+          </section>
+        ) : null}
+      </>
+    ),
+    cta: (
+      <>
+        <EnquiryCta company={company} />
+      </>
+    ),
+  };
 
-      <EnquiryCta company={company} />
-    </>
-  );
+  return <PageLayout page="services" sections={sections} />;
 }

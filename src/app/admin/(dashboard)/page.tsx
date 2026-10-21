@@ -4,7 +4,7 @@ import { Card, Flash, PageTitle, StatusPill } from "@/components/admin/AdminUI";
 
 export default async function AdminHome({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
-  const { supabase, role } = await requireStaff();
+  const { supabase } = await requireStaff();
   const since = new Date(Date.now() - 30 * 86400_000).toISOString();
 
   const [newCount, notifyIssues, recent, events, projectsNoPhotos, certsLive, traffic, statuses] = await Promise.all([
@@ -31,29 +31,36 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <PageTitle title="Dashboard" />
+      <PageTitle title="Welcome" />
       <Flash error={error} />
 
-      <ul className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <h2 className="mb-3 text-lg font-bold">What do you want to do?</h2>
+      <ul className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {[
-          { href: "/admin/pages", title: "Edit pages & sections", text: "Headings, text, buttons, photos; show or hide sections." },
-          { href: "/admin/projects", title: "Projects & photos", text: "Add projects and upload site photos." },
-          { href: "/admin/settings", title: "Company details", text: "Phones, address, headline and About text." },
-          ...(role === "admin"
-            ? [{ href: "/admin/motion", title: "Motion & effects", text: "Speed, sparks, cursor and animations." }]
-            : [{ href: "/admin/blog", title: "Blog posts", text: "Write and publish articles." }]),
+          { href: "/admin/builder", icon: "🧱", title: "Change how a page looks", text: "Drag and drop blocks, add photos and galleries, hide or move sections." },
+          { href: "/admin/pages", icon: "✏️", title: "Change wording on a page", text: "Headings, text and buttons of the existing sections." },
+          { href: "/admin/projects", icon: "📷", title: "Add a project or photos", text: "New jobs, site photos and project details." },
+          { href: "/admin/services", icon: "⚙️", title: "Add or edit a service", text: "New services, photos, order on the website." },
+          { href: "/admin/enquiries", icon: "✉️", title: "Read messages & quotes", text: "Quote requests sent from the website." },
+          { href: "/admin/settings", icon: "🏢", title: "Change phone, address or hours", text: "Company details shown across the site." },
         ].map((c) => (
           <li key={c.href}>
             <Link
               href={c.href}
-              className="group block h-full rounded-lg border border-line bg-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition hover:-translate-y-0.5 hover:border-flame/50"
+              className="group flex h-full gap-4 rounded-xl border border-line bg-card p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition hover:-translate-y-0.5 hover:border-flame/50 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.35)]"
             >
-              <p className="font-semibold group-hover:text-accent">{c.title} →</p>
-              <p className="mt-1 text-sm text-steel-text">{c.text}</p>
+              <span aria-hidden="true" className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-paper-2 text-2xl">
+                {c.icon}
+              </span>
+              <span>
+                <span className="block font-semibold group-hover:text-accent">{c.title}</span>
+                <span className="mt-1 block text-sm text-steel-text">{c.text}</span>
+              </span>
             </Link>
           </li>
         ))}
       </ul>
+      <h2 className="mb-3 text-lg font-bold">At a glance</h2>
 
       {(notifyIssues.count ?? 0) > 0 ? (
         <p className="mb-6 border-s-4 border-warn bg-warn-bg px-4 py-3 text-sm">
@@ -62,13 +69,6 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
         </p>
       ) : null}
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        <Link href="/admin/enquiries?status=new" className="btn btn-sm btn-dark">Review new enquiries</Link>
-        <Link href="/admin/projects/new" className="btn btn-sm btn-secondary">Add project</Link>
-        <Link href="/admin/blog" className="btn btn-sm btn-secondary">Write blog post</Link>
-        <Link href="/admin/analytics" className="btn btn-sm btn-secondary">Visitor report</Link>
-        <a href="/" target="_blank" className="btn btn-sm btn-secondary">View website ↗</a>
-      </div>
 
       <div className="mb-4 grid gap-4 sm:grid-cols-2">
         <Card>

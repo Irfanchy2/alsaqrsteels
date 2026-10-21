@@ -1,36 +1,31 @@
-# Admin setup (one time, about 3 minutes)
+# Admin guide
 
-## 1. Create your login
-Supabase → **Authentication → Users → Add user** → your email and a password.
-(Skip if you already have one.)
+Sign in at https://alsaqrsteels.com/admin. The database update is already applied.
 
-## 2. Run the database update and make yourself Admin
-Supabase → **SQL Editor → New query**. Paste the whole of
-`supabase/migrations/20261020090000_site_content_team.sql` (from the GitHub repo),
-then add these lines at the end with **your** email, and click **Run**:
+## The menu, in plain words
 
-```sql
-insert into public.staff (user_id, email, role)
-select id, email, 'admin' from auth.users where lower(email) = lower('your-email@example.com')
-on conflict (user_id) do update set role = 'admin';
-```
-
-The update only **adds** one table (`site_content`) and four team functions.
-No existing table or data is changed.
-
-## 3. Sign in
-https://alsaqrsteels.com/admin
-
-## What you can edit
-
-| Menu | What it does |
+| Menu | Use it to… |
 |---|---|
-| Pages & sections | Every page's sections: headings, text, buttons, photos; show or hide each section |
-| Projects & photos / Services / Blog / FAQs | The content lists |
-| Company details | Phones, address, hours, home headline, About text, highlights, process steps |
-| Client logos / Certifications / Documents | As named |
-| Motion & effects *(Admin)* | Animations on/off, speed 0.5×–2×, and each effect on its own |
-| Team & roles *(Admin)* | Add people by email, set Admin or Editor, remove |
+| Home | Start here: big buttons for the common jobs |
+| Messages & quotes | Read quote requests sent from the website |
+| **Page builder** | Drag and drop blocks on any page, hide or move sections, create new pages |
+| Page text | Change the wording and photos of the website's own sections |
+| Projects & photos | Add projects and upload site photos |
+| Services | Add, delete, hide and drag to reorder services |
+| Blog / Questions (FAQ) | Articles and common questions |
+| Company info | Phones, address, hours, home headline, About text |
+| Client logos | The logo strip |
+| *Admin only:* Certificates, Documents, Visitors, Motion & effects, Team & roles | |
 
-**Roles:** Admin = everything. Editor = all content and enquiries, but not Team or Motion.
-To add someone: create their login in Supabase (step 1), then add the email under Team & roles.
+## Page builder in 5 steps
+1. Page builder → open a page (or **Add a page** for a new one).
+2. Drag a block from the left onto the page (or click it). On a small screen press **+ Add block**.
+3. Drag the ⠿ handle (or use ↑ ↓) to move blocks. 👁 hides, 🗑 deletes, ⧉ duplicates.
+4. Click a block to change its text and photos on the right (Upload, or pick from the Library).
+5. Press **Save**. The website updates within a minute. Undo: the button or Ctrl/Cmd + Z.
+
+The website's own sections (hero, services, projects…) can be moved and hidden; their wording is edited under **Page text**.
+
+## Giving someone access
+1. Supabase → Authentication → Users → **Add user** (their email + a password).
+2. Admin → **Team & roles** → add the same email as **Editor** (content only) or **Admin** (everything).

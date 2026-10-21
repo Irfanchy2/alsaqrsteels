@@ -11,20 +11,21 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "hnd1";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard", icon: "dashboard", group: "" },
-  { href: "/admin/enquiries", label: "Enquiries", icon: "inbox", group: "Leads" },
-  { href: "/admin/analytics", label: "Visitors & analytics", icon: "chart", group: "Leads" },
-  { href: "/admin/pages", label: "Pages & sections", icon: "pages", group: "Website" },
+  { href: "/admin", label: "Home", icon: "dashboard", group: "" },
+  { href: "/admin/enquiries", label: "Messages & quotes", icon: "inbox", group: "" },
+  { href: "/admin/builder", label: "Page builder", icon: "pages", group: "Website" },
+  { href: "/admin/pages", label: "Page text", icon: "blog", group: "Website" },
   { href: "/admin/projects", label: "Projects & photos", icon: "projects", group: "Website" },
   { href: "/admin/services", label: "Services", icon: "services", group: "Website" },
-  { href: "/admin/blog", label: "Blog posts", icon: "blog", group: "Website" },
-  { href: "/admin/faqs", label: "FAQs", icon: "faq", group: "Website" },
-  { href: "/admin/settings", label: "Company details", icon: "company", group: "Company" },
+  { href: "/admin/blog", label: "Blog", icon: "blog", group: "Website" },
+  { href: "/admin/faqs", label: "Questions (FAQ)", icon: "faq", group: "Website" },
+  { href: "/admin/settings", label: "Company info", icon: "company", group: "Company" },
   { href: "/admin/clients", label: "Client logos", icon: "clients", group: "Company" },
-  { href: "/admin/certifications", label: "Certifications", icon: "cert", group: "Company" },
-  { href: "/admin/documents", label: "Documents", icon: "docs", group: "Company" },
-  { href: "/admin/motion", label: "Motion & effects", icon: "motion", group: "Settings", admin: true },
-  { href: "/admin/team", label: "Team & roles", icon: "team", group: "Settings", admin: true },
+  { href: "/admin/certifications", label: "Certificates", icon: "cert", group: "Company", admin: true },
+  { href: "/admin/documents", label: "Documents", icon: "docs", group: "Company", admin: true },
+  { href: "/admin/analytics", label: "Visitors", icon: "chart", group: "Admin", admin: true },
+  { href: "/admin/motion", label: "Motion & effects", icon: "motion", group: "Admin", admin: true },
+  { href: "/admin/team", label: "Team & roles", icon: "team", group: "Admin", admin: true },
 ];
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {

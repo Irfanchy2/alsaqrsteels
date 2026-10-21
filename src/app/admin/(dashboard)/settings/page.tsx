@@ -15,7 +15,7 @@ export default async function AdminSettings({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <PageTitle title="Company details" />
+      <PageTitle title="Company info" />
       <Flash saved={saved} error={error} />
       <form action={saveCompany} className="max-w-3xl space-y-8">
         <Card className="space-y-5">

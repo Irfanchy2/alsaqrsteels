@@ -358,3 +358,31 @@ html.js [data-reveal="photo"].is-in .photo-zoom:hover img {
     transform: scale(0.98);
   }
 }
+
+/* Page builder toolbar buttons. */
+.tb {
+  display: inline-flex;
+  height: 1.9rem;
+  min-width: 1.9rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.tb:hover {
+  background: #f1f1ef;
+}
+.tb:disabled {
+  opacity: 0.3;
+}
+/* In the builder canvas everything is shown immediately (no scroll reveals). */
+.builder-canvas [data-reveal],
+.builder-canvas .word {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+.builder-canvas [data-reveal] img {
+  transform: none !important;
+}
