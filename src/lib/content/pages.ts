@@ -239,6 +239,9 @@ export type MotionSettings = {
   trail: boolean;
   headingSpark: boolean;
   scrollFx: boolean;
+  progress: boolean;
+  countUp: boolean;
+  magnetic: boolean;
 };
 
 export const MOTION_DEFAULTS: MotionSettings = {
@@ -253,6 +256,9 @@ export const MOTION_DEFAULTS: MotionSettings = {
   trail: true,
   headingSpark: true,
   scrollFx: true,
+  progress: true,
+  countUp: true,
+  magnetic: true,
 };
 
 export function readMotion(saved: Partial<MotionSettings> | null): MotionSettings {

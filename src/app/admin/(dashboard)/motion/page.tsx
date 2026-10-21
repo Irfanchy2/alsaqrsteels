@@ -16,6 +16,9 @@ const EFFECTS: { key: keyof MotionSettings; label: string; hint: string }[] = [
   { key: "scrollFx", label: "Scroll effects", hint: "Parallax depth on big photos, hero fade-out, word-by-word headings and the “Scroll” cue." },
   { key: "tilt", label: "3D card tilt", hint: "Photo cards tilt towards the mouse on hover." },
   { key: "headingSpark", label: "Heading spark line", hint: "A spark runs along the line under each section heading." },
+  { key: "progress", label: "Scroll progress bar", hint: "A thin orange bar at the very top fills up as the visitor reads down the page." },
+  { key: "countUp", label: "Counting numbers", hint: "Big numbers such as years of experience count up from zero when they come into view." },
+  { key: "magnetic", label: "Magnetic buttons", hint: "Orange buttons lean gently towards the mouse (computers only)." },
 ];
 
 export default async function MotionPage({ searchParams }: { searchParams: Promise<{ saved?: string; error?: string }> }) {

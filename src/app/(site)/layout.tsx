@@ -11,6 +11,7 @@ import Assistant from "@/components/assistant/AssistantLazy";
 import WeldSparks from "@/components/site/WeldSparks";
 import MotionControl from "@/components/site/MotionControl";
 import ScrollFx from "@/components/site/ScrollFx";
+import MoreMotion from "@/components/site/MoreMotion";
 
 // Public pages are served from cache and refreshed on every admin save; this
 // is the fallback so no page is ever more than a minute behind the CMS.
@@ -57,6 +58,9 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       ) : null}
       {on ? <MotionControl speed={motion.speed} tilt={motion.tilt} /> : null}
       {on && motion.scrollFx ? <ScrollFx /> : null}
+      {on && (motion.progress || motion.countUp || motion.magnetic) ? (
+        <MoreMotion progress={motion.progress} countUp={motion.countUp} magnetic={motion.magnetic} />
+      ) : null}
       <JsonLd data={organizationLd(company)} />
     </div>
   );

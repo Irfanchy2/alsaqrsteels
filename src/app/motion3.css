@@ -164,3 +164,30 @@ details[open] > summary {
     bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* Scroll progress bar (MoreMotion) */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #ff5a1f, #ffb347);
+  box-shadow: 0 0 10px rgba(255, 122, 40, 0.7);
+  pointer-events: none;
+  will-change: transform;
+}
+/* Magnetic buttons ease back when the pointer leaves */
+.site-theme .btn-primary {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s var(--ease-out-quart),
+    translate 0.3s var(--ease-out-quart),
+    box-shadow 0.25s ease;
+}
+.motion-off .scroll-progress {
+  display: none;
+}
