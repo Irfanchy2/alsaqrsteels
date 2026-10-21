@@ -13,6 +13,7 @@ const EFFECTS: { key: keyof MotionSettings; label: string; hint: string }[] = [
   { key: "heroSparks", label: "Hero sparks", hint: "Sparks rising over the big photo at the top of the home page." },
   { key: "ticker", label: "Moving strips", hint: "The scrolling services strip and client logo strip." },
   { key: "reveals", label: "Scroll animations", hint: "Sections and photos animate in as the visitor scrolls." },
+  { key: "scrollFx", label: "Scroll effects", hint: "Parallax depth on big photos, hero fade-out, word-by-word headings and the “Scroll” cue." },
   { key: "tilt", label: "3D card tilt", hint: "Photo cards tilt towards the mouse on hover." },
   { key: "headingSpark", label: "Heading spark line", hint: "A spark runs along the line under each section heading." },
 ];

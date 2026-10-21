@@ -40,7 +40,15 @@ export default function RevealObserver() {
     );
     els.forEach((el) => io.observe(el));
     // Safety net: never leave content hidden if an observer callback is missed.
-    const t = window.setTimeout(() => els.forEach((el) => el.classList.add("is-in")), 2500);
+    // Only for what is already on screen or scrolled past, so content further
+    // down still animates in when the visitor reaches it.
+    const t = window.setTimeout(
+      () =>
+        els.forEach((el) => {
+          if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("is-in");
+        }),
+      2500
+    );
 
     // Pause the always-running decorative animations (hazard tape, ticker,
     // welding arc) while they are off screen, so only what the visitor can

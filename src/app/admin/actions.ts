@@ -514,6 +514,7 @@ export async function saveMotion(form: FormData) {
     tilt: bool(form, "tilt"),
     trail: bool(form, "trail"),
     headingSpark: bool(form, "headingSpark"),
+    scrollFx: bool(form, "scrollFx"),
   };
   const { error } = await supabase
     .from("site_content")

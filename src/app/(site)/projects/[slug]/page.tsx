@@ -56,7 +56,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]">
-        <div className="absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.3" aria-hidden="true">
           {heroPhoto ? <Image src={heroPhoto.src} alt="" fill priority sizes="100vw" className="kenburns object-cover opacity-40" /> : null}
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />

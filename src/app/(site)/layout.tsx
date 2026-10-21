@@ -10,6 +10,7 @@ import { JsonLd, organizationLd } from "@/components/site/JsonLd";
 import Assistant from "@/components/assistant/AssistantLazy";
 import WeldSparks from "@/components/site/WeldSparks";
 import MotionControl from "@/components/site/MotionControl";
+import ScrollFx from "@/components/site/ScrollFx";
 
 // Public pages are served from cache and refreshed on every admin save; this
 // is the fallback so no page is ever more than a minute behind the CMS.
@@ -29,6 +30,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
     on && motion.reveals ? "" : "no-reveals",
     on && motion.headingSpark ? "fx-heading" : "",
     on && motion.tilt ? "fx-tilt" : "",
+    on && motion.scrollFx ? "fx-scroll" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -53,6 +55,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
         <WeldSparks sparks={motion.sparks} trail={motion.trail && motion.cursor} />
       ) : null}
       {on ? <MotionControl speed={motion.speed} tilt={motion.tilt} /> : null}
+      {on && motion.scrollFx ? <ScrollFx /> : null}
       <JsonLd data={organizationLd(company)} />
     </div>
   );

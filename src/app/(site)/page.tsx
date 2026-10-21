@@ -23,6 +23,7 @@ import ContactLink from "@/components/site/ContactLink";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
 import QuickStart from "@/components/quote/QuickStart";
 import ClientStrip from "@/components/site/ClientStrip";
+import ScrollCue from "@/components/site/ScrollCue";
 
 export const revalidate = 60;
 
@@ -84,7 +85,7 @@ export default async function HomePage() {
     <>
       {/* Hero — full-screen weld photograph ---------------------------------- */}
       <section className="on-ink grain relative -mt-[5.5rem] lg:-mt-[6.25rem] flex min-h-[100svh] flex-col overflow-hidden pt-[5.5rem] lg:pt-[6.25rem]" aria-labelledby="hero-title">
-        <div className="absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.3" aria-hidden="true">
           <Image
             src={heroImage}
             alt=""
@@ -103,7 +104,7 @@ export default async function HomePage() {
           </div> : null}
         </div>
 
-        <div className="wrap relative flex flex-1 flex-col justify-center pb-10 pt-16 lg:pt-10">
+        <div className="wrap relative flex flex-1 flex-col justify-center pb-10 pt-16 lg:pb-36 lg:pt-10" data-scroll-fade>
           <p className="label fade-up" style={d(80)}>
             {eyebrow}
           </p>
@@ -130,6 +131,7 @@ export default async function HomePage() {
               {pg.text("hero", "secondaryCta")}
             </Link>
           </div>
+          {motion.enabled && motion.scrollFx ? <ScrollCue target="after-hero" /> : null}
         </div>
 
         {highlights.length ? (
@@ -151,6 +153,7 @@ export default async function HomePage() {
           </div>
         ) : null}
       </section>
+      <span id="after-hero" aria-hidden="true" className="block scroll-mt-24" />
 
       {/* Ticker of real service lines ---------------------------------------- */}
       {pg.visible("ticker") ? <div className="relative overflow-hidden border-y border-line bg-flame py-4 text-ink">
@@ -187,7 +190,7 @@ export default async function HomePage() {
               </div>
             </div>
             {years ? (
-              <div className="absolute -bottom-6 -end-2 bg-flame px-6 py-5 text-ink shadow-2xl sm:-end-6 lg:px-8 lg:py-6">
+              <div data-parallax="-0.12" className="absolute -bottom-6 -end-2 bg-flame px-6 py-5 text-ink shadow-2xl sm:-end-6 lg:px-8 lg:py-6">
                 <p className="font-display text-5xl font-extrabold leading-none [font-stretch:72%] lg:text-6xl">{years}+</p>
                 <p className="mt-1 font-mono text-[0.68rem] font-medium uppercase tracking-[0.16em]">Years in steel</p>
               </div>
@@ -303,7 +306,7 @@ export default async function HomePage() {
 
       {/* Full-bleed statement band ------------------------------------------- */}
       {pg.visible("band") ? <section aria-labelledby="band-title" className="on-ink relative overflow-hidden">
-        <div className="absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.22" aria-hidden="true">
           <Image src={bandImage} alt="" fill sizes="100vw" className="parallax object-cover opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/20" />
           <div className="forge-glow absolute inset-0" />
@@ -459,7 +462,7 @@ export default async function HomePage() {
 
       {/* Contact + quick quote, over a spark photograph ----------------------- */}
       {pg.visible("contact") ? <section aria-labelledby="contact-title" className="on-ink relative overflow-hidden py-24 lg:py-32">
-        <div className="absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 -top-[14%] -bottom-[14%]" data-parallax="0.18" aria-hidden="true">
           <Image src={STOCK.grinderSparks.src} alt="" fill sizes="100vw" className="object-cover opacity-35" />
           <div className="absolute inset-0 bg-ink/70" />
           <div className="forge-glow absolute inset-0" />

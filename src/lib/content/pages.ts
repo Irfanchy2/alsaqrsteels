@@ -238,6 +238,7 @@ export type MotionSettings = {
   tilt: boolean;
   trail: boolean;
   headingSpark: boolean;
+  scrollFx: boolean;
 };
 
 export const MOTION_DEFAULTS: MotionSettings = {
@@ -251,6 +252,7 @@ export const MOTION_DEFAULTS: MotionSettings = {
   tilt: true,
   trail: true,
   headingSpark: true,
+  scrollFx: true,
 };
 
 export function readMotion(saved: Partial<MotionSettings> | null): MotionSettings {

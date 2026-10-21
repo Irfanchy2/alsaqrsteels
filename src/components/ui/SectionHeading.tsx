@@ -16,7 +16,14 @@ export default function SectionHeading({ label, title, intro, as = "h2", classNa
         id={id}
         className={`mt-4 font-bold ${as === "h1" ? "text-[2.4rem] sm:text-5xl lg:text-[3.6rem]" : "text-[1.9rem] sm:text-4xl lg:text-[2.75rem]"}`}
       >
-        {title}
+        {/* Words rise in one after another when scroll effects are on. */}
+        {title.split(/(\s+)/).map((w, i) =>
+          /^\s+$/.test(w) ? w : (
+            <span key={i} className="word" style={{ ["--i" as string]: Math.floor(i / 2) }}>
+              {w}
+            </span>
+          )
+        )}
       </H>
       <span className="heading-spark" aria-hidden="true" />
       {intro ? <p className="mt-5 text-lg text-steel-text max-w-[62ch]">{intro}</p> : null}
