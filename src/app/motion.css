@@ -213,22 +213,32 @@
 
 /* Reveal variants on top of the base [data-reveal] fade-up. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal="left"] {
-    transform: translateX(-24px);
+  @media (scripting: enabled) {
+    [data-reveal="left"] {
+      transform: translateX(-24px);
+    }
   }
-  html.js [data-reveal="right"] {
-    transform: translateX(24px);
+  @media (scripting: enabled) {
+    [data-reveal="right"] {
+      transform: translateX(24px);
+    }
   }
-  html.js [data-reveal="scale"] {
-    transform: scale(0.96);
+  @media (scripting: enabled) {
+    [data-reveal="scale"] {
+      transform: scale(0.96);
+    }
   }
-  html.js [data-reveal="rule"] {
-    transform: scaleX(0);
-    transform-origin: left;
-    opacity: 1;
+  @media (scripting: enabled) {
+    [data-reveal="rule"] {
+      transform: scaleX(0);
+      transform-origin: left;
+      opacity: 1;
+    }
   }
-  html.js [data-reveal].is-in {
-    transform: none;
+  @media (scripting: enabled) {
+    [data-reveal].is-in {
+      transform: none;
+    }
   }
 }
 

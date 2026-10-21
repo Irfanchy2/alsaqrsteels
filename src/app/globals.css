@@ -491,17 +491,21 @@ body:has(.site-theme) {
 /* Scroll reveal: only when JS has marked the document, so content is never
    hidden for visitors without JavaScript or with reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal] {
-    opacity: 0;
-    transform: translateY(14px);
-    transition:
-      opacity 0.6s var(--ease-out-quart),
-      transform 0.6s var(--ease-out-quart);
-    transition-delay: var(--reveal-delay, 0ms);
+  @media (scripting: enabled) {
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        opacity 0.6s var(--ease-out-quart),
+        transform 0.6s var(--ease-out-quart);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
   }
-  html.js [data-reveal].is-in {
-    opacity: 1;
-    transform: none;
+  @media (scripting: enabled) {
+    [data-reveal].is-in {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
@@ -844,11 +848,13 @@ dialog {
     opacity: 0;
   }
 }
-/* Tilted tiles that also wipe in keep both transitions. */
-html.js .fx-tilt [data-tilt][data-reveal="photo"] {
-  transition:
-    clip-path 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms),
-    transform 0.45s var(--ease-out-quart);
+@media (scripting: enabled) {
+  /* Tilted tiles that also wipe in keep both transitions. */
+.fx-tilt [data-tilt][data-reveal="photo"] {
+    transition:
+      clip-path 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms),
+      transform 0.45s var(--ease-out-quart);
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -863,15 +869,19 @@ html.js .fx-tilt [data-tilt][data-reveal="photo"] {
   display: inline-block;
 }
 @media (prefers-reduced-motion: no-preference) {
-  html.js .fx-scroll [data-reveal]:not(.is-in) .word {
-    opacity: 0;
-    transform: translateY(0.55em) rotate(2deg);
+  @media (scripting: enabled) {
+    .fx-scroll [data-reveal]:not(.is-in) .word {
+      opacity: 0;
+      transform: translateY(0.55em) rotate(2deg);
+    }
   }
-  html.js .fx-scroll [data-reveal] .word {
-    transition:
-      opacity 0.6s var(--ease-out-quart),
-      transform 0.75s var(--ease-out-expo);
-    transition-delay: calc(var(--reveal-delay, 0ms) + 120ms + var(--i, 0) * 55ms);
+  @media (scripting: enabled) {
+    .fx-scroll [data-reveal] .word {
+      transition:
+        opacity 0.6s var(--ease-out-quart),
+        transform 0.75s var(--ease-out-expo);
+      transition-delay: calc(var(--reveal-delay, 0ms) + 120ms + var(--i, 0) * 55ms);
+    }
   }
 }
 /* "Scroll" cue: a glow runs down the rod and a spark drips from its end. */
@@ -914,4 +924,96 @@ html.js .fx-tilt [data-tilt][data-reveal="photo"] {
 .no-reveals .word {
   opacity: 1 !important;
   transform: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   404: a giant number that a welding arc fills from left to right.
+   --------------------------------------------------------------------------- */
+.nf-404 {
+  font-size: clamp(9rem, 30vw, 21rem);
+}
+.nf-404__outline,
+.nf-404__fill {
+  display: block;
+}
+.nf-404__outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgb(244 242 238 / 0.28);
+}
+.nf-404__fill {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  background: linear-gradient(180deg, #fff3d6 0%, #ffb020 38%, #ff5a1f 70%, #c8262d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 22px rgb(255 120 40 / 0.45));
+  clip-path: inset(0 0 0 0);
+}
+.nf-404__arc {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 0.09em;
+  height: 0.09em;
+  margin: -0.045em 0 0 -0.045em;
+  border-radius: 50%;
+  background: #fffbe8;
+  box-shadow:
+    0 0 0.06em 0.03em #fff,
+    0 0 0.2em 0.08em rgb(255 176 32 / 0.9),
+    0 0 0.5em 0.2em rgb(255 90 31 / 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nf-404__fill {
+    animation: nf-weld 2.6s cubic-bezier(0.55, 0.1, 0.35, 1) 0.5s both;
+  }
+  .nf-404__arc {
+    animation:
+      nf-arc 2.6s cubic-bezier(0.55, 0.1, 0.35, 1) 0.5s both,
+      nf-flicker 0.11s steps(2) 0.5s 24;
+  }
+}
+@keyframes nf-weld {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes nf-arc {
+  0% {
+    left: 0%;
+    top: 35%;
+    opacity: 1;
+  }
+  25% {
+    top: 62%;
+  }
+  50% {
+    top: 40%;
+  }
+  75% {
+    top: 60%;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    top: 48%;
+    opacity: 0;
+  }
+}
+@keyframes nf-flicker {
+  50% {
+    transform: scale(0.7);
+    filter: brightness(1.6);
+  }
+}
+.motion-off .nf-404__fill {
+  clip-path: none !important;
 }

@@ -84,13 +84,17 @@ details[open] > summary {
 
 /* Line drawings draw themselves in when their card scrolls into view. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal] .draw-in :is(path, line, rect, circle, ellipse) {
-    stroke-dasharray: 900;
-    stroke-dashoffset: 900;
-    transition: stroke-dashoffset 1.6s var(--ease-out-quart) 0.15s;
+  @media (scripting: enabled) {
+    [data-reveal] .draw-in :is(path, line, rect, circle, ellipse) {
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      transition: stroke-dashoffset 1.6s var(--ease-out-quart) 0.15s;
+    }
   }
-  html.js [data-reveal].is-in .draw-in :is(path, line, rect, circle, ellipse) {
-    stroke-dashoffset: 0;
+  @media (scripting: enabled) {
+    [data-reveal].is-in .draw-in :is(path, line, rect, circle, ellipse) {
+      stroke-dashoffset: 0;
+    }
   }
 }
 

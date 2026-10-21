@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, INDEXABLE } from "@/lib/site";
 import "./globals.css";
@@ -84,10 +83,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${archivo.variable} ${plex.variable} ${plexMono.variable} ${plexArabic.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Marks JS-capable browsers so scroll reveals never hide content without JS. */}
-        <Script id="js-flag" strategy="beforeInteractive">{`document.documentElement.classList.add('js')`}</Script>
-      </head>
       <body>
         {children}
         {/* Enable Web Analytics in the Vercel dashboard first, then set this flag. */}

@@ -144,12 +144,16 @@
 
 /* Section headings: the label's marker rule draws in when revealed. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal] .label::before {
-    transform: scale(0);
-    transition: transform 0.5s var(--ease-out-expo) 0.2s;
+  @media (scripting: enabled) {
+    [data-reveal] .label::before {
+      transform: scale(0);
+      transition: transform 0.5s var(--ease-out-expo) 0.2s;
+    }
   }
-  html.js [data-reveal].is-in .label::before {
-    transform: none;
+  @media (scripting: enabled) {
+    [data-reveal].is-in .label::before {
+      transform: none;
+    }
   }
 }
 
@@ -174,8 +178,10 @@
 
 /* Staggered children get a slightly deeper rise. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-stagger] > [data-reveal]:not(.is-in) {
-    transform: translateY(22px);
+  @media (scripting: enabled) {
+    [data-stagger] > [data-reveal]:not(.is-in) {
+      transform: translateY(22px);
+    }
   }
 }
 
@@ -321,29 +327,39 @@
    when JS is running (html.js), so content is never hidden without it.
    --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal="photo"],
-  html.js [data-stagger] > [data-reveal="photo"]:not(.is-in) {
-    opacity: 1;
-    transform: none;
-    clip-path: inset(100% 0 0 0);
-    transition: clip-path 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  @media (scripting: enabled) {
+    [data-reveal="photo"],
+  [data-stagger] > [data-reveal="photo"]:not(.is-in) {
+      opacity: 1;
+      transform: none;
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms);
+    }
   }
-  html.js [data-reveal="photo"].is-in {
-    clip-path: inset(0 0 0 0);
+  @media (scripting: enabled) {
+    [data-reveal="photo"].is-in {
+      clip-path: inset(0 0 0 0);
+    }
   }
-  html.js [data-reveal="photo"] img {
-    transform: scale(1.18);
-    transition: transform 1.6s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  @media (scripting: enabled) {
+    [data-reveal="photo"] img {
+      transform: scale(1.18);
+      transition: transform 1.6s var(--ease-out-expo) var(--reveal-delay, 0ms);
+    }
   }
-  html.js [data-reveal="photo"].is-in img {
-    transform: none;
+  @media (scripting: enabled) {
+    [data-reveal="photo"].is-in img {
+      transform: none;
+    }
   }
 }
-/* Keep the hover zoom on photo tiles once they have been revealed. */
-html.js [data-reveal="photo"].is-in.photo-zoom:hover img,
-html.js [data-reveal="photo"].is-in .photo-zoom:hover img {
-  transform: scale(1.06);
-  transition-delay: 0ms;
+@media (scripting: enabled) {
+  /* Keep the hover zoom on photo tiles once they have been revealed. */
+[data-reveal="photo"].is-in.photo-zoom:hover img,
+[data-reveal="photo"].is-in .photo-zoom:hover img {
+    transform: scale(1.06);
+    transition-delay: 0ms;
+  }
 }
 
 /* Showcase viewer: each photo fades in as it is selected. */

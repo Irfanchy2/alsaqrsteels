@@ -27,18 +27,55 @@ export default function RevealObserver() {
       els.forEach((el) => el.classList.add("is-in"));
       return;
     }
+    // Photo tiles start fully clipped (the roller-shutter wipe), and the
+    // browser treats a fully clipped element as not visible, so they are
+    // watched through their unclipped parent instead. One target can stand
+    // in for several tiles; they keep their own stagger delays.
+    const groups = new Map<Element, HTMLElement[]>();
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
+            (groups.get(entry.target) ?? []).forEach((el) => el.classList.add("is-in"));
+            groups.delete(entry.target);
             io.unobserve(entry.target);
           }
         }
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
     );
-    els.forEach((el) => io.observe(el));
+    const watched = new WeakSet<Element>();
+    const watch = (el: HTMLElement) => {
+      if (watched.has(el) || el.classList.contains("is-in")) return;
+      watched.add(el);
+      const target = el.dataset.reveal === "photo" && el.parentElement ? el.parentElement : el;
+      const list = groups.get(target);
+      if (list) list.push(el);
+      else {
+        groups.set(target, [el]);
+        io.observe(target);
+      }
+    };
+    els.forEach(watch);
+
+    // Content inserted after this runs (error pages, filtered lists, the
+    // page builder's blocks) is picked up as it appears.
+    const mo = new MutationObserver((records) => {
+      for (const r of records)
+        r.addedNodes.forEach((n) => {
+          if (!(n instanceof HTMLElement)) return;
+          n.querySelectorAll<HTMLElement>("[data-stagger]").forEach((group) =>
+            Array.from(group.children).forEach((child, i) => {
+              const el = child as HTMLElement;
+              if (!el.hasAttribute("data-reveal")) el.setAttribute("data-reveal", "");
+              el.style.setProperty("--reveal-delay", `${Math.min(i, 7) * 80}ms`);
+            })
+          );
+          if (n.matches("[data-reveal]")) watch(n);
+          n.querySelectorAll<HTMLElement>("[data-reveal]").forEach(watch);
+        });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
     // Safety net: never leave content hidden if an observer callback is missed.
     // Only for what is already on screen or scrolled past, so content further
     // down still animates in when the visitor reaches it.
@@ -66,6 +103,7 @@ export default function RevealObserver() {
     }
 
     return () => {
+      mo.disconnect();
       io.disconnect();
       loopIo?.disconnect();
       window.clearTimeout(t);
