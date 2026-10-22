@@ -24,6 +24,7 @@ import WhatsAppButton from "@/components/site/WhatsAppButton";
 import QuickStart from "@/components/quote/QuickStart";
 import ClientStrip from "@/components/site/ClientStrip";
 import ScrollCue from "@/components/site/ScrollCue";
+import HeroVideo from "@/components/site/HeroVideo";
 import PageLayout from "@/components/blocks/PageLayout";
 
 export const revalidate = 60;
@@ -96,6 +97,7 @@ export default async function HomePage() {
               sizes="(max-width: 768px) 70vw, 100vw" quality={50}
               className="kenburns object-cover object-[60%_40%] opacity-70"
             />
+            <HeroVideo className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/50" />
             <div className="forge-glow absolute inset-0" />

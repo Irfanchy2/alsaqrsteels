@@ -16,5 +16,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Skip static files and images; they never need either step.
-  matcher: ["/((?!_next/static|_next/image|images/|brand/|cursors/|favicon.ico|icon.png|apple-icon.png).*)"],
+  matcher: ["/((?!_next/static|_next/image|images/|video/|brand/|cursors/|favicon.ico|icon.png|apple-icon.png).*)"],
 };
