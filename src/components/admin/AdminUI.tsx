@@ -14,14 +14,16 @@ export function Flash({ saved, error }: { saved?: string; error?: string }) {
 
 export function PageTitle({ title, children, back }: { title: string; children?: React.ReactNode; back?: { href: string; label: string } }) {
   return (
-    <div className="mb-8">
-      {back ? (
-        <Link href={back.href} className="font-mono text-xs uppercase tracking-[0.12em] text-steel-text hover:text-ink">
-          ← {back.label}
-        </Link>
-      ) : null}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+    <div className="mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          {back ? (
+            <Link href={back.href} aria-label={`Back to ${back.label}`} title={back.label} className="flex h-7 w-7 items-center justify-center rounded-lg text-lg text-steel-text hover:bg-black/5 hover:text-ink">
+              ←
+            </Link>
+          ) : null}
+          <h1 className="text-xl font-bold">{title}</h1>
+        </div>
         {children ? <div className="flex flex-wrap gap-3">{children}</div> : null}
       </div>
     </div>
@@ -97,7 +99,7 @@ export function StatusPill({ value, label }: { value: string; label?: string }) 
     pending: "bg-paper-2 text-ink",
   };
   return (
-    <span className={`inline-block px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] ${tone[value] ?? "bg-paper-2"}`}>
+    <span className={`inline-block rounded-lg px-2 py-0.5 text-xs font-medium capitalize ${tone[value] ?? "bg-paper-2"}`}>
       {label ?? value.replace("_", " ")}
     </span>
   );
