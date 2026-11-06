@@ -126,11 +126,6 @@ export default function SiteFooter({ company, services }: { company: Company; se
                 </a>
               </li>
             ) : null}
-            <li>
-              <Link href="/admin" className="inline-flex min-h-10 items-center hover:text-on-ink" prefetch={false}>
-                Staff
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

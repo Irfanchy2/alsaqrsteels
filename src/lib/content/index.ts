@@ -5,6 +5,7 @@ import { projectImages, blogImage } from "./stock";
 import { pageReader, readMotion, type PageReader, type PageValues, type MotionSettings } from "./pages";
 import type { Layout, CustomPage } from "./blocks";
 import { sanitizeArticle } from "@/lib/html";
+import { isAllowedImageUrl } from "@/lib/image-hosts";
 import type {
   Company,
   Service,
@@ -308,22 +309,8 @@ type BlogRow = {
 
 // Only images we host (site files or the CMS media bucket) are shown; old
 // links to the former WordPress site no longer resolve.
-const SUPABASE_HOST = (() => {
-  try {
-    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host;
-  } catch {
-    return "";
-  }
-})();
 function hostedImage(src: string | null): string | null {
-  if (!src) return null;
-  if (src.startsWith("/")) return src;
-  try {
-    const u = new URL(src);
-    return u.protocol === "https:" && SUPABASE_HOST && u.host === SUPABASE_HOST ? src : null;
-  } catch {
-    return null;
-  }
+  return isAllowedImageUrl(src) ? src : null;
 }
 
 function toSummary(p: BlogRow): BlogPostSummary {

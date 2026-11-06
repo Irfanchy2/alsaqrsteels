@@ -26,6 +26,7 @@ const NAV = [
   { href: "/admin/analytics", label: "Visitors", icon: "chart", group: "Admin", admin: true },
   { href: "/admin/motion", label: "Motion & effects", icon: "motion", group: "Admin", admin: true },
   { href: "/admin/team", label: "Team & roles", icon: "team", group: "Admin", admin: true },
+  { href: "/admin/security", label: "Sign-in security", icon: "lock", group: "Admin" },
 ];
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {

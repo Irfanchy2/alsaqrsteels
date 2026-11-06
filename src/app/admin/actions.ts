@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isAllowedImageUrl, IMGBB_HOST } from "@/lib/image-hosts";
 import { requireStaff, requireAdmin, refreshSite, text, lines, int, bool, back, slugify } from "@/lib/admin";
 import { PAGES } from "@/lib/content/pages";
 import { BUILT_IN, blockDef, type Block, type BlockType, type CardItem, type StatItem, type CustomPage } from "@/lib/content/blocks";
@@ -200,9 +201,8 @@ export async function saveFaq(form: FormData) {
 // Called directly from the Client logos screen: every change saves at once.
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
-const MEDIA_PREFIX = `${process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""}/storage/v1/object/public/media/`;
 function validLogoUrl(u: string) {
-  return u.startsWith("/images/clients/") || (MEDIA_PREFIX.length > 40 && u.startsWith(MEDIA_PREFIX));
+  return isAllowedImageUrl(u);
 }
 
 export async function addClientLogo(input: { name: string; url: string; width: number | null; height: number | null }): Promise<ActionResult> {
@@ -735,4 +735,39 @@ export async function deleteCustomPage(form: FormData) {
   await supabase.from("site_content").delete().eq("key", `layout:c:${slug}`);
   refreshSite();
   back("/admin/builder", "Page deleted.");
+}
+
+// ---------------------------------------------------------------- ImgBB links
+// Staff can paste an ImgBB link instead of uploading a file. A direct link
+// (https://i.ibb.co/…/photo.jpg) is used as it is; a share-page link
+// (https://ibb.co/abc123) is opened on the server to read the direct image
+// address from the page. Only ibb.co is ever contacted.
+export async function resolveImageLink(input: string): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
+  await requireStaff();
+  let u: URL;
+  try {
+    u = new URL(input.trim());
+  } catch {
+    return { ok: false, error: "That is not a web link. Copy the link from ImgBB and paste it here." };
+  }
+  if (u.protocol !== "https:") return { ok: false, error: "Use the https:// link from ImgBB." };
+  if (u.host === IMGBB_HOST) {
+    return /\.(jpe?g|png|webp|gif)$/i.test(u.pathname)
+      ? { ok: true, url: u.toString() }
+      : { ok: false, error: "That ImgBB link is not a JPG, PNG or WebP image." };
+  }
+  if (u.host !== "ibb.co" && u.host !== "www.ibb.co") {
+    return { ok: false, error: "Only ImgBB links are supported here (ibb.co or i.ibb.co). For other photos, upload the file." };
+  }
+  if (!/^\/[A-Za-z0-9]+\/?$/.test(u.pathname)) return { ok: false, error: "Paste the link of a single ImgBB image." };
+  try {
+    const res = await fetch(`https://ibb.co${u.pathname}`, { redirect: "error", signal: AbortSignal.timeout(8000), cache: "no-store" });
+    if (!res.ok) return { ok: false, error: "ImgBB did not find that image. Check the link." };
+    const html = (await res.text()).slice(0, 200_000);
+    const og = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
+    if (og && isAllowedImageUrl(og) && new URL(og).host === IMGBB_HOST) return { ok: true, url: og };
+    return { ok: false, error: "Could not read the image from that ImgBB page. On ImgBB, copy the “Direct link” instead." };
+  } catch {
+    return { ok: false, error: "ImgBB did not answer. Try again, or copy the “Direct link” from ImgBB." };
+  }
 }

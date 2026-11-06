@@ -16,6 +16,13 @@ export const requireStaff = cache(async () => {
   const { data: auth } = await supabase.auth.getClaims();
   const claims = auth?.claims;
   if (!claims?.sub) redirect("/admin/login");
+  // Two-step sign-in: an account with an authenticator app must also have
+  // entered its 6-digit code in this session. Worked out from the session
+  // cookie, so it adds no round trip.
+  if (claims.aal !== "aal2") {
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal?.nextLevel === "aal2") redirect("/admin/login?step=code");
+  }
   const { data: staff } = await supabase.from("staff").select("role").eq("user_id", claims.sub).maybeSingle();
   if (!staff) redirect("/admin/login?error=not-staff");
   return {

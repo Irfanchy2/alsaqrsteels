@@ -29,6 +29,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       // Photos and documents uploaded through the CMS (public "media" bucket).
       { protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" },
+      // Direct image links pasted from ImgBB in the admin panel.
+      { protocol: "https", hostname: "i.ibb.co", pathname: "/**" },
     ],
   },
   async redirects() {

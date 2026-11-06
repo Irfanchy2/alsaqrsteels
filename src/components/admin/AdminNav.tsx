@@ -188,6 +188,7 @@ const ICONS: Record<string, string> = {
   docs: "M14 2H6v20h12V6zM14 2v4h4",
   company: "M3 21h18M5 21V7l7-4 7 4v14M9 10h1M14 10h1M9 14h1M14 14h1",
   motion: "M13 2 3 14h9l-1 8 10-12h-9z",
+  lock: "M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4M12 15v2",
   team: "M16 11a4 4 0 1 0 0-8M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21v-1a6 6 0 0 1 12 0v1M16 15a6 6 0 0 1 6 6",
 };
 function NavIcon({ name }: { name: string }) {

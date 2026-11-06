@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { uploadToMedia } from "@/lib/media-upload";
+import { resolveImageLink } from "@/app/admin/actions";
 
 // Uploads one file to the public "media" bucket using the signed-in staff
 // member's session (storage policies allow staff only), then puts the public
@@ -35,6 +36,36 @@ export default function MediaUpload({
   const [bytes, setBytes] = useState<number | null>(null);
   const [status, setStatus] = useState<"idle" | "uploading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [link, setLink] = useState("");
+  const [showLink, setShowLink] = useState(false);
+  const acceptsImages = accept.includes("image/");
+
+  // Use a photo already hosted on ImgBB instead of uploading a file.
+  async function onLink() {
+    if (!link.trim()) return;
+    setError(null);
+    setStatus("uploading");
+    const res = await resolveImageLink(link);
+    if (!res.ok) {
+      setStatus("error");
+      setError(res.error);
+      return;
+    }
+    if (withSize) {
+      const dims = await new Promise<{ w: number; h: number } | null>((resolve) => {
+        const im = new Image();
+        im.onload = () => resolve({ w: im.naturalWidth, h: im.naturalHeight });
+        im.onerror = () => resolve(null);
+        im.src = res.url;
+      });
+      if (dims) setSize(dims);
+    }
+    setUrl(res.url);
+    setBytes(null);
+    setLink("");
+    setShowLink(false);
+    setStatus("idle");
+  }
 
   async function onFile(file: File | undefined) {
     if (!file) return;
@@ -56,7 +87,7 @@ export default function MediaUpload({
     }
   }
 
-  const isImage = /\.(jpe?g|png|webp)(\?|$)/i.test(url);
+  const isImage = /\.(jpe?g|png|webp|gif)(\?|$)/i.test(url);
 
   return (
     <div className="space-y-2">
@@ -88,8 +119,38 @@ export default function MediaUpload({
             Remove
           </button>
         ) : null}
+        {acceptsImages && !showLink ? (
+          <button type="button" className="text-sm underline" onClick={() => setShowLink(true)}>
+            Or paste an ImgBB link
+          </button>
+        ) : null}
       </div>
-      {status === "uploading" ? <p className="text-sm text-steel-text">Uploading… keep this page open.</p> : null}
+      {acceptsImages && showLink ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            type="url"
+            inputMode="url"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void onLink();
+              }
+            }}
+            placeholder="https://ibb.co/… or https://i.ibb.co/…"
+            aria-label="ImgBB image link"
+            className="input min-w-0 flex-1"
+          />
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => void onLink()} disabled={status === "uploading" || !link.trim()}>
+            Use link
+          </button>
+          <button type="button" className="text-sm underline" onClick={() => setShowLink(false)}>
+            Cancel
+          </button>
+        </div>
+      ) : null}
+      {status === "uploading" ? <p className="text-sm text-steel-text">{showLink ? "Checking the link…" : "Uploading… keep this page open."}</p> : null}
       {url && url !== initial ? (
         <p className="text-sm font-medium text-ok">Uploaded. Press Save to put it on the website.</p>
       ) : null}

@@ -6,8 +6,8 @@ export const preferredRegion = "hnd1";
 
 export const metadata: Metadata = { title: "Staff sign in", robots: { index: false, follow: false } };
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
-  const { error, next } = await searchParams;
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string; next?: string; step?: string }> }) {
+  const { error, next, step } = await searchParams;
   return (
     <main className="flex min-h-dvh w-full items-center justify-center bg-white px-4 py-12">
       <div className="flex w-full max-w-sm flex-col items-center rounded-3xl border border-orange-100 bg-gradient-to-b from-orange-50/60 to-white p-8 text-black shadow-xl shadow-black/5">
@@ -23,7 +23,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             This account is not on the staff list yet. Ask an admin to add your email under Team &amp; roles.
           </p>
         ) : null}
-        <LoginForm next={next && next.startsWith("/admin") ? next : "/admin"} />
+        <LoginForm next={next && next.startsWith("/admin") ? next : "/admin"} startAtCode={step === "code"} />
         <div className="my-2 flex w-full items-center">
           <div className="flex-grow border-t border-dashed border-gray-200" />
           <span className="mx-2 text-xs text-gray-400">Staff only</span>

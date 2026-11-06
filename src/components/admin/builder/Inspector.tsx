@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import { blockDef, type Block, type CardItem, type PropField, type StatItem } from "@/lib/content/blocks";
 import { libraryPhotos } from "@/lib/content/stock";
 import { uploadToMedia } from "@/lib/media-upload";
+import { resolveImageLink } from "@/app/admin/actions";
 
 const LINKS = ["/quote", "/contact", "/services", "/projects", "/about", "/quality", "/blog", "/"];
 
@@ -243,7 +244,22 @@ function ImagePicker({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [library, setLibrary] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [link, setLink] = useState("");
   const photos = useMemo(() => libraryPhotos(), []);
+
+  // Use a photo hosted on ImgBB (share link or direct link).
+  const applyLink = async () => {
+    if (!link.trim()) return;
+    setBusy(true);
+    setError(null);
+    const res = await resolveImageLink(link);
+    setBusy(false);
+    if (!res.ok) return setError(res.error);
+    onChange(multiple ? [res.url] : res.url);
+    setLink("");
+    setLinkOpen(false);
+  };
 
   const upload = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -274,7 +290,31 @@ function ImagePicker({
         <button type="button" onClick={() => setLibrary((v) => !v)} className="btn btn-sm btn-secondary flex-1">
           Library
         </button>
+        <button type="button" onClick={() => setLinkOpen((v) => !v)} className="btn btn-sm btn-secondary" title="Paste an ImgBB link">
+          Link
+        </button>
       </div>
+      {linkOpen ? (
+        <div className="mt-2 flex gap-1.5">
+          <input
+            type="url"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void applyLink();
+              }
+            }}
+            placeholder="Paste ImgBB link"
+            aria-label="ImgBB image link"
+            className="input min-w-0 flex-1 !py-1.5 text-sm"
+          />
+          <button type="button" disabled={busy || !link.trim()} onClick={() => void applyLink()} className="btn btn-sm btn-primary">
+            Use
+          </button>
+        </div>
+      ) : null}
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple={multiple} className="hidden" onChange={(e) => upload(e.target.files)} />
       {error ? <p className="mt-1 text-xs text-danger">{error}</p> : null}
       {library ? (
