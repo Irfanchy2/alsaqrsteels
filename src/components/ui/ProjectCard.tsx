@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { Project, IllustrationKey } from "@/lib/content/types";
 import Illustration from "./Illustration";
 

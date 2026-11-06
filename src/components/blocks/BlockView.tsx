@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { Block, CardItem, StatItem } from "@/lib/content/blocks";
 import { str } from "@/lib/content/blocks";
 import type { Project } from "@/lib/content/types";

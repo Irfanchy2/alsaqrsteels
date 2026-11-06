@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { ClientLogo } from "@/lib/content";
 
 // "Trusted by teams across UAE industry" — the client logo strip carried over

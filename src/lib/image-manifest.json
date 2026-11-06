@@ -1,0 +1,506 @@
+{
+ "/images/clients/adnoc.webp": [
+  270
+ ],
+ "/images/clients/emaar.webp": [
+  360
+ ],
+ "/images/clients/gasco.webp": [
+  320
+ ],
+ "/images/clients/mada.webp": [
+  320
+ ],
+ "/images/clients/sdic.webp": [
+  320
+ ],
+ "/images/clients/takreer.webp": [
+  206
+ ],
+ "/images/clients/trane.webp": [
+  360
+ ],
+ "/images/projects/al-hayl-road-improvement-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/al-hayl-road-improvement-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/al-hayl-road-improvement-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/al-raha-beach-development-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/al-raha-beach-development-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/al-raha-beach-development-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/burj-vista-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/burj-vista-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/burj-vista-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/dmcc-cluster-car-park-extension-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/dmcc-cluster-car-park-extension-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/dmcc-cluster-car-park-extension-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/ittihad-paper-mill-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/ittihad-paper-mill-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/ittihad-paper-mill-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/taweelah-gas-compressor-station-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/taweelah-gas-compressor-station-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/taweelah-gas-compressor-station-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/zirku-island-development-1.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/zirku-island-development-2.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/projects/zirku-island-development-3.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/showcase/canopy-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/canopy-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/canopy-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/canopy-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/fence-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/gate-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/ladder-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/pergola-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/shed-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/stair-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-1.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-2.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-3.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-4.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-5.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/showcase/sunshade-6.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/stock/cnc-sparks.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/container-yard.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/cranes-dusk.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/factory-hall.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/gas-flare-desert.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/grinder-sparks.jpg": [
+  480,
+  828,
+  1120
+ ],
+ "/images/stock/grinding-worker.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/hero-welding.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/laser-cutter.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/pipe-network.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/pipeline-valves.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/stainless-plant.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/steel-erection.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/steel-grid.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/steel-mill.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/steel-roof-frame.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/welding-blue.jpg": [
+  480,
+  828,
+  1200,
+  1400
+ ],
+ "/images/stock/welding-sparks.jpg": [
+  480,
+  828,
+  932
+ ],
+ "/images/work/cable-drum-trailer.jpg": [
+  480,
+  828,
+  1200
+ ],
+ "/images/work/steel-frame-yard.jpg": [
+  480,
+  768
+ ],
+ "/images/work/steel-frame-yard.webp": [
+  480,
+  640
+ ],
+ "/images/work/tank-frame-yard.jpg": [
+  480,
+  768
+ ],
+ "/images/work/tank-frame-yard.webp": [
+  480,
+  576
+ ]
+}

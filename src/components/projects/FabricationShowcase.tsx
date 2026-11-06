@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SHOWCASE_PHOTOS } from "@/lib/content/stock";
 

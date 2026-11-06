@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import { STOCK } from "@/lib/content/stock";
 import type { Company } from "@/lib/content/types";
 import ContactLink from "./ContactLink";

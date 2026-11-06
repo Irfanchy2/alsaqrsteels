@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { Company, Service } from "@/lib/content/types";
 import ContactLink from "./ContactLink";
 import WhatsAppButton from "./WhatsAppButton";
@@ -29,7 +29,7 @@ export default function SiteFooter({ company, services }: { company: Company; se
               width={480}
               height={208}
               className="h-28 w-auto sm:h-32"
-              sizes="260px"
+              unoptimized
             />
           </Link>
           <p className="mt-6 max-w-sm text-[0.95rem] text-on-ink-muted">{company.tagline}</p>

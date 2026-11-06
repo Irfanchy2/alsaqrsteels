@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { Service } from "@/lib/content/types";
 import { servicePhoto } from "@/lib/content/stock";
 

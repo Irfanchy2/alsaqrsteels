@@ -1,6 +1,6 @@
 import Link from "next/link";
 import PageLayout from "@/components/blocks/PageLayout";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { Metadata } from "next";
 import { getPage, getCompany, getServices, getProcessSteps, getDocuments } from "@/lib/content";
 import { WORK_PHOTOS } from "@/lib/content/seed";

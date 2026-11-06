@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import type { ImageRef } from "@/lib/content/types";
 import { STOCK } from "@/lib/content/stock";
 import Breadcrumbs, { type Crumb } from "./Breadcrumbs";

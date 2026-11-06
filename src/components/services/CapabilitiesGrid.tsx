@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import { CAPABILITY_PHOTO } from "@/lib/content/stock";
 import type { CapabilityCategory } from "@/lib/content/capabilities";
 

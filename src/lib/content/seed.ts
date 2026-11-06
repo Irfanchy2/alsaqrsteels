@@ -19,20 +19,18 @@ import type {
 // WordPress copy, the live site's own data) — see docs/AUDIT.md. Items that
 // still need the owner's confirmation are listed in docs/CHECKLIST.md.
 
-// Photos are served from the CMS media bucket when NEXT_PUBLIC_MEDIA_BASE is
-// set (deployments); the local copies in /public keep offline builds working.
-const MEDIA_BASE = process.env.NEXT_PUBLIC_MEDIA_BASE?.replace(/\/$/, "");
-const media = (local: string, remote: string) => (MEDIA_BASE ? `${MEDIA_BASE}/${remote}` : local);
+// Workshop photos ship with the site (public/images/work) and are served as
+// pre-sized static WebP files, which the CDN caches.
 
 export const WORK_PHOTOS = {
   steelFrame: {
-    src: media("/images/work/steel-frame-yard.webp", "site/steel-frame-yard.jpg"),
+    src: "/images/work/steel-frame-yard.webp",
     alt: "Fabricated steel frame with a vertical tank in the workshop yard",
     width: 640,
     height: 853,
   },
   tankFrame: {
-    src: media("/images/work/tank-frame-yard.webp", "site/tank-frame-yard.jpg"),
+    src: "/images/work/tank-frame-yard.webp",
     alt: "Blue tank installed in a fabricated steel support frame in the workshop yard",
     width: 576,
     height: 768,

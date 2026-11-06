@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/Img";
 import { useDeferredValue, useMemo, useState } from "react";
 import type { BlogPostSummary } from "@/lib/content/types";
 
