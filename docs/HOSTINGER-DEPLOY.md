@@ -79,3 +79,16 @@ Then set `NEXT_PUBLIC_SITE_INDEXABLE=true` and redeploy.
 - `vercel.json` and the `preferredRegion` lines are ignored on Hostinger and do no harm.
 - Stock photos live in `public/images/stock/` (see `CREDITS.md` there). Anything uploaded
   through the CMS replaces them automatically.
+
+## Adding or replacing photos in `public/images`
+
+Site photos are served as pre-sized WebP files from `public/img`, which the
+Hostinger CDN caches. After adding or replacing a photo in `public/images`, run:
+
+```bash
+node scripts/make-images.mjs
+```
+
+and commit `public/img` and `src/lib/image-manifest.json` with it. A photo
+without pre-sized files still works; it is just resized by the server instead.
+Photos uploaded in the admin panel are not affected.
