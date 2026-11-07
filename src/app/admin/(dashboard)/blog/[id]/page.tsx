@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/admin";
 import { Flash, PageTitle } from "@/components/admin/AdminUI";
 import BlogForm, { type BlogRow } from "@/components/admin/BlogForm";
+import { aiWriterEnabled } from "@/lib/ai/writer";
 
 export default async function EditBlogPost({
   params,
@@ -16,7 +17,7 @@ export default async function EditBlogPost({
       <>
         <PageTitle title="New post" back={{ href: "/admin/blog", label: "Blog posts" }} />
         <Flash saved={saved} error={error} />
-        <BlogForm />
+        <BlogForm aiEnabled={aiWriterEnabled()} />
       </>
     );
   }
@@ -28,7 +29,7 @@ export default async function EditBlogPost({
     <>
       <PageTitle title="Edit post" back={{ href: "/admin/blog", label: "Blog posts" }} />
       <Flash saved={saved} error={error} />
-      <BlogForm post={data as BlogRow} />
+      <BlogForm post={data as BlogRow} aiEnabled={aiWriterEnabled()} />
     </>
   );
 }

@@ -771,3 +771,17 @@ export async function resolveImageLink(input: string): Promise<{ ok: true; url: 
     return { ok: false, error: "ImgBB did not answer. Try again, or copy the “Direct link” from ImgBB." };
   }
 }
+
+// ---------------------------------------------------------------- AI writer
+// Drafts a blog post with the AI writer (src/lib/ai/writer.ts). Only staff can
+// call it, at most 10 drafts per person per hour, and nothing is saved: the
+// draft fills the editor for a person to check, edit and publish.
+export async function aiDraftBlogPost(input: { topic: string; keyword: string; notes?: string }) {
+  const { supabase, user } = await requireStaff();
+  const topic = (input.topic ?? "").trim().slice(0, 300);
+  if (topic.length < 5) return { ok: false as const, error: "Describe the topic in a few words first." };
+  const { data: allowed } = await supabase.rpc("hit_rate_limit", { p_key: `ai-writer:${user.id}`, p_limit: 10, p_window_seconds: 3600 });
+  if (allowed === false) return { ok: false as const, error: "That's 10 drafts this hour. Try again later." };
+  const { writeDraft } = await import("@/lib/ai/writer");
+  return writeDraft({ topic, keyword: (input.keyword ?? "").trim().slice(0, 120), notes: (input.notes ?? "").trim().slice(0, 2000) });
+}

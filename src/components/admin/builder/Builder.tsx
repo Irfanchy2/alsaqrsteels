@@ -8,19 +8,29 @@ import {
   KeyboardSensor,
   PointerSensor,
   closestCenter,
+  pointerWithin,
   useDraggable,
   useDroppable,
   useSensor,
   useSensors,
+  type CollisionDetection,
   type DragEndEvent,
+  type DragMoveEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { arrayMove } from "@dnd-kit/sortable";
 import { BLOCK_DEFS, blockDef, type Block, type BlockType } from "@/lib/content/blocks";
 import BlockView, { type BlockData } from "@/components/blocks/BlockView";
 import { saveLayout, resetLayout } from "@/app/admin/actions";
 import Inspector from "./Inspector";
+import Layers from "./Layers";
+
+// Drop target = the block under the pointer (not the nearest centre, which is
+// unpredictable with tall sections); fall back to the nearest one in gaps.
+const collide: CollisionDetection = (args) => {
+  const hits = pointerWithin(args);
+  return hits.length ? hits : closestCenter(args);
+};
 
 const newId = () => Math.random().toString(36).slice(2, 10);
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
@@ -49,13 +59,14 @@ export default function Builder({
   const [status, setStatus] = useState<{ kind: "idle" | "saving" | "saved" | "error"; msg?: string }>({ kind: "idle" });
   const [dragging, setDragging] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [tab, setTab] = useState<"add" | "layers">("add");
+  // Where a dragged block will land: index in the list (0 = very top).
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
+  const dropRef = useRef<number | null>(null);
   const [, start] = useTransition();
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), useSensor(KeyboardSensor));
 
   // Every change goes through here so it can be undone.
   const change = useCallback((next: Block[] | ((prev: Block[]) => Block[])) => {
@@ -108,23 +119,45 @@ export default function Builder({
     insertAt(type, i || blocks.length);
   };
 
+  const setDrop = (i: number | null) => {
+    dropRef.current = i;
+    setDropIndex(i);
+  };
   const onDragStart = (e: DragStartEvent) => setDragging(String(e.active.id));
-  const onDragEnd = (e: DragEndEvent) => {
-    setDragging(null);
-    const active = String(e.active.id);
+  // Work out the insertion point from the pointer: over the top half of a
+  // block = above it, bottom half = below it. Run on every move and again on
+  // release, so even a very quick drag lands in the right place.
+  const dropFor = (e: DragMoveEvent | DragEndEvent): number | null => {
     const over = e.over ? String(e.over.id) : null;
+    if (!over) return null;
+    if (over === "canvas-end") return blocks.length;
+    const idx = blocks.findIndex((b) => b.id === over);
+    if (idx < 0) return null;
+    const start = e.activatorEvent as PointerEvent;
+    const rect = document.getElementById(`blk-${over}`)?.getBoundingClientRect();
+    if (!rect || typeof start.clientY !== "number") return idx;
+    const y = start.clientY + e.delta.y;
+    return idx + (y > rect.top + rect.height / 2 ? 1 : 0);
+  };
+  const onDragMove = (e: DragMoveEvent) => setDrop(dropFor(e));
+  const onDragEnd = (e: DragEndEvent) => {
+    const target = dropFor(e) ?? dropRef.current;
+    setDragging(null);
+    setDrop(null);
+    const active = String(e.active.id);
+    if (target === null || !e.over) return;
     if (active.startsWith("new:")) {
-      if (!over) return;
-      const type = active.slice(4) as BlockType;
-      const idx = over === "canvas-end" ? blocks.length : blocks.findIndex((b) => b.id === over);
-      insertAt(type, idx < 0 ? blocks.length : idx);
+      insertAt(active.slice(4) as BlockType, target);
       return;
     }
-    if (!over || active === over || over === "canvas-end") return;
     const from = blocks.findIndex((b) => b.id === active);
-    const to = blocks.findIndex((b) => b.id === over);
-    if (from < 0 || to < 0) return;
-    change((prev) => arrayMove(prev, from, to));
+    if (from < 0) return;
+    const to = target > from ? target - 1 : target;
+    if (to !== from) change((prev) => arrayMove(prev, from, to));
+  };
+  const onDragCancel = () => {
+    setDragging(null);
+    setDrop(null);
   };
 
   // Typing in the settings panel: consecutive edits to the same block within
@@ -180,6 +213,7 @@ export default function Builder({
   };
 
   const sel = blocks.find((b) => b.id === selected) ?? null;
+  const labelOf = (b: Block) => (b.type === "section" ? sectionLabels[String(b.props.key)] ?? "Section" : blockDef(b.type)?.label ?? b.type);
   const groups = useMemo(() => {
     const g: Record<string, typeof BLOCK_DEFS> = {};
     for (const d of BLOCK_DEFS) (g[d.group] ??= []).push(d);
@@ -227,7 +261,15 @@ export default function Builder({
         </div>
       </header>
 
-      <DndContext id="page-builder" sensors={sensors} collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <DndContext
+        id="page-builder"
+        sensors={sensors}
+        collisionDetection={collide}
+        onDragStart={onDragStart}
+        onDragMove={onDragMove}
+        onDragEnd={onDragEnd}
+        onDragCancel={onDragCancel}
+      >
         <div className="flex min-h-0 flex-1">
           {/* Blocks palette */}
           {addOpen ? <button type="button" aria-label="Close" onClick={() => setAddOpen(false)} className="fixed inset-0 z-[85] bg-black/40 md:hidden" /> : null}
@@ -236,8 +278,39 @@ export default function Builder({
               addOpen ? "fixed inset-y-0 start-0 z-[90] block shadow-2xl" : "hidden"
             }`}
           >
-            <p className="text-sm font-semibold">Add blocks</p>
-            <p className="mt-1 text-xs text-steel-text">Drag a block onto the page, or click it to add it below the selected block.</p>
+            <div className="mb-4 grid grid-cols-2 rounded-lg bg-paper-2 p-1 text-sm font-semibold" role="tablist">
+              {(["add", "layers"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === t}
+                  onClick={() => setTab(t)}
+                  className={`rounded-md py-1.5 ${tab === t ? "bg-white shadow-sm" : "text-steel-text hover:text-ink"}`}
+                >
+                  {t === "add" ? "Add" : `Layers (${blocks.length})`}
+                </button>
+              ))}
+            </div>
+            {tab === "layers" ? (
+              <>
+                <p className="mb-3 text-xs text-steel-text">Drag ⠿ to reorder exactly. Click a row to edit that block.</p>
+                <Layers
+                  blocks={blocks}
+                  labels={Object.fromEntries(blocks.map((b) => [b.id, labelOf(b)]))}
+                  selected={selected}
+                  onSelect={(id) => {
+                    setSelected(id);
+                    setAddOpen(false);
+                    document.getElementById(`blk-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  onReorder={(from, to) => change((prev) => arrayMove(prev, from, to))}
+                  onToggle={toggle}
+                />
+              </>
+            ) : (
+            <>
+            <p className="text-xs text-steel-text">Drag a block onto the page (an orange line shows where it lands), or click it to add it below the selected block.</p>
             {Object.entries(groups).map(([group, defs]) => (
               <div key={group} className="mt-5">
                 <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-steel-text">{group}</p>
@@ -251,6 +324,8 @@ export default function Builder({
                 </ul>
               </div>
             ))}
+            </>
+            )}
             {pageKey.startsWith("c:") ? null : (
               <button type="button" onClick={reset} className="mt-8 w-full rounded-md border border-line px-3 py-2 text-xs text-steel-text hover:border-danger hover:text-danger">
                 Reset page to original
@@ -261,7 +336,6 @@ export default function Builder({
           {/* Canvas */}
           <main ref={canvasRef} className="min-w-0 flex-1 overflow-y-auto p-3 sm:p-6" onClick={() => setSelected(null)}>
             <div className="site-theme builder-canvas mx-auto max-w-[1280px] overflow-hidden rounded-lg shadow-[0_10px_40px_-15px_rgba(0,0,0,0.4)]" style={{ cursor: "default" }}>
-              <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
                 {blocks.map((b, i) => (
                   <BlockFrame
                     key={b.id}
@@ -274,7 +348,9 @@ export default function Builder({
                     onDuplicate={() => duplicate(b.id)}
                     onToggle={() => toggle(b.id)}
                     onRemove={() => remove(b.id)}
-                    label={b.type === "section" ? sectionLabels[String(b.props.key)] ?? "Section" : blockDef(b.type)?.label ?? b.type}
+                    label={labelOf(b)}
+                    lineAbove={dropIndex === i}
+                    lineBelow={i === blocks.length - 1 && dropIndex === blocks.length}
                   >
                     {b.type === "section" ? (
                       <SectionCard
@@ -288,7 +364,6 @@ export default function Builder({
                     )}
                   </BlockFrame>
                 ))}
-              </SortableContext>
               <DropEnd active={!!dragging?.startsWith("new:")} empty={!blocks.length} />
             </div>
           </main>
@@ -313,6 +388,10 @@ export default function Builder({
                 onChange={(props) => update(sel.id, props)}
                 onToggle={() => toggle(sel.id)}
                 onRemove={() => remove(sel.id)}
+                index={blocks.findIndex((b) => b.id === sel.id)}
+                count={blocks.length}
+                onMove={(d) => move(sel.id, d)}
+                onDuplicate={sel.type === "section" ? undefined : () => duplicate(sel.id)}
               />
             ) : (
               <div className="p-5 text-sm text-steel-text">
@@ -333,9 +412,11 @@ export default function Builder({
         </div>
 
         <DragOverlay dropAnimation={null}>
-          {dragging?.startsWith("new:") ? (
+          {dragging ? (
             <div className="rounded-lg border-2 border-flame bg-white px-4 py-3 text-sm font-semibold shadow-2xl">
-              + {blockDef(dragging.slice(4) as BlockType)?.label}
+              {dragging.startsWith("new:")
+                ? `+ ${blockDef(dragging.slice(4) as BlockType)?.label}`
+                : `⠿ ${labelOf(blocks.find((b) => b.id === dragging) ?? blocks[0])}`}
             </div>
           ) : null}
         </DragOverlay>
@@ -380,12 +461,16 @@ function BlockFrame({
   onDuplicate,
   onToggle,
   onRemove,
+  lineAbove,
+  lineBelow,
 }: {
   block: Block;
   index: number;
   count: number;
   selected: boolean;
   label: string;
+  lineAbove: boolean;
+  lineBelow: boolean;
   children: React.ReactNode;
   onSelect: () => void;
   onMove: (d: -1 | 1) => void;
@@ -393,20 +478,28 @@ function BlockFrame({
   onToggle: () => void;
   onRemove: () => void;
 }) {
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging, isOver } = useSortable({ id: block.id });
+  // The block stays in place while it is dragged (a small label follows the
+  // pointer), and an orange line shows exactly where it will be dropped.
+  const drag = useDraggable({ id: block.id });
+  const drop = useDroppable({ id: block.id });
+  const { attributes, listeners, setActivatorNodeRef, isDragging } = drag;
+  const setNodeRef = (el: HTMLElement | null) => {
+    drag.setNodeRef(el);
+    drop.setNodeRef(el);
+  };
   const isSection = block.type === "section";
   return (
     <div
       id={`blk-${block.id}`}
       ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
       onClick={(e) => {
         e.stopPropagation();
         onSelect();
       }}
-      className={`group/blk relative ${isDragging ? "z-20 opacity-60" : ""} ${block.hidden ? "opacity-40" : ""}`}
+      className={`group/blk relative ${isDragging ? "opacity-40" : ""} ${block.hidden ? "opacity-40" : ""}`}
     >
-      {isOver ? <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-1 bg-flame" /> : null}
+      {lineAbove ? <DropLine edge="top" /> : null}
+      {lineBelow ? <DropLine edge="bottom" /> : null}
       <div
         className={`pointer-events-none absolute inset-0 z-20 border-2 transition-colors ${
           selected ? "border-flame" : "border-transparent group-hover/blk:border-flame/50"
@@ -453,6 +546,15 @@ function BlockFrame({
         <div className="absolute start-2 top-2 z-30 rounded bg-ink px-2 py-1 text-xs font-semibold text-on-ink">Hidden on website</div>
       ) : null}
       {children}
+    </div>
+  );
+}
+
+function DropLine({ edge }: { edge: "top" | "bottom" }) {
+  return (
+    <div className={`pointer-events-none absolute inset-x-0 z-40 flex justify-center ${edge === "top" ? "-top-[3px]" : "-bottom-[3px]"}`}>
+      <div className="h-[6px] w-full rounded-full bg-flame shadow-[0_0_0_3px_rgba(255,90,31,0.25)]" />
+      <span className="absolute -top-3 rounded-full bg-flame px-3 py-0.5 text-xs font-semibold text-black shadow">Drop here</span>
     </div>
   );
 }

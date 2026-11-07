@@ -16,6 +16,10 @@ export default function Inspector({
   onChange,
   onToggle,
   onRemove,
+  index,
+  count,
+  onMove,
+  onDuplicate,
 }: {
   block: Block;
   sectionLabel?: string;
@@ -23,9 +27,39 @@ export default function Inspector({
   onChange: (props: Record<string, unknown>) => void;
   onToggle: () => void;
   onRemove: () => void;
+  index: number;
+  count: number;
+  onMove: (d: -1 | 1) => void;
+  onDuplicate?: () => void;
 }) {
+  // One row of actions for the selected block, the same for every block type.
+  const toolbar = (
+    <div className="flex items-center gap-1 border-b border-line bg-white px-3 py-2 lg:sticky lg:top-0 lg:z-10">
+      <span className="me-auto text-xs text-steel-text">
+        Block {index + 1} of {count}
+        {block.hidden ? " · hidden" : ""}
+      </span>
+      <button type="button" className="tb" onClick={() => onMove(-1)} disabled={index <= 0} title="Move up">
+        ↑
+      </button>
+      <button type="button" className="tb" onClick={() => onMove(1)} disabled={index >= count - 1} title="Move down">
+        ↓
+      </button>
+      {onDuplicate ? (
+        <button type="button" className="tb" onClick={onDuplicate} title="Duplicate">
+          ⧉
+        </button>
+      ) : null}
+      <button type="button" className="tb" onClick={onToggle} title={block.hidden ? "Show on website" : "Hide from website"}>
+        {block.hidden ? "◌" : "👁"}
+      </button>
+    </div>
+  );
+
   if (block.type === "section") {
     return (
+      <>
+      {toolbar}
       <div className="space-y-4 p-5">
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-steel-text">Website section</p>
         <h2 className="text-xl font-bold">{sectionLabel}</h2>
@@ -42,6 +76,7 @@ export default function Inspector({
           </Link>
         ) : null}
       </div>
+      </>
     );
   }
 
@@ -49,6 +84,8 @@ export default function Inspector({
   const set = (key: string, value: unknown) => onChange({ ...block.props, [key]: value });
 
   return (
+    <>
+    {toolbar}
     <div className="p-5">
       <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-steel-text">Block</p>
       <h2 className="text-xl font-bold">{def.label}</h2>
@@ -73,6 +110,7 @@ export default function Inspector({
         </button>
       </div>
     </div>
+    </>
   );
 }
 

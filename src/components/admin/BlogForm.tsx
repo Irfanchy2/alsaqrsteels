@@ -3,6 +3,8 @@ import { Field } from "@/components/admin/AdminUI";
 import MediaUpload from "@/components/admin/MediaUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import { saveBlogPost } from "@/app/admin/actions";
+import SeoPanel from "@/components/admin/SeoPanel";
+import AiWriterPanel from "@/components/admin/AiWriterPanel";
 
 export type BlogRow = {
   id: string;
@@ -19,10 +21,10 @@ export type BlogRow = {
   published_at: string | null;
 };
 
-export default function BlogForm({ post }: { post?: BlogRow }) {
+export default function BlogForm({ post, aiEnabled = false }: { post?: BlogRow; aiEnabled?: boolean }) {
   const date = post?.published_at ? post.published_at.slice(0, 10) : "";
   return (
-    <form action={saveBlogPost} className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
+    <form id="blog-form" action={saveBlogPost} className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
       {post ? <input type="hidden" name="id" value={post.id} /> : null}
       <div className="min-w-0 space-y-5">
         <Field label="Title" name="title" defaultValue={post?.title} required />
@@ -43,7 +45,12 @@ export default function BlogForm({ post }: { post?: BlogRow }) {
         </div>
       </div>
 
-      <div className="space-y-5 xl:sticky xl:top-6 xl:self-start">
+      <div className="space-y-5">
+        <div className="border border-line bg-card p-5">
+          <p className="mb-3 font-semibold">✨ AI writer</p>
+          <AiWriterPanel enabled={aiEnabled} formId="blog-form" />
+        </div>
+
         <div className="border border-line bg-card p-5">
           <label htmlFor="f-status" className="field-label">
             Status
@@ -77,13 +84,12 @@ export default function BlogForm({ post }: { post?: BlogRow }) {
           <Field label="Web address (slug)" name="slug" defaultValue={post?.slug} hint="Made from the title if left empty." />
         </div>
 
-        <details className="border border-line bg-card p-5">
-          <summary className="cursor-pointer font-semibold">Search engine settings</summary>
-          <div className="mt-4 space-y-4">
-            <Field label="SEO title" name="meta_title" defaultValue={post?.meta_title} hint="Up to 60 characters." />
-            <Field label="SEO description" name="meta_description" defaultValue={post?.meta_description} textarea rows={3} hint="Up to 160 characters." />
-          </div>
-        </details>
+        <div className="space-y-4 border border-line bg-card p-5">
+          <p className="font-semibold">Search engine (SEO)</p>
+          <Field label="SEO title" name="meta_title" defaultValue={post?.meta_title} hint="30–60 characters. Empty = the post title." />
+          <Field label="SEO description" name="meta_description" defaultValue={post?.meta_description} textarea rows={3} hint="120–160 characters. Empty = the summary." />
+          <SeoPanel formId="blog-form" />
+        </div>
 
         {post ? (
           <label className="flex items-center gap-2 border border-danger/40 bg-danger-bg px-4 py-3 text-sm">

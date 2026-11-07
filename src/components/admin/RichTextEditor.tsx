@@ -46,6 +46,19 @@ export default function RichTextEditor({ name, defaultValue }: { name: string; d
 
   const sync = () => setHtml(ref.current?.innerHTML ?? "");
 
+  // Lets other tools on the page (the AI writer) replace the article:
+  // window.dispatchEvent(new CustomEvent("rte:set", { detail: { name, html } })).
+  useEffect(() => {
+    const onSet = (e: Event) => {
+      const d = (e as CustomEvent<{ name: string; html: string }>).detail;
+      if (!d || d.name !== name) return;
+      setHtml(d.html);
+      if (ref.current) ref.current.innerHTML = d.html;
+    };
+    window.addEventListener("rte:set", onSet);
+    return () => window.removeEventListener("rte:set", onSet);
+  }, [name]);
+
   return (
     <div className="border-[1.5px] border-line-strong bg-white focus-within:border-ink">
       <div className="sticky top-14 z-10 flex flex-wrap items-center gap-1 border-b border-line bg-paper-2 p-1.5 lg:top-0" role="toolbar" aria-label="Formatting">
