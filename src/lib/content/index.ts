@@ -6,6 +6,7 @@ import { pageReader, readMotion, type PageReader, type PageValues, type MotionSe
 import type { Layout, CustomPage } from "./blocks";
 import { sanitizeArticle } from "@/lib/html";
 import { isAllowedImageUrl } from "@/lib/image-hosts";
+import { readSettings, type Announcement, type AnnouncementSettings } from "@/lib/announcements";
 import type {
   Company,
   Service,
@@ -400,3 +401,32 @@ export async function getCustomPages(): Promise<CustomPage[]> {
   const v = all["pages:custom"];
   return Array.isArray(v) ? (v as CustomPage[]) : [];
 }
+
+// Announcement bar ----------------------------------------------------------
+
+// Published, enabled announcements that are not finished yet, plus the
+// bar-wide settings. Which ones show is decided again in the browser from the
+// visitor's clock (src/lib/announcements.ts), so a message switches on or off
+// at its exact UAE time even on a cached page. Any error = no bar.
+export const getAnnouncementBar = cache(async (): Promise<{ rows: Announcement[]; settings: AnnouncementSettings }> => {
+  const all = await getSiteContent();
+  const settings = readSettings(all["announcement:settings"]);
+  if (USE_SEED || !settings.enabled) return { rows: [], settings };
+  try {
+    const now = new Date().toISOString();
+    const { data, error } = await publicClient()
+      .from("announcements")
+      .select(
+        "id, title, message, emoji, link_url, cta_text, bg_color, text_color, font_size, height_desktop, height_mobile, speed, direction, animation, starts_at, ends_at, recurrence, enabled, status, priority, override_auto, kind, template_key"
+      )
+      .eq("status", "published")
+      .eq("enabled", true)
+      .or(`recurrence.eq.yearly,ends_at.is.null,ends_at.gt.${now}`)
+      .order("priority", { ascending: false })
+      .limit(50);
+    if (error || !data) return { rows: [], settings };
+    return { rows: data as Announcement[], settings };
+  } catch {
+    return { rows: [], settings };
+  }
+});

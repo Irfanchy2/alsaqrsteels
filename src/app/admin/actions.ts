@@ -785,3 +785,117 @@ export async function aiDraftBlogPost(input: { topic: string; keyword: string; n
   const { writeDraft } = await import("@/lib/ai/writer");
   return writeDraft({ topic, keyword: (input.keyword ?? "").trim().slice(0, 120), notes: (input.notes ?? "").trim().slice(0, 2000) });
 }
+
+// ---------------------------------------------------------------- Announcement bar
+// Admin-only (requireAdmin here, and RLS on public.announcements). Every field
+// is checked again on the server; dates are entered in UAE time.
+const plainText = (v: string | null, max: number) =>
+  v
+    ? v
+        .replace(/<[^>]*>/g, "")
+        .replace(/[\u0000-\u001f\u007f]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, max) || null
+    : null;
+const hex = (v: string | null, fallback: string) => (v && /^#[0-9a-fA-F]{6}$/.test(v) ? v.toLowerCase() : fallback);
+const clampInt = (v: number | null, min: number, max: number, fallback: number) => (v === null ? fallback : Math.min(max, Math.max(min, v)));
+const pick = <T extends string>(v: string | null, allowed: readonly T[], fallback: T): T => (allowed.includes(v as T) ? (v as T) : fallback);
+
+export async function saveAnnouncement(form: FormData) {
+  const { supabase, user } = await requireAdmin();
+  const id = text(form, "id", 40);
+  const publish = form.get("intent") === "publish";
+  const title = plainText(text(form, "title", 200), 120);
+  const message = plainText(text(form, "message", 600), 300);
+  const back_ = (msg: string) => back(id ? `/admin/announcements/${id}` : "/admin/announcements/new", msg, "error");
+  if (!title) back_("Give the announcement a title (only you see it).");
+  if (!message) back_("Write the message visitors will see.");
+  const link = text(form, "link_url", 500);
+  if (link && !(/^\/(?!\/)/.test(link) || link === "/" || /^https:\/\/[^\s]+$/.test(link)))
+    back_("The link must be a page on this site (starting with /) or a full https:// address.");
+  const { fromDubaiInput } = await import("@/lib/announcements");
+  const starts = fromDubaiInput(text(form, "starts_at", 20));
+  const ends = fromDubaiInput(text(form, "ends_at", 20));
+  if (starts && ends && Date.parse(ends) <= Date.parse(starts)) back_("The end date must be after the start date.");
+  const recurrence = pick(text(form, "recurrence", 10), ["none", "yearly"] as const, "none");
+  if (recurrence === "yearly" && (!starts || !ends)) back_("A yearly announcement needs both a start and an end date.");
+
+  const row = {
+    title: title!,
+    message: message!,
+    emoji: plainText(text(form, "emoji", 20), 8),
+    link_url: link || null,
+    cta_text: plainText(text(form, "cta_text", 80), 40),
+    bg_color: hex(text(form, "bg_color", 7), "#111111"),
+    text_color: hex(text(form, "text_color", 7), "#ffffff"),
+    font_size: clampInt(int(form, "font_size"), 10, 18, 13),
+    height_desktop: clampInt(int(form, "height_desktop"), 24, 56, 30),
+    height_mobile: clampInt(int(form, "height_mobile"), 24, 56, 32),
+    speed: clampInt(int(form, "speed"), 8, 120, 30),
+    direction: pick(text(form, "direction", 5), ["left", "right"] as const, "left"),
+    animation: pick(text(form, "animation", 8), ["marquee", "fade", "static"] as const, "marquee"),
+    starts_at: starts,
+    ends_at: ends,
+    recurrence,
+    enabled: bool(form, "enabled"),
+    status: publish ? ("published" as const) : ("draft" as const),
+    priority: clampInt(int(form, "priority"), -100, 100, 0),
+    override_auto: bool(form, "override_auto"),
+    updated_at: new Date().toISOString(),
+    updated_by: user.id,
+  };
+  const { data, error } = id
+    ? await supabase.from("announcements").update(row).eq("id", id).select("id").single()
+    : await supabase.from("announcements").insert(row).select("id").single();
+  if (error || !data) back_(`Could not save: ${error?.message ?? "unknown error"}`);
+  refreshSite();
+  back(`/admin/announcements/${data!.id}`, publish ? "Published. It shows on the website within a minute (on its dates)." : "Saved as a draft. Not on the website.");
+}
+
+export async function announcementQuickAction(form: FormData) {
+  const { supabase, user } = await requireAdmin();
+  const id = text(form, "id", 40);
+  const op = text(form, "op", 20);
+  if (!id || !op) back("/admin/announcements", "Nothing to change.", "error");
+  const stamp = { updated_at: new Date().toISOString(), updated_by: user.id };
+  let error: { message: string } | null = null;
+  let msg = "Saved.";
+  if (op === "publish" || op === "unpublish") {
+    ({ error } = await supabase.from("announcements").update({ status: op === "publish" ? "published" : "draft", ...stamp }).eq("id", id!));
+    msg = op === "publish" ? "Published." : "Moved to drafts. It no longer shows on the website.";
+  } else if (op === "enable" || op === "disable") {
+    ({ error } = await supabase.from("announcements").update({ enabled: op === "enable", ...stamp }).eq("id", id!));
+    msg = op === "enable" ? "Switched on." : "Switched off.";
+  } else if (op === "duplicate") {
+    const { data: src } = await supabase.from("announcements").select("*").eq("id", id!).single();
+    if (src) {
+      const { id: _id, created_at: _c, template_key: _t, ...copy } = src as Record<string, unknown>;
+      ({ error } = await supabase
+        .from("announcements")
+        .insert({ ...copy, title: `${String(copy.title).slice(0, 110)} (copy)`, status: "draft", kind: "custom", ...stamp }));
+      msg = "Copied as a new draft.";
+    }
+  } else if (op === "delete") {
+    ({ error } = await supabase.from("announcements").delete().eq("id", id!));
+    msg = "Deleted.";
+  }
+  if (error) back("/admin/announcements", `Could not save: ${error.message}`, "error");
+  refreshSite();
+  back("/admin/announcements", msg);
+}
+
+export async function saveAnnouncementSettings(form: FormData) {
+  const { supabase, user } = await requireAdmin();
+  const data = {
+    enabled: bool(form, "enabled"),
+    mode: form.get("mode") === "rotate" ? "rotate" : "marquee",
+    interval: clampInt(int(form, "interval"), 3, 60, 6),
+  };
+  const { error } = await supabase
+    .from("site_content")
+    .upsert({ key: "announcement:settings", data, updated_at: new Date().toISOString(), updated_by: user.id });
+  if (error) back("/admin/announcements", `Could not save: ${error.message}`, "error");
+  refreshSite();
+  back("/admin/announcements", data.enabled ? "Bar settings saved." : "The announcement bar is now off for the whole website.");
+}

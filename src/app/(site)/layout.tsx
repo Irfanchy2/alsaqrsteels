@@ -1,4 +1,5 @@
-import { getCompany, getServices, getMotion, getCustomPages } from "@/lib/content";
+import { getCompany, getServices, getMotion, getCustomPages, getAnnouncementBar } from "@/lib/content";
+import AnnouncementBar from "@/components/site/AnnouncementBar";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import MobileContactBar from "@/components/site/MobileContactBar";
@@ -20,7 +21,13 @@ export const revalidate = 60;
 export const preferredRegion = "hnd1";
 
 export default async function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [company, services, motion, customPages] = await Promise.all([getCompany(), getServices(), getMotion(), getCustomPages()]);
+  const [company, services, motion, customPages, announcements] = await Promise.all([
+    getCompany(),
+    getServices(),
+    getMotion(),
+    getCustomPages(),
+    getAnnouncementBar(),
+  ]);
   const extraNav = customPages.filter((p) => p.inMenu).map((p) => ({ href: `/${p.slug}`, label: p.title }));
   const on = motion.enabled;
   // Each switched-off effect adds a class that disables it in CSS.
@@ -42,6 +49,9 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
         Skip to content
       </a>
       <IllustrationDefs />
+      {announcements.rows.length ? (
+        <AnnouncementBar rows={announcements.rows} settings={announcements.settings} serverNow={Date.now()} />
+      ) : null}
       <SiteHeader company={company} extraNav={extraNav} />
       <main id="main" tabIndex={-1} className="outline-none">
         {children}

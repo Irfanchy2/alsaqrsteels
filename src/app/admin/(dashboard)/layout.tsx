@@ -19,6 +19,7 @@ const NAV = [
   { href: "/admin/services", label: "Services", icon: "services", group: "Website" },
   { href: "/admin/blog", label: "Blog", icon: "blog", group: "Website" },
   { href: "/admin/faqs", label: "Questions (FAQ)", icon: "faq", group: "Website" },
+  { href: "/admin/announcements", label: "Announcement bar", icon: "megaphone", group: "Website", admin: true },
   { href: "/admin/settings", label: "Company info", icon: "company", group: "Company" },
   { href: "/admin/clients", label: "Client logos", icon: "clients", group: "Company" },
   { href: "/admin/certifications", label: "Certificates", icon: "cert", group: "Company", admin: true },

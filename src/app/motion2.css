@@ -583,3 +583,56 @@
 .admin .site-theme {
   font-size: 1rem;
 }
+
+/* ---------------------------------------------------------------------------
+   Announcement bar (src/components/site/AnnouncementBar.tsx)
+   --------------------------------------------------------------------------- */
+.ann-bar {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.ann-bar a {
+  color: inherit;
+}
+.ann-track {
+  animation: ann-scroll var(--ann-dur, 30s) linear infinite;
+  will-change: transform;
+}
+.ann-bar:hover .ann-track,
+.ann-bar:focus-within .ann-track,
+.ann-bar[data-paused] .ann-track {
+  animation-play-state: paused;
+}
+@keyframes ann-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ann-fade {
+  animation: ann-fade 0.6s ease-out both;
+}
+@keyframes ann-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ann-track,
+  .ann-fade {
+    animation: none;
+  }
+  /* Without motion, the messages can be scrolled sideways instead. */
+  .ann-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
