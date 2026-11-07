@@ -1,28 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export type AdminNavItem = { href: string; label: string; icon?: string; group?: string };
 
-// Desktop: fixed sidebar list. Phone/tablet: a compact top bar with the
-// current section and a Menu button that opens a full-height drawer.
+// The admin shell, laid out like the Shopify admin: a dark top bar (logo,
+// search across every admin section, account menu), a light sidebar on
+// desktop (a drawer on phones), and the page content centred on a grey canvas.
 export default function AdminNav({
   items,
   email,
   role,
   signOut,
+  children,
 }: {
   items: AdminNavItem[];
   email: string;
   role: string;
   signOut: React.ReactNode;
+  children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const active = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(href + "/"));
-  const current = items.find((i) => active(i.href))?.label ?? "Admin";
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -63,18 +65,18 @@ export default function AdminNav({
     return acc;
   }, {});
   const list = (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {Object.entries(groups).map(([group, entries]) => (
         <div key={group || "main"}>
-          {group ? <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-on-ink-muted/70">{group}</p> : null}
-          <ul className="space-y-0.5">
+          {group ? <p className="px-3 pb-1 text-[0.72rem] font-semibold text-[#616161]">{group}</p> : null}
+          <ul className="space-y-px">
             {entries.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   prefetch
                   aria-current={active(item.href) ? "page" : undefined}
-                  className="admin-nav-link flex min-h-11 items-center gap-3 rounded-md px-3 text-[0.95rem] lg:min-h-9 lg:text-sm"
+                  className="admin-nav-link flex min-h-10 items-center gap-2.5 px-3 text-[0.9rem] lg:min-h-8 lg:text-[0.8125rem]"
                 >
                   {item.icon ? <NavIcon name={item.icon} /> : null}
                   {item.label}
@@ -89,87 +91,245 @@ export default function AdminNav({
 
   return (
     <>
-      {saving ? <span aria-hidden="true" className="admin-progress fixed inset-x-0 top-0 z-[60] h-[3px] bg-flame" /> : null}
-      {/* Phone / tablet bar */}
-      <div className="sticky top-0 z-40 flex h-14 items-center justify-between gap-3 border-b border-line-ink bg-ink px-4 text-on-ink lg:hidden">
-        <div className="min-w-0">
-          <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-amber">Al Saqr admin</p>
-          <p className="truncate text-sm font-semibold">{current}</p>
-        </div>
+      {saving ? <span aria-hidden="true" className="admin-progress fixed inset-x-0 top-0 z-[60] h-[3px] bg-[#005bd3]" /> : null}
+
+      {/* Top bar */}
+      <header className="admin-topbar sticky top-0 z-40 flex h-14 items-center gap-3 px-3 text-white sm:px-4">
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={open}
           aria-controls="admin-drawer"
-          className="flex h-10 items-center gap-2 border border-line-ink px-3 font-mono text-xs uppercase tracking-[0.12em]"
+          aria-label="Open menu"
+          className="flex h-9 w-9 flex-none items-center justify-center rounded-lg hover:bg-white/10 lg:hidden"
         >
-          <span aria-hidden="true" className="grid gap-[3px]">
-            <span className="block h-[2px] w-4 bg-current" />
-            <span className="block h-[2px] w-4 bg-current" />
-            <span className="block h-[2px] w-4 bg-current" />
-          </span>
-          Menu
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
-      </div>
+        <Link href="/admin" className="flex flex-none items-center gap-2.5 lg:w-[13.25rem]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icon.png" alt="" width={28} height={28} className="rounded-md bg-white p-0.5" />
+          <span className="hidden text-[0.9rem] font-semibold sm:inline">Al Saqr admin</span>
+        </Link>
+        <div className="flex min-w-0 flex-1 justify-center">
+          <AdminSearch items={items} />
+        </div>
+        <a href="/" target="_blank" rel="noopener" title="View website" className="hidden h-9 items-center gap-1.5 rounded-lg px-2.5 text-[0.8125rem] text-white/85 hover:bg-white/10 hover:text-white md:flex">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M14 3h7v7M21 3l-9 9M19 14v6H4V5h6" />
+          </svg>
+          View website
+        </a>
+        <AccountMenu email={email} role={role} signOut={signOut} />
+      </header>
 
-      {/* Drawer */}
-      <div
-        id="admin-drawer"
-        className={`fixed inset-0 z-50 lg:hidden ${open ? "" : "pointer-events-none"}`}
-        aria-hidden={!open}
-        inert={!open}
-      >
+      {/* Drawer (phones and tablets) */}
+      <div id="admin-drawer" className={`fixed inset-0 z-50 lg:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open} inert={!open}>
         <button
           type="button"
           aria-label="Close menu"
           tabIndex={-1}
           onClick={() => setOpen(false)}
-          className={`absolute inset-0 bg-ink/60 transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0"}`}
         />
         <nav
           aria-label="Admin"
-          className={`absolute inset-y-0 start-0 flex w-[82%] max-w-xs flex-col bg-ink text-on-ink shadow-2xl transition-transform duration-200 ease-out ${
+          className={`admin-sidebar absolute inset-y-0 start-0 flex w-[82%] max-w-xs flex-col shadow-2xl transition-transform duration-200 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="flex h-14 items-center justify-between border-b border-line-ink px-4">
-            <p className="font-display text-lg font-bold">Al Saqr admin</p>
-            <button type="button" onClick={() => setOpen(false)} className="h-10 px-2 text-2xl leading-none" aria-label="Close menu">
+          <div className="flex h-14 items-center justify-between px-4">
+            <p className="font-semibold">Al Saqr admin</p>
+            <button type="button" onClick={() => setOpen(false)} className="h-10 w-10 rounded-lg text-2xl leading-none hover:bg-black/5" aria-label="Close menu">
               ×
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-2 py-3">{list}</div>
-          <div className="border-t border-line-ink px-4 py-4 text-sm">
-            <p className="truncate text-on-ink-muted">{email}</p>
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-flame">{role === "admin" ? "Admin" : "Editor"}</p>
-            <div className="mt-3 flex items-center gap-4">
-              <Link href="/" target="_blank" className="text-on-ink-muted underline">
-                View website ↗
-              </Link>
-              {signOut}
-            </div>
-          </div>
+          <div className="flex-1 overflow-y-auto px-2 pb-4">{list}</div>
         </nav>
       </div>
 
-      {/* Desktop sidebar */}
-      <aside className="hidden border-e border-line-ink bg-ink text-on-ink lg:sticky lg:top-0 lg:flex lg:h-dvh lg:w-64 lg:shrink-0 lg:flex-col">
-        <div className="px-5 py-6">
-          <div className="flex items-center gap-2.5"><img src="/icon.png" alt="" width={28} height={28} className="rounded" /><p className="font-display text-lg font-bold">Al Saqr admin</p></div>
-          <p className="mt-3 truncate text-xs text-on-ink-muted">{email}</p>
-          <p className="mt-2 inline-block rounded-full bg-flame/15 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-flame">{role === "admin" ? "Admin" : "Editor"}</p>
-        </div>
-        <nav aria-label="Admin" className="flex-1 overflow-y-auto px-3">
-          {list}
-        </nav>
-        <div className="space-y-1 px-3 py-5 text-sm">
-          <Link href="/" className="block px-3 py-2 text-on-ink-muted hover:text-on-ink" target="_blank">
-            View website ↗
-          </Link>
-          <div className="px-3 py-2">{signOut}</div>
-        </div>
-      </aside>
+      <div className="lg:flex">
+        {/* Sidebar (desktop) */}
+        <aside className="admin-sidebar hidden lg:sticky lg:top-14 lg:flex lg:h-[calc(100dvh-3.5rem)] lg:w-60 lg:shrink-0 lg:flex-col">
+          <nav aria-label="Admin" className="flex-1 overflow-y-auto px-2 py-3">
+            {list}
+          </nav>
+        </aside>
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <div className="mx-auto max-w-[1200px]">{children}</div>
+        </main>
+      </div>
     </>
+  );
+}
+
+// Search box in the top bar: type to find any admin section, use the arrow
+// keys and Enter to open it. Ctrl/⌘ + K jumps to the box from anywhere.
+function AdminSearch({ items }: { items: AdminNavItem[] }) {
+  const router = useRouter();
+  const input = useRef<HTMLInputElement>(null);
+  const [q, setQ] = useState("");
+  const [focus, setFocus] = useState(false);
+  const [i, setI] = useState(0);
+
+  const all = useMemo(
+    () => [
+      ...items.map((it) => ({ href: it.href, label: it.label, hint: it.group || "Home", icon: it.icon })),
+      { href: "/admin/projects/new", label: "Add a new project", hint: "Action", icon: "projects" },
+      { href: "/admin/blog/new", label: "Write a new blog post", hint: "Action", icon: "blog" },
+      { href: "/admin/enquiries?status=new", label: "New enquiries", hint: "Action", icon: "inbox" },
+    ],
+    [items]
+  );
+  const results = useMemo(() => {
+    const t = q.trim().toLowerCase();
+    return (t ? all.filter((r) => `${r.label} ${r.hint}`.toLowerCase().includes(t)) : all).slice(0, 8);
+  }, [q, all]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        input.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const go = (href: string) => {
+    setQ("");
+    setFocus(false);
+    input.current?.blur();
+    router.push(href);
+  };
+
+  return (
+    <div className="relative w-full max-w-[36rem]">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/60" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input
+        ref={input}
+        type="search"
+        value={q}
+        onChange={(e) => {
+          setQ(e.target.value);
+          setI(0);
+        }}
+        onFocus={() => setFocus(true)}
+        onBlur={() => window.setTimeout(() => setFocus(false), 150)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setI((n) => Math.min(n + 1, results.length - 1));
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setI((n) => Math.max(n - 1, 0));
+          } else if (e.key === "Enter" && results[i]) {
+            e.preventDefault();
+            go(results[i].href);
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            setFocus(false);
+            input.current?.blur();
+          }
+        }}
+        placeholder="Search"
+        aria-label="Search the admin"
+        role="combobox"
+        aria-expanded={focus}
+        aria-controls="admin-search-results"
+        className="h-9 w-full rounded-lg border border-white/15 bg-[#303030] pl-9 pr-14 text-[0.8125rem] text-white placeholder:text-white/60 hover:bg-[#3a3a3a] focus:border-white/40 focus:bg-[#3a3a3a] focus:outline-none"
+      />
+      <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 rounded border border-white/20 px-1.5 py-0.5 font-sans text-[0.68rem] text-white/60 sm:block">
+        Ctrl K
+      </kbd>
+      {focus ? (
+        <ul id="admin-search-results" role="listbox" className="absolute inset-x-0 top-11 z-50 overflow-hidden rounded-xl bg-white py-1.5 text-[#303030] shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+          {results.length ? (
+            results.map((r, n) => (
+              <li key={r.href + r.label} role="option" aria-selected={n === i}>
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onMouseEnter={() => setI(n)}
+                  onClick={() => go(r.href)}
+                  className={`flex w-full items-center gap-3 px-3 py-2 text-left text-[0.8125rem] ${n === i ? "bg-[#f1f1f1]" : ""}`}
+                >
+                  <span className="text-[#616161]">
+                    <NavIcon name={r.icon ?? "pages"} />
+                  </span>
+                  <span className="flex-1">{r.label}</span>
+                  <span className="text-xs text-[#8a8a8a]">{r.hint}</span>
+                </button>
+              </li>
+            ))
+          ) : (
+            <li className="px-3 py-3 text-[0.8125rem] text-[#616161]">Nothing found for “{q}”.</li>
+          )}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+// Avatar button with the signed-in account, its role and sign-out.
+function AccountMenu({ email, role, signOut }: { email: string; role: string; signOut: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => {
+      if (!box.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [open]);
+
+  const initial = (email[0] ?? "A").toUpperCase();
+  const name = email.split("@")[0];
+  return (
+    <div ref={box} className="relative flex-none">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex h-9 items-center gap-2 rounded-lg px-1.5 hover:bg-white/10 sm:pe-2.5"
+      >
+        <span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#ff5a1f] text-[0.8rem] font-bold text-black">
+          {initial}
+        </span>
+        <span className="hidden max-w-[9rem] truncate text-[0.8125rem] sm:inline">{name}</span>
+      </button>
+      {open ? (
+        <div role="menu" className="absolute right-0 top-11 z-50 w-64 overflow-hidden rounded-xl bg-white text-[#303030] shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+          <div className="border-b border-[#e3e3e3] px-4 py-3">
+            <p className="truncate text-[0.8125rem] font-semibold">{email}</p>
+            <p className="text-xs text-[#616161]">{role === "admin" ? "Admin (full access)" : "Editor"}</p>
+          </div>
+          <div className="py-1.5 text-[0.8125rem]">
+            <Link href="/admin/security" role="menuitem" className="block px-4 py-2 hover:bg-[#f1f1f1]">
+              Sign-in security
+            </Link>
+            <a href="/" target="_blank" rel="noopener" role="menuitem" className="block px-4 py-2 hover:bg-[#f1f1f1]">
+              View website ↗
+            </a>
+          </div>
+          <div className="admin-signout border-t border-[#e3e3e3] px-4 py-2.5 text-[0.8125rem]">{signOut}</div>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -193,7 +353,7 @@ const ICONS: Record<string, string> = {
 };
 function NavIcon({ name }: { name: string }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-none opacity-80">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-none">
       <path d={ICONS[name] ?? ICONS.pages} />
     </svg>
   );

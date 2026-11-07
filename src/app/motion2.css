@@ -535,21 +535,13 @@
 .admin main a.underline:hover {
   text-decoration: underline;
 }
-/* Light sidebar, dark top bar on phones */
-.admin aside.bg-ink {
+/* Shell: dark top bar, light sidebar */
+.admin-topbar {
+  background: #1a1a1a;
+}
+.admin-sidebar {
   background: #ebebeb;
   color: #303030;
-  border-color: #e3e3e3;
-}
-.admin aside .text-on-ink-muted,
-.admin aside p,
-.admin aside a {
-  color: #4a4a4a;
-}
-.admin aside .font-display {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  color: #1a1a1a;
 }
 .admin .admin-nav-link {
   color: #303030;
@@ -557,9 +549,12 @@
   border-radius: 8px;
   font-weight: 550;
 }
+.admin .admin-nav-link svg {
+  color: #4a4a4a;
+}
 .admin .admin-nav-link:hover {
   color: #1a1a1a;
-  background: #f7f7f7;
+  background: rgba(0, 0, 0, 0.05);
 }
 .admin .admin-nav-link[aria-current="page"] {
   color: #1a1a1a;
@@ -567,22 +562,19 @@
   font-weight: 650;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
-.admin aside .admin-nav-link svg {
-  color: #4a4a4a;
+.admin .admin-nav-link[aria-current="page"] svg {
+  color: #1a1a1a;
 }
-.admin aside .text-\[0\.68rem\] {
-  color: #616161;
+/* Sentence-case labels and calmer numbers, as in the Shopify admin. */
+.admin main .uppercase {
+  text-transform: none;
+  letter-spacing: 0;
 }
-.admin #admin-drawer nav {
-  background: #ebebeb;
-  color: #303030;
+.admin main .text-4xl {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
 }
-.admin #admin-drawer nav .text-on-ink-muted {
-  color: #4a4a4a;
-}
-.admin > div.sticky.bg-ink {
-  background: #1a1a1a;
-}
-.admin main {
-  max-width: 1200px;
+.admin main .text-3xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }

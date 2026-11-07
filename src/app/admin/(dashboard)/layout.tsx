@@ -32,20 +32,21 @@ const NAV = [
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { user, role } = await requireStaff();
   return (
-    <div className="admin min-h-dvh bg-paper lg:flex">
+    <div className="admin min-h-dvh bg-paper">
       <AdminNav
         items={NAV.filter((n) => !n.admin || role === "admin")}
         email={user.email}
         role={role}
         signOut={
           <form action={signOut}>
-            <button type="submit" className="text-on-ink-muted underline hover:text-on-ink">
+            <button type="submit" className="w-full text-left font-medium text-[#8e1f0b] hover:underline">
               Sign out
             </button>
           </form>
         }
-      />
-      <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-10">{children}</main>
+      >
+        {children}
+      </AdminNav>
     </div>
   );
 }
