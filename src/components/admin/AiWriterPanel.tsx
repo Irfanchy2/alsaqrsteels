@@ -16,9 +16,15 @@ export default function AiWriterPanel({ enabled, formId }: { enabled: boolean; f
     return (
       <div className="text-sm">
         <p className="text-steel-text">
-          The AI writer is ready but not switched on. To turn it on, add your Anthropic API key on the server as{" "}
-          <code className="rounded bg-paper-2 px-1">ANTHROPIC_API_KEY</code> (Hostinger: your website → Node.js → Environment variables), then redeploy.
+          The AI writer is ready but not switched on. It works with <strong>free</strong> AI services such as OpenRouter (free Hermes, Llama
+          and other models), Groq or Google AI Studio. Add these three settings in Hostinger (your website → Node.js → Environment variables),
+          then redeploy:
         </p>
+        <ul className="mt-2 space-y-1 font-mono text-xs">
+          <li>AI_BASE_URL</li>
+          <li>AI_API_KEY</li>
+          <li>AI_WRITER_MODEL</li>
+        </ul>
         <p className="mt-2 text-steel-text">Step-by-step guide and costs: docs/AI-WRITER-PLAN.md in the project.</p>
       </div>
     );

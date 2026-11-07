@@ -4,14 +4,33 @@ import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import * as z from "zod/v4";
 
 // AI writer for blog drafts (Admin > Blog > New post > AI writer).
-// Switched on by setting ANTHROPIC_API_KEY on the server (Hostinger:
-// Websites > your site > Node.js > Environment variables). Without it the
-// editor shows how to turn it on and nothing is sent anywhere.
-// See docs/AI-WRITER-PLAN.md for the plan, costs and how to change the model.
+// Off until the server has AI settings (Hostinger: Websites > your site >
+// Node.js > Environment variables). Two ways to switch it on:
+//
+//  1. Free: any OpenAI-compatible service with a free tier (OpenRouter's free
+//     models such as Hermes, Groq, Google AI Studio). Set
+//       AI_BASE_URL      e.g. https://openrouter.ai/api/v1
+//       AI_API_KEY       the key from that service
+//       AI_WRITER_MODEL  the model name from that service
+//  2. Paid (best quality): Anthropic's Claude. Set ANTHROPIC_API_KEY
+//     (AI_WRITER_MODEL optional, default claude-opus-5-5).
+//
+// If both are set, the free service is used. See docs/AI-WRITER-PLAN.md.
+const FREE = {
+  baseUrl: (process.env.AI_BASE_URL ?? "").replace(/\/+$/, ""),
+  apiKey: process.env.AI_API_KEY ?? "",
+  model: process.env.AI_WRITER_MODEL ?? "",
+};
+const freeConfigured = () => !!(FREE.baseUrl && FREE.apiKey && FREE.model);
 export const AI_MODEL = process.env.AI_WRITER_MODEL || "claude-opus-5-5";
 
 export function aiWriterEnabled() {
-  return !!process.env.ANTHROPIC_API_KEY;
+  return freeConfigured() || !!process.env.ANTHROPIC_API_KEY;
+}
+
+export function aiWriterName() {
+  if (freeConfigured()) return FREE.model;
+  return process.env.ANTHROPIC_API_KEY ? AI_MODEL : null;
 }
 
 export const DraftSchema = z.object({
@@ -40,16 +59,84 @@ Rules:
 - Include an "Frequently asked questions" <h2> with 3 short <h3> questions and answers.
 - Link to 2-4 of these pages where relevant: /services, /services/steel-structures, /projects, /about, /quality, /contact, and end with a sentence linking to /quote.`;
 
-export async function writeDraft(input: { topic: string; keyword: string; notes?: string }): Promise<{ ok: true; draft: Draft } | { ok: false; error: string }> {
-  if (!aiWriterEnabled()) return { ok: false, error: "The AI writer is not switched on yet." };
-  const client = new Anthropic();
-  const prompt = [
+type Result = { ok: true; draft: Draft } | { ok: false; error: string };
+type Input = { topic: string; keyword: string; notes?: string };
+
+const promptFor = (input: Input) =>
+  [
     `Topic: ${input.topic}`,
     `Focus keyword: ${input.keyword || "(choose the best one for the topic)"}`,
     input.notes ? `Notes from the company (follow them):\n${input.notes}` : "",
   ]
     .filter(Boolean)
     .join("\n\n");
+
+export async function writeDraft(input: Input): Promise<Result> {
+  if (freeConfigured()) return writeWithCompatible(input);
+  if (process.env.ANTHROPIC_API_KEY) return writeWithClaude(input);
+  return { ok: false, error: "The AI writer is not switched on yet." };
+}
+
+// Free / OpenAI-compatible services (OpenRouter, Groq, Google AI Studio…).
+// Free models follow formats less strictly, so the reply is searched for the
+// JSON object and checked against the schema before it is used.
+async function writeWithCompatible(input: Input): Promise<Result> {
+  const keys = Object.keys(DraftSchema.shape).join(", ");
+  const body = {
+    model: FREE.model,
+    max_tokens: 8000,
+    temperature: 0.6,
+    response_format: { type: "json_object" },
+    messages: [
+      { role: "system", content: SYSTEM },
+      {
+        role: "user",
+        content: `${promptFor(input)}\n\nReply with ONLY one JSON object, no other text, with exactly these string keys: ${keys}. "content_html" holds the whole article as HTML.`,
+      },
+    ],
+  };
+  const call = async (withFormat: boolean) =>
+    fetch(`${FREE.baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${FREE.apiKey}`,
+        "Content-Type": "application/json",
+        // Shown on OpenRouter's dashboard; ignored by other services.
+        "HTTP-Referer": "https://alsaqrsteels.com",
+        "X-Title": "Al Saqr admin AI writer",
+      },
+      body: JSON.stringify(withFormat ? body : { ...body, response_format: undefined }),
+      signal: AbortSignal.timeout(150_000),
+      cache: "no-store",
+    });
+  try {
+    let res = await call(true);
+    // Some free models reject response_format: retry once without it.
+    if (res.status === 400) res = await call(false);
+    if (res.status === 401 || res.status === 403) return { ok: false, error: "The AI key was not accepted. Check AI_API_KEY on the server." };
+    if (res.status === 404) return { ok: false, error: "That AI model was not found. Check AI_WRITER_MODEL on the server." };
+    if (res.status === 429) return { ok: false, error: "The free AI limit is used up for now. Try again later (free plans have daily limits)." };
+    if (!res.ok) return { ok: false, error: `The AI service returned an error (${res.status}). Try again later.` };
+    const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+    const text = data.choices?.[0]?.message?.content ?? "";
+    const json = text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1);
+    let raw: unknown;
+    try {
+      raw = JSON.parse(json);
+    } catch {
+      return { ok: false, error: "The AI reply was not in the expected format. Press Write a draft again, or try another model." };
+    }
+    const parsed = DraftSchema.safeParse(raw);
+    if (!parsed.success) return { ok: false, error: "The AI left out part of the draft. Press Write a draft again, or try another model." };
+    return { ok: true, draft: parsed.data };
+  } catch {
+    return { ok: false, error: "Could not reach the AI service (or it took too long). Try again later." };
+  }
+}
+
+async function writeWithClaude(input: Input): Promise<Result> {
+  const client = new Anthropic();
+  const prompt = promptFor(input);
 
   try {
     const response = await client.beta.messages.parse({
