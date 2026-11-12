@@ -636,3 +636,133 @@
     scrollbar-width: none;
   }
 }
+
+/* Premium celebration banner ------------------------------------------------ */
+.ann-premium {
+  animation: ann-in 0.8s ease-out both;
+}
+@keyframes ann-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ann-flag {
+  background-image: var(--ann-img-sm);
+  background-size: cover;
+  background-position: 78% 45%;
+  animation: ann-drift 28s ease-in-out infinite alternate;
+}
+@media (min-width: 768px) {
+  .ann-flag {
+    background-image: var(--ann-img);
+    background-position: 70% 45%;
+  }
+}
+@keyframes ann-drift {
+  from {
+    transform: translate3d(-1.5%, 0, 0) scale(1.06);
+  }
+  to {
+    transform: translate3d(1.5%, -2%, 0) scale(1.1);
+  }
+}
+.ann-bar:hover .ann-flag,
+.ann-bar[data-paused] .ann-flag {
+  animation-play-state: paused;
+}
+.ann-premium-in {
+  gap: 0;
+  animation: ann-fade 0.7s ease-out both;
+}
+.ann-premium-head {
+  font-weight: 600;
+  font-size: calc(var(--ann-fs) - 2px);
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.ann-premium-subline {
+  margin-top: 3px;
+  font-size: 10.5px;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  color: var(--ann-sub);
+  white-space: nowrap;
+  max-width: 100%;
+}
+.ann-premium-sub {
+  color: var(--ann-sub);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.ann-premium-sep {
+  font-size: 12px;
+  color: var(--ann-sub);
+}
+.ann-premium-sep::before {
+  content: "·";
+  margin-inline: 0.6rem;
+  opacity: 0.7;
+}
+.ann-premium-cta {
+  flex: none;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: inherit;
+}
+.ann-underline {
+  margin-top: 3px;
+  height: 2px;
+}
+.ann-underline i {
+  display: block;
+  width: 14px;
+  height: 2px;
+}
+.ann-light .ann-underline i:nth-child(2),
+.ann-light .ann-flag-icon {
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+.ann-dark .ann-flag-icon {
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.35);
+}
+@media (min-width: 768px) {
+  .ann-premium-head {
+    font-size: var(--ann-fs);
+  }
+  .ann-premium-subline {
+    font-size: 11.5px;
+    margin-top: 4px;
+  }
+  .ann-underline {
+    margin-top: 4px;
+  }
+  .ann-underline i {
+    width: 18px;
+  }
+}
+/* The editor's phone preview uses phone sizes on any screen. */
+[data-device="mobile"] .ann-premium-head {
+  font-size: calc(var(--ann-fs) - 2px);
+}
+[data-device="mobile"] .ann-premium-subline {
+  font-size: 10.5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ann-premium,
+  .ann-premium-in,
+  .ann-flag {
+    animation: none;
+  }
+}
+[data-device="mobile"] .ann-premium-sep {
+  display: none;
+}

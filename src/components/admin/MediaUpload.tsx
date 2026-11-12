@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { uploadToMedia } from "@/lib/media-upload";
 import { resolveImageLink } from "@/app/admin/actions";
 
@@ -17,6 +17,7 @@ export default function MediaUpload({
   maxMb = 15,
   defaultWidth,
   defaultHeight,
+  onChange,
 }: {
   name: string;
   folder: string;
@@ -27,6 +28,8 @@ export default function MediaUpload({
   maxMb?: number;
   defaultWidth?: number | null;
   defaultHeight?: number | null;
+  /** Called with the new address after an upload, a pasted link or Remove. */
+  onChange?: (url: string) => void;
 }) {
   const initial = defaultUrl ?? "";
   const [url, setUrl] = useState(initial);
@@ -39,6 +42,16 @@ export default function MediaUpload({
   const [link, setLink] = useState("");
   const [showLink, setShowLink] = useState(false);
   const acceptsImages = accept.includes("image/");
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    onChange?.(url);
+    // Only when the address changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
 
   // Use a photo already hosted on ImgBB instead of uploading a file.
   async function onLink() {

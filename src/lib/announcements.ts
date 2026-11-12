@@ -28,7 +28,71 @@ export type Announcement = {
   override_auto: boolean;
   kind: "custom" | "celebration";
   template_key: string | null;
+  /** Look of the bar: slim one-line bar, or the premium celebration banner. */
+  design?: Partial<Design> | null;
 };
+
+// Premium celebration banner settings (stored in announcements.design).
+export type Design = {
+  style: "slim" | "premium";
+  theme: "dark" | "light";
+  size: "premium" | "compact";
+  subtitle: string;
+  subtext_color: string;
+  image_url: string;
+  /** Background photo opacity, 0-40 (%). */
+  image_opacity: number;
+  /** Background photo blur, 0-8 (px). */
+  image_blur: number;
+  flag_icons: boolean;
+  underline: boolean;
+};
+
+export const FLAG_IMAGE = "/img/ann/uae-flag-banner-2400.webp";
+export const THEMES = {
+  dark: { bg: "#102b25", text: "#ffffff", sub: "#d0e2d7", opacity: 17 },
+  light: { bg: "#f5f6f1", text: "#163c30", sub: "#526c61", opacity: 7 },
+} as const;
+export const SIZES = {
+  premium: { desktop: 56, mobile: 48 },
+  compact: { desktop: 40, mobile: 36 },
+} as const;
+
+export const DEFAULT_DESIGN: Design = {
+  style: "slim",
+  theme: "dark",
+  size: "premium",
+  subtitle: "",
+  subtext_color: THEMES.dark.sub,
+  image_url: FLAG_IMAGE,
+  image_opacity: THEMES.dark.opacity,
+  image_blur: 3,
+  flag_icons: true,
+  underline: true,
+};
+
+const isHex = (v: unknown): v is string => typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+const okImage = (v: unknown): v is string =>
+  typeof v === "string" && v.length <= 500 && ((v.startsWith("/") && !v.startsWith("//")) || /^https:\/\/[^\s"'()]+$/.test(v));
+
+/** Design settings with every value checked and defaults filled in. */
+export function readDesign(v: unknown): Design {
+  const o = (v && typeof v === "object" ? v : {}) as Partial<Design>;
+  const theme = o.theme === "light" ? "light" : "dark";
+  const num = (x: unknown, min: number, max: number, d: number) => (Number.isFinite(Number(x)) ? Math.min(max, Math.max(min, Number(x))) : d);
+  return {
+    style: o.style === "premium" ? "premium" : "slim",
+    theme,
+    size: o.size === "compact" ? "compact" : "premium",
+    subtitle: typeof o.subtitle === "string" ? o.subtitle.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 160) : "",
+    subtext_color: isHex(o.subtext_color) ? o.subtext_color : THEMES[theme].sub,
+    image_url: okImage(o.image_url) ? o.image_url : FLAG_IMAGE,
+    image_opacity: num(o.image_opacity, 0, 40, THEMES[theme].opacity),
+    image_blur: num(o.image_blur, 0, 8, 3),
+    flag_icons: o.flag_icons !== false,
+    underline: o.underline !== false,
+  };
+}
 
 export type AnnouncementSettings = { enabled: boolean; mode: "marquee" | "rotate"; interval: number };
 export const DEFAULT_SETTINGS: AnnouncementSettings = { enabled: true, mode: "marquee", interval: 6 };
@@ -123,7 +187,7 @@ export function fillMessage(a: Pick<Announcement, "message" | "starts_at" | "end
   return a.message.replace(/\{year\}/g, String(year)).replace(/\{anniversary\}/g, ordinal(year - UAE_FOUNDED));
 }
 
-export type LiveItem = Announcement & { text: string };
+export type LiveItem = Announcement & { text: string; subtitleText: string };
 
 /**
  * What the bar shows now, highest priority first. If any live announcement
@@ -136,5 +200,5 @@ export function liveAnnouncements(rows: Announcement[], settings: AnnouncementSe
   if (live.some((a) => a.override_auto)) live = live.filter((a) => a.kind !== "celebration");
   return live
     .sort((a, b) => b.priority - a.priority || (Date.parse(b.starts_at ?? "0") || 0) - (Date.parse(a.starts_at ?? "0") || 0))
-    .map((a) => ({ ...a, text: fillMessage(a, now) }));
+    .map((a) => ({ ...a, text: fillMessage(a, now), subtitleText: fillMessage({ ...a, message: readDesign(a.design).subtitle }, now) }));
 }

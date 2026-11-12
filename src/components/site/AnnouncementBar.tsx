@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { liveAnnouncements, type Announcement, type AnnouncementSettings, type LiveItem } from "@/lib/announcements";
+import { liveAnnouncements, readDesign, FLAG_IMAGE, type Announcement, type AnnouncementSettings, type Design, type LiveItem } from "@/lib/announcements";
 
 // The slim bar above the site header. The server sends every announcement
 // that could show; this decides, from the clock, which ones are live now
@@ -42,8 +42,13 @@ function Bar({ items, settings, device }: { items: LiveItem[]; settings: Announc
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hover, setHover] = useState(false);
-  const rotate = settings.mode === "rotate" && items.length > 1;
+  // The premium banner is a centred composition, so several messages take
+  // turns (fading) instead of scrolling past together.
+  const leadPremium = readDesign(items[0].design).style === "premium";
+  const rotate = (leadPremium || settings.mode === "rotate") && items.length > 1;
   const current = rotate ? items[index % items.length] : items[0];
+  const design = readDesign(current.design);
+  const premium = design.style === "premium";
 
   useEffect(() => {
     if (!rotate || paused || hover) return;
@@ -51,7 +56,7 @@ function Bar({ items, settings, device }: { items: LiveItem[]; settings: Announc
     return () => window.clearTimeout(t);
   }, [rotate, paused, hover, index, items.length, settings.interval]);
 
-  const scrolling = rotate ? current.animation === "marquee" : items.length > 1 || current.animation === "marquee";
+  const scrolling = premium ? current.animation === "marquee" : rotate ? current.animation === "marquee" : items.length > 1 || current.animation === "marquee";
   const moving = scrolling || rotate;
 
   return (
@@ -63,7 +68,7 @@ function Bar({ items, settings, device }: { items: LiveItem[]; settings: Announc
       onMouseLeave={() => setHover(false)}
       onFocus={() => setHover(true)}
       onBlur={() => setHover(false)}
-      className="ann-bar relative z-50 flex h-[var(--ann-hm)] items-center overflow-hidden md:h-[var(--ann-h)]"
+      className={`ann-bar relative z-50 flex h-[var(--ann-hm)] items-center overflow-hidden md:h-[var(--ann-h)] ${premium ? `ann-premium ann-${design.theme}` : ""}`}
       style={
         {
           "--ann-h": `${device === "mobile" ? current.height_mobile : current.height_desktop}px`,
@@ -71,10 +76,15 @@ function Bar({ items, settings, device }: { items: LiveItem[]; settings: Announc
           background: current.bg_color,
           color: current.text_color,
           fontSize: `${current.font_size}px`,
+          "--ann-fs": `${current.font_size}px`,
+          "--ann-sub": design.subtext_color,
         } as React.CSSProperties
       }
     >
-      {scrolling ? (
+      {premium ? <PremiumBackdrop design={design} bg={current.bg_color} /> : null}
+      {premium && !scrolling ? (
+        <PremiumContent key={current.id} item={current} design={design} device={device} />
+      ) : scrolling ? (
         <Marquee items={rotate ? [current] : items} lead={current} />
       ) : (
         <p
@@ -166,5 +176,108 @@ function Marquee({ items, lead }: { items: LiveItem[]; lead: LiveItem }) {
         {copy(true)}
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Premium celebration banner: deep emerald (or ivory) with a softly blurred
+// UAE flag behind a centred headline, flag icons, a four-colour underline and
+// a subtitle. All of it is set per announcement in the admin.
+
+function PremiumBackdrop({ design, bg }: { design: Design; bg: string }) {
+  const custom = design.image_url !== FLAG_IMAGE;
+  const r = parseInt(bg.slice(1, 3), 16), g = parseInt(bg.slice(3, 5), 16), b = parseInt(bg.slice(5, 7), 16);
+  const c = (a: number) => `rgba(${r}, ${g}, ${b}, ${a})`;
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="ann-flag pointer-events-none absolute -inset-3"
+        style={
+          {
+            "--ann-img": `url("${design.image_url}")`,
+            "--ann-img-sm": `url("${custom ? design.image_url : "/img/ann/uae-flag-banner-1200.webp"}")`,
+            opacity: design.image_opacity / 100,
+            filter: design.image_blur ? `blur(${design.image_blur}px)` : undefined,
+          } as React.CSSProperties
+        }
+      />
+      {/* Keeps the text readable: a soft pool of the background colour
+          behind the centred text, so the flag shows fully at the sides. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(ellipse 34% 140% at 50% 50%, ${c(0.62)} 0%, ${c(0.35)} 60%, ${c(0)} 100%)` }}
+      />
+    </>
+  );
+}
+
+function PremiumContent({ item, design, device }: { item: LiveItem; design: Design; device?: "mobile" | "desktop" }) {
+  const compact = design.size === "compact";
+  const link = item.link_url;
+  const external = link?.startsWith("https://") && !link.includes("alsaqrsteels.com");
+  const linkProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+  const heading = (
+    <span className="ann-premium-head">
+      {item.emoji ? <span aria-hidden="true" className="me-1.5">{item.emoji}</span> : null}
+      {link && !item.cta_text ? (
+        <a href={link} className="hover:underline focus-visible:underline" {...linkProps}>
+          {item.text}
+        </a>
+      ) : (
+        item.text
+      )}
+    </span>
+  );
+  const cta =
+    link && item.cta_text ? (
+      <a href={link} className="ann-premium-cta" {...linkProps}>
+        {item.cta_text} →
+      </a>
+    ) : null;
+  const sub = item.subtitleText ? <span className="ann-premium-sub">{item.subtitleText}</span> : null;
+
+  return (
+    <div className={`ann-premium-in relative flex h-full w-full items-center justify-center px-9 text-center ${compact ? "" : "flex-col"}`} data-device={device}>
+      <p className="flex min-w-0 items-center justify-center gap-2.5">
+        {design.flag_icons ? <FlagIcon /> : null}
+        {heading}
+        {compact && sub ? <span className="ann-premium-sep hidden md:inline">{sub}</span> : null}
+        {compact ? cta : null}
+        {design.flag_icons ? <FlagIcon /> : null}
+      </p>
+      {design.underline ? <Underline compact={compact} /> : null}
+      {!compact && (sub || cta) ? (
+        <p className="ann-premium-subline flex min-w-0 items-center justify-center gap-2">
+          {sub}
+          {cta}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+// Small UAE flag, drawn (not an emoji, which some computers show as "AE").
+function FlagIcon() {
+  return (
+    <svg viewBox="0 0 24 12" width="21" height="11" aria-hidden="true" className="ann-flag-icon flex-none">
+      <rect width="24" height="4" y="0" fill="#00732f" />
+      <rect width="24" height="4" y="4" fill="#ffffff" />
+      <rect width="24" height="4" y="8" fill="#000000" />
+      <rect width="6" height="12" fill="#ce1126" />
+    </svg>
+  );
+}
+
+// Red, white, black and green: a short underline in the flag's colours.
+function Underline({ compact }: { compact: boolean }) {
+  return (
+    <span aria-hidden="true" className={`ann-underline flex ${compact ? "absolute bottom-[5px] left-1/2 -translate-x-1/2" : ""}`}>
+      <i style={{ background: "#ce1126" }} />
+      <i style={{ background: "#ffffff" }} />
+      <i style={{ background: "#000000" }} />
+      <i style={{ background: "#00732f" }} />
+    </span>
   );
 }

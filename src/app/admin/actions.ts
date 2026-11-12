@@ -814,7 +814,15 @@ export async function saveAnnouncement(form: FormData) {
   const link = text(form, "link_url", 500);
   if (link && !(/^\/(?!\/)/.test(link) || link === "/" || /^https:\/\/[^\s]+$/.test(link)))
     back_("The link must be a page on this site (starting with /) or a full https:// address.");
-  const { fromDubaiInput } = await import("@/lib/announcements");
+  const { fromDubaiInput, readDesign } = await import("@/lib/announcements");
+  let designRaw: unknown = null;
+  try {
+    designRaw = JSON.parse(text(form, "design", 4000) ?? "null");
+  } catch {
+    designRaw = null;
+  }
+  // readDesign keeps only known settings, checks every value and fills defaults.
+  const design = readDesign(designRaw);
   const starts = fromDubaiInput(text(form, "starts_at", 20));
   const ends = fromDubaiInput(text(form, "ends_at", 20));
   if (starts && ends && Date.parse(ends) <= Date.parse(starts)) back_("The end date must be after the start date.");
@@ -830,8 +838,8 @@ export async function saveAnnouncement(form: FormData) {
     bg_color: hex(text(form, "bg_color", 7), "#111111"),
     text_color: hex(text(form, "text_color", 7), "#ffffff"),
     font_size: clampInt(int(form, "font_size"), 10, 18, 13),
-    height_desktop: clampInt(int(form, "height_desktop"), 24, 56, 30),
-    height_mobile: clampInt(int(form, "height_mobile"), 24, 56, 32),
+    height_desktop: clampInt(int(form, "height_desktop"), 24, 72, 30),
+    height_mobile: clampInt(int(form, "height_mobile"), 24, 72, 32),
     speed: clampInt(int(form, "speed"), 8, 120, 30),
     direction: pick(text(form, "direction", 5), ["left", "right"] as const, "left"),
     animation: pick(text(form, "animation", 8), ["marquee", "fade", "static"] as const, "marquee"),
@@ -842,6 +850,7 @@ export async function saveAnnouncement(form: FormData) {
     status: publish ? ("published" as const) : ("draft" as const),
     priority: clampInt(int(form, "priority"), -100, 100, 0),
     override_auto: bool(form, "override_auto"),
+    design,
     updated_at: new Date().toISOString(),
     updated_by: user.id,
   };

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { Flash, PageTitle } from "@/components/admin/AdminUI";
 import AnnouncementEditor, { type EditorValues } from "@/components/admin/AnnouncementEditor";
-import { toDubaiInput, type Announcement } from "@/lib/announcements";
+import { toDubaiInput, readDesign, DEFAULT_DESIGN, THEMES, SIZES, type Announcement } from "@/lib/announcements";
 
 export const dynamic = "force-dynamic";
 
@@ -13,14 +13,15 @@ const BLANK: EditorValues = {
   emoji: "",
   link_url: "",
   cta_text: "",
-  bg_color: "#111111",
-  text_color: "#ffffff",
-  font_size: 13,
-  height_desktop: 30,
-  height_mobile: 32,
+  // New announcements start as the premium dark celebration banner.
+  bg_color: THEMES.dark.bg,
+  text_color: THEMES.dark.text,
+  font_size: 15,
+  height_desktop: SIZES.premium.desktop,
+  height_mobile: SIZES.premium.mobile,
   speed: 30,
   direction: "left",
-  animation: "marquee",
+  animation: "fade",
   starts: "",
   ends: "",
   recurrence: "none",
@@ -30,11 +31,20 @@ const BLANK: EditorValues = {
   override_auto: false,
   kind: "custom",
   template_key: null,
+  design: { ...DEFAULT_DESIGN, style: "premium" },
 };
 
 const toValues = (a: Announcement): EditorValues => {
-  const { starts_at, ends_at, ...rest } = a;
-  return { ...rest, emoji: a.emoji ?? "", link_url: a.link_url ?? "", cta_text: a.cta_text ?? "", starts: toDubaiInput(starts_at), ends: toDubaiInput(ends_at) };
+  const { starts_at, ends_at, design, ...rest } = a;
+  return {
+    ...rest,
+    emoji: a.emoji ?? "",
+    link_url: a.link_url ?? "",
+    cta_text: a.cta_text ?? "",
+    starts: toDubaiInput(starts_at),
+    ends: toDubaiInput(ends_at),
+    design: readDesign(design),
+  };
 };
 
 export default async function EditAnnouncement({

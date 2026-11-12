@@ -414,18 +414,22 @@ export const getAnnouncementBar = cache(async (): Promise<{ rows: Announcement[]
   if (USE_SEED || !settings.enabled) return { rows: [], settings };
   try {
     const now = new Date().toISOString();
-    const { data, error } = await publicClient()
-      .from("announcements")
-      .select(
-        "id, title, message, emoji, link_url, cta_text, bg_color, text_color, font_size, height_desktop, height_mobile, speed, direction, animation, starts_at, ends_at, recurrence, enabled, status, priority, override_auto, kind, template_key"
-      )
-      .eq("status", "published")
-      .eq("enabled", true)
-      .or(`recurrence.eq.yearly,ends_at.is.null,ends_at.gt.${now}`)
-      .order("priority", { ascending: false })
-      .limit(50);
+    const base =
+      "id, title, message, emoji, link_url, cta_text, bg_color, text_color, font_size, height_desktop, height_mobile, speed, direction, animation, starts_at, ends_at, recurrence, enabled, status, priority, override_auto, kind, template_key";
+    const query = (cols: string) =>
+      publicClient()
+        .from("announcements")
+        .select(cols)
+        .eq("status", "published")
+        .eq("enabled", true)
+        .or(`recurrence.eq.yearly,ends_at.is.null,ends_at.gt.${now}`)
+        .order("priority", { ascending: false })
+        .limit(50);
+    let { data, error } = await query(`${base}, design`);
+    // Database without the design column yet: show the slim bar instead of none.
+    if (error) ({ data, error } = await query(base));
     if (error || !data) return { rows: [], settings };
-    return { rows: data as Announcement[], settings };
+    return { rows: data as unknown as Announcement[], settings };
   } catch {
     return { rows: [], settings };
   }
