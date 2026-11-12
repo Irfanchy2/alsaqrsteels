@@ -651,14 +651,11 @@
 }
 .ann-flag {
   background-image: var(--ann-img-sm);
-  background-size: cover;
-  background-position: 78% 45%;
   animation: ann-drift 28s ease-in-out infinite alternate;
 }
 @media (min-width: 768px) {
   .ann-flag {
     background-image: var(--ann-img);
-    background-position: 70% 45%;
   }
 }
 @keyframes ann-drift {

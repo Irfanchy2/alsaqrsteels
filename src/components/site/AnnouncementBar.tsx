@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { liveAnnouncements, readDesign, FLAG_IMAGE, type Announcement, type AnnouncementSettings, type Design, type LiveItem } from "@/lib/announcements";
+import { liveAnnouncements, readDesign, photoLayout, FLAG_IMAGE, type Announcement, type AnnouncementSettings, type Design, type LiveItem } from "@/lib/announcements";
 
 // The slim bar above the site header. The server sends every announcement
 // that could show; this decides, from the clock, which ones are live now
@@ -197,6 +197,7 @@ function PremiumBackdrop({ design, bg }: { design: Design; bg: string }) {
           {
             "--ann-img": `url("${design.image_url}")`,
             "--ann-img-sm": `url("${custom ? design.image_url : "/img/ann/uae-flag-banner-1200.webp"}")`,
+            ...photoLayout(design),
             opacity: design.image_opacity / 100,
             filter: design.image_blur ? `blur(${design.image_blur}px)` : undefined,
           } as React.CSSProperties

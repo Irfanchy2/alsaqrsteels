@@ -44,6 +44,13 @@ export type Design = {
   image_opacity: number;
   /** Background photo blur, 0-8 (px). */
   image_blur: number;
+  /** "cover" fills the banner (cropping the photo); "contain" shows the whole photo at the banner's height. */
+  image_fit: "cover" | "contain";
+  /** Whole-photo mode: photo height as % of the banner height, 50-300. */
+  image_zoom: number;
+  /** Whole-photo mode: repeat the photo across the banner. */
+  image_repeat: boolean;
+  image_position: "left" | "center" | "right";
   flag_icons: boolean;
   underline: boolean;
 };
@@ -67,6 +74,10 @@ export const DEFAULT_DESIGN: Design = {
   image_url: FLAG_IMAGE,
   image_opacity: THEMES.dark.opacity,
   image_blur: 3,
+  image_fit: "cover",
+  image_zoom: 100,
+  image_repeat: false,
+  image_position: "right",
   flag_icons: true,
   underline: true,
 };
@@ -89,6 +100,10 @@ export function readDesign(v: unknown): Design {
     image_url: okImage(o.image_url) ? o.image_url : FLAG_IMAGE,
     image_opacity: num(o.image_opacity, 0, 40, THEMES[theme].opacity),
     image_blur: num(o.image_blur, 0, 8, 3),
+    image_fit: o.image_fit === "contain" ? "contain" : "cover",
+    image_zoom: num(o.image_zoom, 50, 300, 100),
+    image_repeat: o.image_repeat === true,
+    image_position: o.image_position === "left" || o.image_position === "center" ? o.image_position : "right",
     flag_icons: o.flag_icons !== false,
     underline: o.underline !== false,
   };
@@ -201,4 +216,14 @@ export function liveAnnouncements(rows: Announcement[], settings: AnnouncementSe
   return live
     .sort((a, b) => b.priority - a.priority || (Date.parse(b.starts_at ?? "0") || 0) - (Date.parse(a.starts_at ?? "0") || 0))
     .map((a) => ({ ...a, text: fillMessage(a, now), subtitleText: fillMessage({ ...a, message: readDesign(a.design).subtitle }, now) }));
+}
+
+/** CSS background size, position and repeat for the banner photo. */
+export function photoLayout(d: Design): { backgroundSize: string; backgroundPosition: string; backgroundRepeat: string } {
+  if (d.image_fit === "contain") {
+    const x = { left: "2%", center: "50%", right: "98%" }[d.image_position];
+    return { backgroundSize: `auto ${d.image_zoom}%`, backgroundPosition: `${x} 50%`, backgroundRepeat: d.image_repeat ? "repeat-x" : "no-repeat" };
+  }
+  const x = { left: "15%", center: "50%", right: "70%" }[d.image_position];
+  return { backgroundSize: "cover", backgroundPosition: `${x} 45%`, backgroundRepeat: "no-repeat" };
 }

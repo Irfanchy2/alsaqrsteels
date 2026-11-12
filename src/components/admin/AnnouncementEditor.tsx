@@ -201,6 +201,52 @@ export default function AnnouncementEditor({ initial, templates }: { initial: Ed
                 </label>
               </div>
             </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-3">
+                <div>
+                  <p className="field-label">Photo size</p>
+                  <Segmented
+                    name="_fit"
+                    value={v.design.image_fit}
+                    onChange={(x) => setD("image_fit", x as Design["image_fit"])}
+                    options={[
+                      ["cover", "Fill the banner"],
+                      ["contain", "Show the whole photo"],
+                    ]}
+                  />
+                  <span className="field-hint">
+                    “Fill” stretches the photo across the banner and crops it, best for wide photos. For a small or square photo, choose
+                    “Show the whole photo”.
+                  </span>
+                </div>
+                <div>
+                  <p className="field-label">Photo position</p>
+                  <Segmented
+                    name="_pos"
+                    value={v.design.image_position}
+                    onChange={(x) => setD("image_position", x as Design["image_position"])}
+                    options={[
+                      ["left", "Left"],
+                      ["center", "Centre"],
+                      ["right", "Right"],
+                    ]}
+                  />
+                </div>
+              </div>
+              {v.design.image_fit === "contain" ? (
+                <div className="space-y-3">
+                  <label className="block">
+                    <span className="field-label">Photo zoom: {v.design.image_zoom}%</span>
+                    <input type="range" min={50} max={300} step={5} value={v.design.image_zoom} onChange={(e) => setD("image_zoom", Number(e.target.value))} className="w-full" />
+                    <span className="field-hint">100% = the photo is exactly as tall as the banner.</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" checked={v.design.image_repeat} onChange={(e) => setD("image_repeat", e.target.checked)} className="h-5 w-5" />
+                    <span className="font-medium">Repeat the photo across the banner</span>
+                  </label>
+                </div>
+              ) : null}
+            </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={v.design.flag_icons} onChange={(e) => setD("flag_icons", e.target.checked)} className="h-5 w-5" />
